@@ -119,9 +119,14 @@ class Custom_Post_Type_Permalinks {
 			if(!$permalink){
 				$permalink = '/%year%/%monthnum%/%day%/%post_id%/';	
 			}
-
-			$permalink = str_replace('%post_id%','%'.$post_type.'_id%',$permalink);
-			$permalink = str_replace('%postname%','%'.$post_type.'name%',$permalink);	
+			
+			//フラグ
+			$post_id_count = 0;
+			$postname_count = 0;
+			
+			//個別記事のパーマリンク
+			$permalink = str_replace('%post_id%','%'.$post_type.'_id%',$permalink,$post_id_count);
+			$permalink = str_replace('%postname%','%'.$post_type.'name%',$permalink,$postname_count);
 
 			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_id%', '([^/]+)','post_type='.$post_type.'&p=');
 			$wp_rewrite->add_rewrite_tag('%'.$post_type.'name%', '([^/]+)',$post_type.'=');
@@ -140,12 +145,30 @@ class Custom_Post_Type_Permalinks {
 			$permalink_paged = str_replace("%second%","[0-9]{1,2}", $permalink_paged);
 
 			$permalink_paged = str_replace('%'.$post_type.'_id%',"([0-9]{1,})", $permalink_paged);
+			$permalink_paged = str_replace('%'.$post_type.'name%',"([^/]+)", $permalink_paged);
+
+
 			$permalink_paged = $permalink_paged."/([0-9]{1,})/?$";
 			$permalink_paged = str_replace("//","/", $permalink_paged);
 			
-		
-			add_rewrite_rule($slug.$permalink_paged,'index.php?p=$matches[1]&page=$matches[2]&post_type='.$post_type,"top");
+			$count = $post_id_count + $postname_count;
+			
+			if( $count == 1 ){
+				if($post_id_count) {
+					add_rewrite_rule($slug.$permalink_paged,'index.php?p=$matches[1]&page=$matches[2]&post_type='.$post_type,"top");
+				}
+				elseif($postname_count) {
+					add_rewrite_rule($slug.$permalink_paged,'index.php?'.$post_type.'=$matches[1]&page=$matches[2]&post_type='.$post_type,"top");
+				}
 
+			}elseif( $count == 2 ) {
+				if(strpos($permalink,'%'.$post_type.'_id%') < strpos($permalink,'%'.$post_type.'name%')){
+					add_rewrite_rule($slug.$permalink_paged,'index.php?p=$matches[1]&page=$matches[3]&post_type='.$post_type,"top");
+				}else{
+					add_rewrite_rule($slug.$permalink_paged,'index.php?p=$matches[2]&page=$matches[3]&post_type='.$post_type,"top");
+				}
+				
+			}
 
 
 		endforeach;
@@ -302,7 +325,7 @@ class Custom_Post_Type_Permalinks_Admin {
 	function admin_menu_custom_permalink () {
 		// 設定メニュー下にサブメニューを追加:
 		$menuName = __("Permalinks of Custom post type","cptp");
-		add_options_page($menuName, $menuName, manage_options, __FILE__, array(&$this,'admin_menu_custom_permalink_callback'));
+		add_options_page($menuName, $menuName, 'manage_options', __FILE__, array(&$this,'admin_menu_custom_permalink_callback'));
 	}
  
 	// プラグインページのコンテンツを表示
