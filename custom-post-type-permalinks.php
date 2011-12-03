@@ -5,10 +5,9 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com
-Version: 0.5.9
+Version: 0.6
 */
 
-/*Last Update: 2011-12-02*/
 
 
 /*  Copyright 2011 Toro_Unit (email : mail@torounit.com)
