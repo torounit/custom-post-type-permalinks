@@ -1,7 +1,6 @@
 === Custom Post Type Permalinks ===
-Contributors: markjaquith, mdawaffe (this should be a list of wordpress.org userid's)
-Donate link: http://example.com/
-Tags: comments, spam
+Contributors: Toro_Unit
+Tags: custom post type,permalink
 Requires at least: 3.0
 Tested up to: 3.3
 Stable tag: 0.6.2
