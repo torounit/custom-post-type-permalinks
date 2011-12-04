@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com
-Version: 0.6
+Version: 0.6.1
 */
 
 
@@ -188,8 +188,10 @@ class Custom_Post_Type_Permalinks {
 		$newlink = str_replace("%".$post->post_type."%", $post->post_type, $newlink);
 		$newlink = str_replace("%".$post->post_type."_id%", $post->ID, $newlink);
 		$newlink = str_replace("%".$post->post_type."name%", $post->post_name, $newlink);
-
-		$newlink = str_replace("%author%", $post->post_author, $newlink);
+		
+		
+		$user = get_userdata($post->post_author);
+		$newlink = str_replace("%author%", $user->user_login, $newlink);
 
 	
 
