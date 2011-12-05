@@ -118,7 +118,11 @@ class Custom_Post_Type_Permalinks {
 			if(!$permalink){
 				$permalink = '/%year%/%monthnum%/%day%/%post_id%/';	
 			}
-					
+			$permalink = $permalink."/%page%";	
+			$permalink = str_replace('//','/',$permalink);
+			
+
+
 			
 			//フラグ
 			$post_id_count = 0;
@@ -130,61 +134,15 @@ class Custom_Post_Type_Permalinks {
 
 			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_id%', '([^/]+)','post_type='.$post_type.'&p=');
 			$wp_rewrite->add_rewrite_tag('%'.$post_type.'name%', '([^/]+)',$post_type.'=');
-			$wp_rewrite->add_permastruct($post_type,$slug.$permalink, false);
-
-
-			
-			//個別投稿のページング
-			$permalink_paged = $permalink;
+			$wp_rewrite->add_rewrite_tag('%page%','([0-9]{1,})','page=');
 
 			//タクソノミーの処理
-			global $wp_taxonomies;
 			$taxonomies = get_taxonomies();
 			foreach ( $taxonomies as $key => $taxonomy ) {
-				$permalink_paged = str_replace('%'.$key.'%',"[^/]+",$permalink_paged);			
+				$wp_rewrite->add_rewrite_tag('%'.$key.'%', '([^/]+)',$key.'=');
 			}
-			
-			
-
-
-
-
-			$permalink_paged = str_replace("%year%","[0-9]{4}", $permalink_paged);
-			$permalink_paged = str_replace("%monthnum%","[0-9]{1,2}", $permalink_paged);
-			$permalink_paged = str_replace("%day%","[0-9]{1,2}", $permalink_paged);
-			$permalink_paged = str_replace("%hour%","[0-9]{1,2}", $permalink_paged);
-			$permalink_paged = str_replace("%minute%","[0-9]{1,2}", $permalink_paged);
-			$permalink_paged = str_replace("%second%","[0-9]{1,2}", $permalink_paged);
-
-			$permalink_paged = str_replace("%author%","[^/]+", $permalink_paged);
-
-
-			$permalink_paged = str_replace('%'.$post_type.'_id%',"([0-9]{1,})", $permalink_paged);
-			$permalink_paged = str_replace('%'.$post_type.'name%',"([^/]+)", $permalink_paged);
-
-
-			$permalink_paged = $permalink_paged."/([0-9]{1,})/?$";
-			$permalink_paged = str_replace("//","/", $permalink_paged);
-			
-			$count = $post_id_count + $postname_count;
-			
-			if( $count == 1 ){
-				if($post_id_count) {
-					add_rewrite_rule($slug.$permalink_paged,'index.php?p=$matches[1]&page=$matches[2]&post_type='.$post_type,"top");
-				}
-				elseif($postname_count) {
-					add_rewrite_rule($slug.$permalink_paged,'index.php?'.$post_type.'=$matches[1]&page=$matches[2]&post_type='.$post_type,"top");
-				}
-
-			}elseif( $count == 2 ) {
-				if(strpos($permalink,'%'.$post_type.'_id%') < strpos($permalink,'%'.$post_type.'name%')){
-					add_rewrite_rule($slug.$permalink_paged,'index.php?p=$matches[1]&page=$matches[3]&post_type='.$post_type,"top");
-				}else{
-					add_rewrite_rule($slug.$permalink_paged,'index.php?p=$matches[2]&page=$matches[3]&post_type='.$post_type,"top");
-				}
-				
-			}
-
+					
+			$wp_rewrite->add_permastruct($post_type,$slug.$permalink, false);
 
 		endforeach;
 	}
@@ -230,7 +188,6 @@ class Custom_Post_Type_Permalinks {
 
 				$newlink = str_replace('%'.$taxonomy.'%',$first_term->slug,$newlink);
 			}
-			$newlink = str_replace('%'.$taxonomy.'%',"",$newlink);
 			$newlink = str_replace('//',"/",$newlink);
 
 			
@@ -251,6 +208,8 @@ class Custom_Post_Type_Permalinks {
 		$newlink = str_replace("%hour%",date("H",$post_date), $newlink);
 		$newlink = str_replace("%minute%",date("i",$post_date), $newlink);
 		$newlink = str_replace("%second%",date("s",$post_date), $newlink);
+
+		$newlink = str_replace("%page%","", $newlink);
 	
 	
 		$newlink = home_url(user_trailingslashit($newlink));
@@ -390,7 +349,7 @@ class Custom_Post_Type_Permalinks_Admin {
 		<form method="post" action="options.php">
 			<?php wp_nonce_field('update-options'); ?>
 			<p><?php _e("Setting permalinks of custom post type.","cptp");//カスタム投稿タイプごとのパーマリンク構造を設定できます。?><br />
-			<?php _e("The tags you can use is '%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%', '%author%' '%{custom_taxonomy_slug}%(Replace the taxomomy term)'.","cptp");?><br />
+			<?php _e("The tags you can use is '%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%','%author%','%category%','%tag%' and '%{custom_taxonomy_slug}%(Replace the taxomomy term)'.","cptp");?><br />
 			<?php _e("If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/.","cptp");?>
 			</p>
 			<table class="form-table">
