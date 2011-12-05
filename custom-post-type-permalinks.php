@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.6.2
+Version: 0.6.5
 */
 
 
@@ -37,8 +37,8 @@ Version: 0.6.2
 class Custom_Post_Type_Permalinks {
 
 	function init_function(){
-		add_action('init',array(&$this,'set_archive_rewrite'),99);
-		add_action('init', array(&$this,'set_rewrite'),100);
+		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
+		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
 		add_filter('post_type_link', array(&$this,'set_permalink'),10,2);
 
 		add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
@@ -118,6 +118,7 @@ class Custom_Post_Type_Permalinks {
 			if(!$permalink){
 				$permalink = '/%year%/%monthnum%/%day%/%post_id%/';	
 			}
+					
 			
 			//フラグ
 			$post_id_count = 0;
@@ -136,12 +137,27 @@ class Custom_Post_Type_Permalinks {
 			//個別投稿のページング
 			$permalink_paged = $permalink;
 
+			//タクソノミーの処理
+			global $wp_taxonomies;
+			$taxonomies = get_taxonomies();
+			foreach ( $taxonomies as $key => $taxonomy ) {
+				$permalink_paged = str_replace('%'.$key.'%',"[^/]+",$permalink_paged);			
+			}
+			
+			
+
+
+
+
 			$permalink_paged = str_replace("%year%","[0-9]{4}", $permalink_paged);
 			$permalink_paged = str_replace("%monthnum%","[0-9]{1,2}", $permalink_paged);
 			$permalink_paged = str_replace("%day%","[0-9]{1,2}", $permalink_paged);
 			$permalink_paged = str_replace("%hour%","[0-9]{1,2}", $permalink_paged);
 			$permalink_paged = str_replace("%minute%","[0-9]{1,2}", $permalink_paged);
 			$permalink_paged = str_replace("%second%","[0-9]{1,2}", $permalink_paged);
+
+			$permalink_paged = str_replace("%author%","[^/]+", $permalink_paged);
+
 
 			$permalink_paged = str_replace('%'.$post_type.'_id%',"([0-9]{1,})", $permalink_paged);
 			$permalink_paged = str_replace('%'.$post_type.'name%',"([^/]+)", $permalink_paged);
@@ -172,6 +188,17 @@ class Custom_Post_Type_Permalinks {
 
 		endforeach;
 	}
+	
+	function term_id_asc($a, $b){
+	
+		if($a->term_id < $b->term_id){
+			return -1;
+		}else if($a->term_id > $b->term_id){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
 
 
 	//個別投稿の出力URLの変更
@@ -189,6 +216,27 @@ class Custom_Post_Type_Permalinks {
 		$newlink = str_replace("%".$post->post_type."_id%", $post->ID, $newlink);
 		$newlink = str_replace("%".$post->post_type."name%", $post->post_name, $newlink);
 		
+		
+
+		//タクソノミーの処理
+		$taxonomies = get_taxonomies(array("show_ui" => true));
+		foreach ( $taxonomies as $taxonomy ) {
+			$terms = get_the_terms($post->ID,$taxonomy);
+
+			if( !empty($terms) ) {
+			
+				usort($terms, array($this, "term_id_asc"));
+				$first_term = array_shift($terms);
+
+				$newlink = str_replace('%'.$taxonomy.'%',$first_term->slug,$newlink);
+			}
+			$newlink = str_replace('%'.$taxonomy.'%',"",$newlink);
+			$newlink = str_replace('//',"/",$newlink);
+
+			
+		}
+
+
 		
 		$user = get_userdata($post->post_author);
 		$newlink = str_replace("%author%", $user->user_login, $newlink);
