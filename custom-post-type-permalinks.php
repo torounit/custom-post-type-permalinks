@@ -390,8 +390,8 @@ class Custom_Post_Type_Permalinks_Admin {
 		<form method="post" action="options.php">
 			<?php wp_nonce_field('update-options'); ?>
 			<p><?php _e("Setting permalinks of custom post type.","cptp");//カスタム投稿タイプごとのパーマリンク構造を設定できます。?><br />
-			<?php _e("The tags you can use is '%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%' and '%author%'.","cptp");//使用できるタグは、%year%,%monthnum%,%day%,%hour%,%minute%,%second%,%postname%,%post_id%,%author%です。?><br />
-			<?php _e("If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/.","cptp");//未入力のときは、/%year%/%monthnum%/%day%/%post_id%/に設定されます。?>
+			<?php _e("The tags you can use is '%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%', '%author%' '%{custom_taxonomy_slug}%(Replace the taxomomy term)'.","cptp");?><br />
+			<?php _e("If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/.","cptp");?>
 			</p>
 			<table class="form-table">
 			<?php

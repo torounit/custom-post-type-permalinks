@@ -6,10 +6,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Custom Post Type Permalinks 1.0 Ja \n"
+"Project-Id-Version: Custom Post Type Permalinks 0.7.0 Ja \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-21 11:00+0900\n"
-"PO-Revision-Date: 2011-09-21 11:00+0900\n"
+"PO-Revision-Date: 2011-12^05 11:00+0900\n"
 "Last-Translator: Toro_Unit <mail@torounit.com>\n"
 "Language-Team: Toro_Unit <mail@torounit.com>\n"
 "MIME-Version: 1.0\n"
@@ -19,18 +19,14 @@ msgstr ""
 "X-Poedit-Country: JAPAN\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: custom-post-type-permalinks.php:254
 msgid "Permalinks of Custom post type"
 msgstr ""
 
-#: custom-post-type-permalinks.php:270
 msgid "Setting permalinks of custom post type."
 msgstr ""
 
-#: custom-post-type-permalinks.php:271
-msgid "The tags you can use is '%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%' and '%author%'."
+msgid "The tags you can use is '%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%', '%author%' '%{custom_taxonomy_slug}%(Replace the taxomomy term)'."
 msgstr ""
 
-#: custom-post-type-permalinks.php:272
 msgid "If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/."
 msgstr ""
