@@ -65,7 +65,7 @@ class Custom_Post_Type_Permalinks {
 	function init_function(){
 		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
 		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
-		add_filter('post_type_link', array(&$this,'set_permalink'),10,2);
+		add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
 
 		add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
 		add_filter('get_archives_link', array(&$this,'get_archives_link'));
@@ -144,21 +144,13 @@ class Custom_Post_Type_Permalinks {
 			if(!$permalink){
 				$permalink = '/%year%/%monthnum%/%day%/%post_id%/';	
 			}
+			$permalink = '/%post_type%/'.$permalink;
+			
+			$permalink = str_replace('%postname%',"%$post_type%",$permalink);
 			$permalink = str_replace('//','/',$permalink);
 			
 
-
-			
-			//フラグ
-			$post_id_count = 0;
-			$postname_count = 0;
-			
-			//個別記事のパーマリンク
-			$permalink = str_replace('%post_id%','%'.$post_type.'_id%',$permalink,$post_id_count);
-			$permalink = str_replace('%postname%','%'.$post_type.'name%',$permalink,$postname_count);
-
-			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_id%', '([^/]+)','post_type='.$post_type.'&p=');
-			$wp_rewrite->add_rewrite_tag('%'.$post_type.'name%', '([^/]+)',$post_type.'=');
+			$wp_rewrite->add_rewrite_tag('%post_type%', '([^/]+)','post_type=');
 
 			//タクソノミーの処理
 			$taxonomies = get_taxonomies('','objects');
@@ -166,7 +158,7 @@ class Custom_Post_Type_Permalinks {
 				$wp_rewrite->add_rewrite_tag('%'.$key.'%', '([^/]+)',$key.'=');
 			}
 					
-			$wp_rewrite->add_permastruct($post_type,$slug.$permalink, false);
+			$wp_rewrite->add_permastruct($post_type,$permalink, false);
 
 		endforeach;
 	}
@@ -184,20 +176,16 @@ class Custom_Post_Type_Permalinks {
 
 
 	//個別投稿の出力URLの変更
-	function set_permalink($post_link, $id = 0) {
+	function set_permalink($post_link, $post,$leavename) {
 		global $wp_rewrite;
-
-		$post = &get_post($id);
-		if (is_wp_error($post)){
-			return $post;
-		}
 
 		$newlink = $wp_rewrite->get_extra_permastruct($post->post_type);
 	
-		$newlink = str_replace("%".$post->post_type."%", $post->post_type, $newlink);
-		$newlink = str_replace("%".$post->post_type."_id%", $post->ID, $newlink);
-		$newlink = str_replace("%".$post->post_type."name%", $post->post_name, $newlink);
-		
+		$newlink = str_replace("%post_type%", $post->post_type, $newlink);
+		$newlink = str_replace("%post_id%", $post->ID, $newlink);
+		if(!$leavename){
+			$newlink = str_replace("%$post->post_type%", $post->post_name, $newlink);
+		}
 		
 
 		//タクソノミーの処理
@@ -234,16 +222,13 @@ class Custom_Post_Type_Permalinks {
 		$newlink = str_replace("%hour%",date("H",$post_date), $newlink);
 		$newlink = str_replace("%minute%",date("i",$post_date), $newlink);
 		$newlink = str_replace("%second%",date("s",$post_date), $newlink);
-		if(get_query_var("page") > 1){
-		
-		}
-				$newlink = $newlink."/page/".get_query_var("page");
 
 		$newlink = str_replace('//',"/",$newlink);
 	
 		$newlink = home_url(user_trailingslashit($newlink));
 		return $newlink;
 	}
+	
 
 
 
@@ -388,7 +373,7 @@ class Custom_Post_Type_Permalinks_Admin {
 			foreach ($post_types as $post_type):
 			
 			?>
-				<tr valign="top"><th scope="row"><?php echo $post_type;?></th><td>/<?php echo get_post_type_object($post_type)->rewrite["slug"];?>&nbsp;<input type="text" name="<?php echo $post_type."_structure";?>" value="<?php echo get_option($post_type."_structure"); ?>" class="regular-text code" />
+				<tr valign="top"><th scope="row"><?php echo $post_type;?></th><td>/<?php echo get_post_type_object($post_type)->rewrite["slug"];?>&nbsp;<?php ?><input type="text" name="<?php echo $post_type."_structure";?>" value="<?php echo get_option($post_type."_structure"); ?>" class="regular-text code" />
 </td></tr>
 			<?php
 			$page_options .= $post_type."_structure".",";
