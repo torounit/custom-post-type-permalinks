@@ -151,12 +151,6 @@ class Custom_Post_Type_Permalinks {
 			
 
 			$wp_rewrite->add_rewrite_tag('%post_type%', '([^/]+)','post_type=');
-
-			//タクソノミーの処理
-			$taxonomies = get_taxonomies('','objects');
-			foreach ( $taxonomies as $key => $taxonomy ) {
-				$wp_rewrite->add_rewrite_tag('%'.$key.'%', '([^/]+)',$key.'=');
-			}
 					
 			$wp_rewrite->add_permastruct($post_type,$permalink, false);
 
@@ -191,21 +185,22 @@ class Custom_Post_Type_Permalinks {
 		//タクソノミーの処理
 		$taxonomies = get_taxonomies(array("show_ui" => true),'objects');
 		foreach ( $taxonomies as $taxonomy => $objects ) {
+//---------------
+			$term = '';
+			if ( strpos($newlink, "%$taxonomy%") !== false ) {
 			$terms = get_the_terms($post->ID,$taxonomy);
-
-			if( !empty($terms) ) {
-			
-				usort($terms, array($this, "term_id_asc"));
-				$first_term = array_shift($terms);
-				$slug = get_taxonomy_parents( $first_term->term_id,$taxonomy,false,'/', true);
-				$slug = substr($slug, 0, (strlen($slug)-1) );
-
-				$newlink = str_replace('%'.$taxonomy.'%',$slug,$newlink);
+				if ( $terms ) {
+					usort($terms, '_usort_terms_by_ID'); // order by ID
+					$term = $terms[0]->slug;
+					if ( $parent = $terms[0]->parent )
+						$term = get_taxonomy_parents($parent,$taxonomy, false, '/', true) . $term;
+				}
+			$newlink = str_replace("%$taxonomy%", $term, $newlink);
 			}
-			$newlink = str_replace('//',"/",$newlink);
-
-			
+		
+//----------------
 		}
+		
 
 
 		
