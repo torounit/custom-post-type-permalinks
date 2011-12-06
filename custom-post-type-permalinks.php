@@ -33,6 +33,32 @@ Version: 0.7.x
 /* This plugin don't support Multisite yet.*/
 
 
+function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
+	$chain = '';
+	$parent = &get_term( $id, $taxonomy, OBJECT, 'raw');
+	if ( is_wp_error( $parent ) )
+		return $parent;
+
+	if ( $nicename )
+		$name = $parent->slug;
+	else
+		$name = $parent->name;
+
+	if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $visited ) ) {
+		$visited[] = $parent->parent;
+		$chain .= get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
+	}
+
+	if ( $link )
+		$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $parent->name ) ) . '">'.$name.'</a>' . $separator;
+	else
+		$chain .= $name.$separator;
+	return $chain;
+}
+
+
+
+
 
 class Custom_Post_Type_Permalinks {
 
@@ -118,7 +144,6 @@ class Custom_Post_Type_Permalinks {
 			if(!$permalink){
 				$permalink = '/%year%/%monthnum%/%day%/%post_id%/';	
 			}
-			$permalink = $permalink."/%page%";	
 			$permalink = str_replace('//','/',$permalink);
 			
 
@@ -134,10 +159,9 @@ class Custom_Post_Type_Permalinks {
 
 			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_id%', '([^/]+)','post_type='.$post_type.'&p=');
 			$wp_rewrite->add_rewrite_tag('%'.$post_type.'name%', '([^/]+)',$post_type.'=');
-			$wp_rewrite->add_rewrite_tag('%page%','([0-9]{1,})','page=');
 
 			//タクソノミーの処理
-			$taxonomies = get_taxonomies();
+			$taxonomies = get_taxonomies('','objects');
 			foreach ( $taxonomies as $key => $taxonomy ) {
 				$wp_rewrite->add_rewrite_tag('%'.$key.'%', '([^/]+)',$key.'=');
 			}
@@ -165,7 +189,7 @@ class Custom_Post_Type_Permalinks {
 
 		$post = &get_post($id);
 		if (is_wp_error($post)){
-			return $post;	
+			return $post;
 		}
 
 		$newlink = $wp_rewrite->get_extra_permastruct($post->post_type);
@@ -177,16 +201,18 @@ class Custom_Post_Type_Permalinks {
 		
 
 		//タクソノミーの処理
-		$taxonomies = get_taxonomies(array("show_ui" => true));
-		foreach ( $taxonomies as $taxonomy ) {
+		$taxonomies = get_taxonomies(array("show_ui" => true),'objects');
+		foreach ( $taxonomies as $taxonomy => $objects ) {
 			$terms = get_the_terms($post->ID,$taxonomy);
 
 			if( !empty($terms) ) {
 			
 				usort($terms, array($this, "term_id_asc"));
 				$first_term = array_shift($terms);
+				$slug = get_taxonomy_parents( $first_term->term_id,$taxonomy,false,'/', true);
+				$slug = substr($slug, 0, (strlen($slug)-1) );
 
-				$newlink = str_replace('%'.$taxonomy.'%',$first_term->slug,$newlink);
+				$newlink = str_replace('%'.$taxonomy.'%',$slug,$newlink);
 			}
 			$newlink = str_replace('//',"/",$newlink);
 
@@ -208,9 +234,12 @@ class Custom_Post_Type_Permalinks {
 		$newlink = str_replace("%hour%",date("H",$post_date), $newlink);
 		$newlink = str_replace("%minute%",date("i",$post_date), $newlink);
 		$newlink = str_replace("%second%",date("s",$post_date), $newlink);
+		if(get_query_var("page") > 1){
+		
+		}
+				$newlink = $newlink."/page/".get_query_var("page");
 
-		$newlink = str_replace("%page%","", $newlink);
-	
+		$newlink = str_replace('//',"/",$newlink);
 	
 		$newlink = home_url(user_trailingslashit($newlink));
 		return $newlink;
