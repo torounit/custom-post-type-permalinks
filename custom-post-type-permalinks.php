@@ -109,6 +109,8 @@ class Custom_Post_Type_Permalinks {
 				add_rewrite_rule($slug.'/date/([0-9]{4})/page/?([0-9]{1,})/?$','index.php?year=$matches[1]&paged=$matches[2]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/date/([0-9]{4})/?$','index.php?year=$matches[1]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/([0-9]{1,})/?$','index.php?p=$matches[1]&post_type='.$post_type,"top");
+				add_rewrite_rule($slug.'/author/([^/]+)/?$','index.php?author=$matches[1]&post_type='.$post_type,"top");
+				add_rewrite_rule($slug.'/author/[^/]+/([^/]+)/?$','index.php?author=$matches[1]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/?$','index.php?post_type='.$post_type,"top");
 			}
 
@@ -330,64 +332,72 @@ if(get_option("permalink_structure") != ""){
 
 class Custom_Post_Type_Permalinks_Admin {
 
-	function init_function(){
+	function add_hooks(){
 		add_action('init', array(&$this,'load_textdomain'));
-		add_action('admin_menu', array(&$this,'admin_menu_custom_permalink'));
+		add_action('init', array(&$this,'init'));
+		add_action('admin_init', array(&$this,'settings_api_init'));
 	
 	}
  	function load_textdomain(){
 		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks');	
 	}
- 
-	function admin_menu_custom_permalink () {
-		// 設定メニュー下にサブメニューを追加:
-		$menuName = __("Permalinks of Custom post type","cptp");
-		add_options_page($menuName, $menuName, 'manage_options', __FILE__, array(&$this,'admin_menu_custom_permalink_callback'));
+	
+	function init(){
+		
 	}
  
-	// プラグインページのコンテンツを表示
-	function admin_menu_custom_permalink_callback () {
-		global $wp_rewrite;
-		$wp_rewrite->flush_rules();
+ 
+	function settings_api_init() {
+
+	 	add_settings_section('setting_section',
+			'Example settings section in reading',
+			 array(&$this,'setting_section_callback_function'),
+			'permalink');
+
+
+		
+		$post_types = get_post_types(array("_builtin"=>false));
+		var_dump($post_types);
+		foreach ($post_types as $post_type):
+		if($_POST["submit"]){
+			update_option($post_type."_structure",$_POST[$post_type."_structure"]);
+
+			
+		}
+
+	 		add_settings_field($post_type."_structure",
+				$post_type,
+				array(&$this,'setting_callback_function'),
+				'permalink',
+				'setting_section',
+				$post_type."_structure");
+ 	
+		 	register_setting('permalink',$post_type."_structure");
+		endforeach;
 	
-		// 設定変更画面を表示する
-	?>
-	<div class="wrap">
-		<div class="icon32" id="icon-options-general"></div>
-		<h2><?php echo __("Permalinks of Custom post type","cptp"); //カスタム投稿タイプのパーマリンク?></h2>
-		<form method="post" action="options.php">
-			<?php wp_nonce_field('update-options'); ?>
+	}
+ 
+ 
+ 
+	function setting_section_callback_function() {
+		//セクションの上の説明文
+		?>
 			<p><?php _e("Setting permalinks of custom post type.","cptp");//カスタム投稿タイプごとのパーマリンク構造を設定できます。?><br />
 			<?php _e("The tags you can use is '%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%','%author%','%category%','%tag%' and '%{custom_taxonomy_slug}%(Replace the taxomomy term)'.","cptp");?><br />
 			<?php _e("If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/.","cptp");?>
 			</p>
-			<table class="form-table">
-			<?php
-			$post_types = get_post_types(array("_builtin"=>false));
-			$page_options = "";
-			foreach ($post_types as $post_type):
-			
-			?>
-				<tr valign="top"><th scope="row"><?php echo $post_type;?></th><td>/<?php echo get_post_type_object($post_type)->rewrite["slug"];?>&nbsp;<?php ?><input type="text" name="<?php echo $post_type."_structure";?>" value="<?php echo get_option($post_type."_structure"); ?>" class="regular-text code" />
-</td></tr>
-			<?php
-			$page_options .= $post_type."_structure".",";
-			endforeach;?>
-			</table>
-			<input type="hidden" name="action" value="update" />
-			<?php $page_options = rtrim($page_options, ",");?>
+		<?php
+	}
+ 
+ 
+	function setting_callback_function(  $option  ) {
 
-			<input type="hidden" name="page_options" value="<?php echo $page_options;?>" />
-			<p class="submit">
-				<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
-			</p>
-		</form>
-	</div>
-
-<?php
+		echo '<input name="'.$option.'" id="'.$option.'" type="text" class="code" value="' . get_option($option) .'" />';
 
 	}
 
+
+
 }
 $custom_post_type_permalinks_admin = new Custom_Post_Type_Permalinks_Admin;
-$custom_post_type_permalinks_admin->init_function();
+$custom_post_type_permalinks_admin->add_hooks();
