@@ -136,7 +136,8 @@ class Custom_Post_Type_Permalinks {
 	//rewrite_tagの追加
 	function set_rewrite() {
 		global $wp_rewrite;
-		$post_types = get_post_types(array("_builtin"=>false));
+		$post_types = get_post_types(array("_builtin"=>false,"publicly_queryable"=>true));
+
 		foreach ($post_types as $post_type):
 	
 			$permalink = get_option($post_type."_structure");			
@@ -185,7 +186,6 @@ class Custom_Post_Type_Permalinks {
 		//カスタム分類の対応
 		$taxonomies = get_taxonomies(array("show_ui" => true),'objects');
 		foreach ( $taxonomies as $taxonomy => $objects ) {
-//---------------
 			$term = '';
 			if ( strpos($newlink, "%$taxonomy%") !== false ) {
 			$terms = get_the_terms($post->ID,$taxonomy);
@@ -198,7 +198,6 @@ class Custom_Post_Type_Permalinks {
 			$newlink = str_replace("%$taxonomy%", $term, $newlink);
 			}
 		
-//----------------
 		}
 		
 
