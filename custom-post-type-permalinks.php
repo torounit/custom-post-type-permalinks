@@ -59,12 +59,11 @@ function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $sepa
 
 
 
-
 class Custom_Post_Type_Permalinks {
 
 	function init_function(){
-		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
-		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
+		add_action('init',array(&$this,'set_archive_rewrite'),99);
+		add_action('init', array(&$this,'set_rewrite'),100);
 		add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
 
 		add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
@@ -87,7 +86,7 @@ class Custom_Post_Type_Permalinks {
 
 	//カスタム投稿タイプのアーカイブのリライトルールの追加
 	function set_archive_rewrite() {
-		$post_types = get_post_types(array("_builtin"=>false));
+		$post_types = get_post_types(array("_builtin"=>false,"publicly_queryable"=>true));
 
 		foreach ($post_types as $post_type):
 			if(!$post_type) continue;
@@ -101,6 +100,7 @@ class Custom_Post_Type_Permalinks {
 				add_rewrite_rule($slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$','index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/?$','index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/date/([0-9]{4})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$','index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type,"top");
+
 				add_rewrite_rule($slug.'/date/([0-9]{4})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$','index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$','index.php?year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/date/([0-9]{4})/([0-9]{1,2})/?$','index.php?year=$matches[1]&monthnum=$matches[2]&post_type='.$post_type,"top");
@@ -109,8 +109,6 @@ class Custom_Post_Type_Permalinks {
 				add_rewrite_rule($slug.'/date/([0-9]{4})/page/?([0-9]{1,})/?$','index.php?year=$matches[1]&paged=$matches[2]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/date/([0-9]{4})/?$','index.php?year=$matches[1]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/([0-9]{1,})/?$','index.php?p=$matches[1]&post_type='.$post_type,"top");
-				add_rewrite_rule($slug.'/author/([^/]+)/?$','index.php?author=$matches[1]&post_type='.$post_type,"top");
-				add_rewrite_rule($slug.'/author/[^/]+/([^/]+)/?$','index.php?author=$matches[1]&post_type='.$post_type,"top");
 				add_rewrite_rule($slug.'/?$','index.php?post_type='.$post_type,"top");
 			}
 
@@ -135,7 +133,7 @@ class Custom_Post_Type_Permalinks {
 
 
 
-	//パーマリンク構造を登録
+	//rewrite_tagの追加
 	function set_rewrite() {
 		global $wp_rewrite;
 		$post_types = get_post_types(array("_builtin"=>false));
@@ -171,7 +169,7 @@ class Custom_Post_Type_Permalinks {
 	}
 
 
-	//個別投稿の出力URLの変更
+	//パーマリンクの出力の変更
 	function set_permalink($post_link, $post,$leavename) {
 		global $wp_rewrite;
 
@@ -184,7 +182,7 @@ class Custom_Post_Type_Permalinks {
 		}
 		
 
-		//タクソノミーの処理
+		//カスタム分類の対応
 		$taxonomies = get_taxonomies(array("show_ui" => true),'objects');
 		foreach ( $taxonomies as $taxonomy => $objects ) {
 //---------------
@@ -225,7 +223,6 @@ class Custom_Post_Type_Permalinks {
 		$newlink = home_url(user_trailingslashit($newlink));
 		return $newlink;
 	}
-	
 
 
 
@@ -312,7 +309,7 @@ class Custom_Post_Type_Permalinks {
 
 	//アンインストール時
 	function uninstall_hook_custom_permalink () {
-		$post_types = get_post_types(array("_builtin"=>false));
+		$post_types = get_post_types(array("_builtin"=>false,"publicly_queryable"=>true));
 		foreach ($post_types as $post_type):
 			delete_option($post_type."_structure");
 		endforeach;
@@ -326,6 +323,7 @@ if(get_option("permalink_structure") != ""){
 	$custom_post_type_permalinks = new Custom_Post_Type_Permalinks;
 	$custom_post_type_permalinks->init_function();
 }
+
 
 
 
@@ -356,11 +354,10 @@ class Custom_Post_Type_Permalinks_Admin {
 
 
 		
-		$post_types = get_post_types(array("_builtin"=>false));
-		var_dump($post_types);
+		$post_types = get_post_types(array("_builtin"=>false,"publicly_queryable"=>true));
 		foreach ($post_types as $post_type):
 		if($_POST["submit"]){
-			update_option($post_type."_structure",$_POST[$post_type."_structure"]);
+			update_option($post_type."_structure",esc_attr($_POST[$post_type."_structure"]));
 
 			
 		}
@@ -401,3 +398,4 @@ class Custom_Post_Type_Permalinks_Admin {
 }
 $custom_post_type_permalinks_admin = new Custom_Post_Type_Permalinks_Admin;
 $custom_post_type_permalinks_admin->add_hooks();
+
