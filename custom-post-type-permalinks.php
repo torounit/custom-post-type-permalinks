@@ -62,8 +62,8 @@ function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $sepa
 class Custom_Post_Type_Permalinks {
 
 	function init_function(){
-		add_action('init',array(&$this,'set_archive_rewrite'),99);
-		add_action('init', array(&$this,'set_rewrite'),100);
+		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
+		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
 		add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
 
 		add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
@@ -331,7 +331,7 @@ class Custom_Post_Type_Permalinks_Admin {
 
 	function add_hooks(){
 		add_action('init', array(&$this,'load_textdomain'));
-		add_action('init', array(&$this,'init'));
+		add_action('wp_loaded', array(&$this,'init'),101);
 		add_action('admin_init', array(&$this,'settings_api_init'));
 	
 	}
@@ -355,11 +355,9 @@ class Custom_Post_Type_Permalinks_Admin {
 		
 		$post_types = get_post_types(array("_builtin"=>false,"publicly_queryable"=>true));
 		foreach ($post_types as $post_type):
-		if($_POST["submit"]){
-			update_option($post_type."_structure",esc_attr($_POST[$post_type."_structure"]));
-
-			
-		}
+			if($_POST["submit"]){
+				update_option($post_type."_structure",esc_attr($_POST[$post_type."_structure"]));
+			}
 
 	 		add_settings_field($post_type."_structure",
 				$post_type,
