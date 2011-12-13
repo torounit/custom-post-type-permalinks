@@ -1,9 +1,9 @@
 === Custom Post Type Permalinks ===
 Contributors: Toro_Unit
 Tags: custom post type,permalink
-Requires at least: 3.0
+Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 0.6.2
+Stable tag: 0.9
 
 Lets you edit the permalink of custom post type.
 
@@ -20,7 +20,7 @@ Custom Post Type Permalinks lets you edit the permalink structure of custom post
 1. Upload the `custom-post-type-permalinks` directory to your `/wp-content/plugins/` directory.
 1. Activate the plugin through the 'Plugins' menu in WordPress.
 
-That's it. You can access the permalinks setting by going to *Settings -> Permalinks of Custom post type*.
+That's it. You can access the permalinks setting by going to *Settings -> Permalinks*.
 
 
 == Screenshots ==
@@ -28,8 +28,14 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
+=0.9=
+* Add %{taxonomy}% tag.
+* A large number of Bug Fix.
+* Change Setting Page. Use Setting API.
+
+
 = 0.6.2 =
-* Fix %author% tag
+* Fix %author% tag.
 
 = 0.6 =
 * First release on wordpress.org
