@@ -384,8 +384,9 @@ class Custom_Post_Type_Permalinks_Admin {
  
  
 	function setting_callback_function(  $option  ) {
-
-		echo '<input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . get_option($option) .'" />';
+		
+		$post_type = str_replace("_structure","" ,$option);
+		echo '/'.$post_type.'<input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . get_option($option) .'" />';
 
 	}
 
