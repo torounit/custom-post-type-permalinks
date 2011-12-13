@@ -346,7 +346,7 @@ class Custom_Post_Type_Permalinks_Admin {
 	function settings_api_init() {
 
 	 	add_settings_section('setting_section',
-			'Example settings section in reading',
+			__('Permalink Setting for custom post type'),
 			 array(&$this,'setting_section_callback_function'),
 			'permalink');
 

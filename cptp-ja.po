@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Custom Post Type Permalinks 0.7.0 Ja\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-21 11:00+0900\n"
-"PO-Revision-Date: 2011-12-07 03:09+0900\n"
+"PO-Revision-Date: 2011-12-14 01:14+0900\n"
 "Last-Translator: Toro_Unit <mail@torounit.com>\n"
 "Language-Team: Toro_Unit <mail@torounit.com>\n"
 "MIME-Version: 1.0\n"
@@ -20,6 +20,9 @@ msgstr ""
 
 msgid "Permalinks of Custom post type"
 msgstr "カスタム投稿タイプのパーマリンク"
+
+msgid "Permalink Setting for custom post type"
+msgstr "カスタム投稿タイプのパーマリンク設定"
 
 msgid "Setting permalinks of custom post type."
 msgstr "カスタム投稿タイプごとのパーマリンク構造を設定できます。"
