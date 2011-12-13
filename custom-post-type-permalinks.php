@@ -59,9 +59,11 @@ function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $sepa
 
 
 
+
+
 class Custom_Post_Type_Permalinks {
 
-	function init_function(){
+	function add_hooks(){
 		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
 		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
 		add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
@@ -73,12 +75,13 @@ class Custom_Post_Type_Permalinks {
 		add_filter('term_link', array(&$this,'set_term_link'),10,3);
 
 
+	}
+	
+	static function uninstall_hook(){
 		if ( function_exists('register_uninstall_hook') ) {
 			register_uninstall_hook(__FILE__, array(&$this,'uninstall_hook_custom_permalink'));
 		}
-
 	}
-	
 	
 
 
@@ -152,10 +155,17 @@ class Custom_Post_Type_Permalinks {
 			
 
 			$wp_rewrite->add_rewrite_tag('%post_type%', '([^/]+)','post_type=');
-					
 			$wp_rewrite->add_permastruct($post_type,$permalink, false);
 
 		endforeach;
+
+		//カスタム分類の対応
+		$taxonomies = get_taxonomies(array("show_ui" => true),'objects');
+		foreach ( $taxonomies as $taxonomy => $objects ):
+			$wp_rewrite->add_rewrite_tag("%$taxonomy%", '(.+?)',"$taxonomy=");
+		endforeach;
+		
+		$wp_rewrite->use_verbose_page_rules = true;
 	}
 	
 	function term_id_asc($a, $b){
@@ -307,7 +317,7 @@ class Custom_Post_Type_Permalinks {
 
 
 	//アンインストール時
-	function uninstall_hook_custom_permalink () {
+	static function uninstall_hook_custom_permalink () {
 		$post_types = get_post_types(array("_builtin"=>false,"publicly_queryable"=>true));
 		foreach ($post_types as $post_type):
 			delete_option($post_type."_structure");
@@ -318,12 +328,6 @@ class Custom_Post_Type_Permalinks {
 
 }
 
-if(get_option("permalink_structure") != ""){
-	$custom_post_type_permalinks = new Custom_Post_Type_Permalinks;
-	$custom_post_type_permalinks->init_function();
-}
-
-
 
 
 
@@ -331,7 +335,6 @@ class Custom_Post_Type_Permalinks_Admin {
 
 	function add_hooks(){
 		add_action('init', array(&$this,'load_textdomain'));
-		add_action('wp_loaded', array(&$this,'init'),101);
 		add_action('admin_init', array(&$this,'settings_api_init'));
 	
 	}
@@ -339,10 +342,6 @@ class Custom_Post_Type_Permalinks_Admin {
 		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks');	
 	}
 	
-	function init(){
-		
-	}
- 
  
 	function settings_api_init() {
 
@@ -355,7 +354,7 @@ class Custom_Post_Type_Permalinks_Admin {
 		
 		$post_types = get_post_types(array("_builtin"=>false,"publicly_queryable"=>true));
 		foreach ($post_types as $post_type):
-			if($_POST["submit"]){
+			if(isset($_POST["submit"])){
 				update_option($post_type."_structure",esc_attr($_POST[$post_type."_structure"]));
 			}
 
@@ -386,13 +385,22 @@ class Custom_Post_Type_Permalinks_Admin {
  
 	function setting_callback_function(  $option  ) {
 
-		echo '<input name="'.$option.'" id="'.$option.'" type="text" class="code" value="' . get_option($option) .'" />';
+		echo '<input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . get_option($option) .'" />';
 
 	}
 
 
 
 }
+
+
+$custom_post_type_permalinks = new Custom_Post_Type_Permalinks;
+
+if(get_option("permalink_structure") != ""){
+	$custom_post_type_permalinks->add_hooks();
+}
+$custom_post_type_permalinks->uninstall_hook();
+
 $custom_post_type_permalinks_admin = new Custom_Post_Type_Permalinks_Admin;
 $custom_post_type_permalinks_admin->add_hooks();
 
