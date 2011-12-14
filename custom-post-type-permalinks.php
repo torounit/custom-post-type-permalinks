@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.9
+Version: 0.7
 */
 
 
@@ -145,17 +145,25 @@ class Custom_Post_Type_Permalinks {
 	
 			$permalink = get_option($post_type."_structure");			
 			$slug = get_post_type_object($post_type)->rewrite["slug"];
+
 			if(!$permalink){
 				$permalink = '/%year%/%monthnum%/%day%/%post_id%/';	
 			}
-			$permalink = '/%post_type%/'.$permalink;
-			
+
 			$permalink = str_replace('%postname%',"%$post_type%",$permalink);
+
+			$permalink = '/%post_type%/'.$permalink;			
 			$permalink = str_replace('//','/',$permalink);
 			
 
 			$wp_rewrite->add_rewrite_tag('%post_type%', '([^/]+)','post_type=');
 			$wp_rewrite->add_permastruct($post_type,$permalink, false);
+
+			if(!$slug or $slug != $post_type){
+				$wp_rewrite->add_rewrite_tag('%$slug%', '([^/]+)',"post_type=$post_type&slug=");
+				$wp_rewrite->add_permastruct($post_type,str_replace("%post_type%","%$slug%",$permalink), false);
+			}
+
 
 		endforeach;
 
@@ -185,6 +193,8 @@ class Custom_Post_Type_Permalinks {
 		global $wp_rewrite;
 
 		$newlink = $wp_rewrite->get_extra_permastruct($post->post_type);
+		$slug = get_post_type_object($post->post_type)->rewrite["slug"];
+		$newlink = str_replace("%$slug%", $slug, $newlink);
 	
 		$newlink = str_replace("%post_type%", $post->post_type, $newlink);
 		$newlink = str_replace("%post_id%", $post->ID, $newlink);
@@ -344,9 +354,8 @@ class Custom_Post_Type_Permalinks_Admin {
 	
  
 	function settings_api_init() {
-
 	 	add_settings_section('setting_section',
-			__('Permalink Setting for custom post type'),
+			__("Permalink Setting for custom post type","cptp"),
 			 array(&$this,'setting_section_callback_function'),
 			'permalink');
 
