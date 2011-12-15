@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.7
+Version: 0.7.1
 */
 
 
@@ -55,8 +55,6 @@ function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $sepa
 		$chain .= $name.$separator;
 	return $chain;
 }
-
-
 
 
 
@@ -159,10 +157,6 @@ class Custom_Post_Type_Permalinks {
 			$wp_rewrite->add_rewrite_tag('%post_type%', '([^/]+)','post_type=');
 			$wp_rewrite->add_permastruct($post_type,$permalink, false);
 
-			if(!$slug or $slug != $post_type){
-				$wp_rewrite->add_rewrite_tag('%$slug%', '([^/]+)',"post_type=$post_type&slug=");
-				$wp_rewrite->add_permastruct($post_type,str_replace("%post_type%","%$slug%",$permalink), false);
-			}
 
 
 		endforeach;
@@ -193,14 +187,14 @@ class Custom_Post_Type_Permalinks {
 		global $wp_rewrite;
 
 		$newlink = $wp_rewrite->get_extra_permastruct($post->post_type);
-		$slug = get_post_type_object($post->post_type)->rewrite["slug"];
-		$newlink = str_replace("%$slug%", $slug, $newlink);
 	
 		$newlink = str_replace("%post_type%", $post->post_type, $newlink);
 		$newlink = str_replace("%post_id%", $post->ID, $newlink);
 		if(!$leavename){
 			$newlink = str_replace("%$post->post_type%", $post->post_name, $newlink);
 		}
+
+		$newlink = str_replace("%postname%", $post->post_name, $newlink);
 		
 
 		//カスタム分類の対応
@@ -345,15 +339,16 @@ class Custom_Post_Type_Permalinks_Admin {
 
 	function add_hooks(){
 		add_action('init', array(&$this,'load_textdomain'));
-		add_action('admin_init', array(&$this,'settings_api_init'));
+		add_action('admin_init', array(&$this,'settings_api_init'),10);
+		add_action('admin_init', array(&$this,'set_rules'),50);
 	
 	}
+	
  	function load_textdomain(){
 		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks');	
 	}
 	
- 
-	function settings_api_init() {
+	function settings_api_init(){
 	 	add_settings_section('setting_section',
 			__("Permalink Setting for custom post type","cptp"),
 			 array(&$this,'setting_section_callback_function'),
@@ -364,7 +359,8 @@ class Custom_Post_Type_Permalinks_Admin {
 		$post_types = get_post_types(array("_builtin"=>false,"publicly_queryable"=>true));
 		foreach ($post_types as $post_type):
 			if(isset($_POST["submit"])){
-				update_option($post_type."_structure",esc_attr($_POST[$post_type."_structure"]));
+				if( strpos($_POST["_wp_http_referer"],"options-permalink.php") !== FALSE )
+					update_option($post_type."_structure",esc_attr($_POST[$post_type."_structure"]));
 			}
 
 	 		add_settings_field($post_type."_structure",
@@ -377,6 +373,11 @@ class Custom_Post_Type_Permalinks_Admin {
 		 	register_setting('permalink',$post_type."_structure");
 		endforeach;
 	
+	}
+	
+	function set_rules(){
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();		
 	}
  
  
