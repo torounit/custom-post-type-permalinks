@@ -65,6 +65,7 @@ class Custom_Post_Type_Permalinks {
 		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
 		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
 		add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
+		add_filter('preview_post_link',array(&$this,'set_preview_link'),10,3);
 
 		add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
 		add_filter('get_archives_link', array(&$this,'get_archives_link'));
@@ -185,6 +186,9 @@ class Custom_Post_Type_Permalinks {
 	//パーマリンクの出力の変更
 	function set_permalink($post_link, $post,$leavename) {
 		global $wp_rewrite;
+		$draft_or_pending = isset($post->post_status) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
+		if( $draft_or_pending and !$leavename)
+			return $post_link;
 
 		$newlink = $wp_rewrite->get_extra_permastruct($post->post_type);
 	
@@ -235,6 +239,9 @@ class Custom_Post_Type_Permalinks {
 	
 		$newlink = home_url(user_trailingslashit($newlink));
 		return $newlink;
+	}
+	
+	function set_preview_link(){
 	}
 
 
