@@ -25,12 +25,15 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Screenshots ==
 
+1. screenshot-1.png 
+
 
 == Changelog ==
 
 
 =0.7.2=
 * Reweite bug fix.
+* Prewview bug fix.
 
 =0.7.1=
 * Bug fix.
