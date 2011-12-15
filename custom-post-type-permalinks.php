@@ -65,7 +65,6 @@ class Custom_Post_Type_Permalinks {
 		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
 		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
 		add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
-		add_filter('preview_post_link',array(&$this,'set_preview_link'),10,3);
 
 		add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
 		add_filter('get_archives_link', array(&$this,'get_archives_link'));
@@ -142,20 +141,30 @@ class Custom_Post_Type_Permalinks {
 
 		foreach ($post_types as $post_type):
 	
-			$permalink = get_option($post_type."_structure");			
-			$slug = get_post_type_object($post_type)->rewrite["slug"];
+			$permalink = get_option($post_type."_structure");
 
 			if(!$permalink){
 				$permalink = '/%year%/%monthnum%/%day%/%post_id%/';	
 			}
 
-			$permalink = str_replace('%postname%',"%$post_type%",$permalink);
 
-			$permalink = '/%post_type%/'.$permalink;			
+			//$permalink = str_replace('%postname%',"%$post_type%",$permalink);
+			$permalink = str_replace('%postname%','%'.$post_type.'_name%',$permalink);
+			$permalink = str_replace('%post_id%','%'.$post_type.'_id%',$permalink);
+
+			$slug = get_post_type_object($post_type)->rewrite['slug'];
+			if( !$slug ) {
+				$slug = $post_type;
+			}
+
+			$permalink = '/'.$slug.'/'.$permalink.'/%'.$post_type.'_page%';			
 			$permalink = str_replace('//','/',$permalink);
 			
 
 			$wp_rewrite->add_rewrite_tag('%post_type%', '([^/]+)','post_type=');
+			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=');
+			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_name%', '([^/]+)',$post_type.'=');
+			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_page%', '([0-9]{1,}?)/?',"page=");
 			$wp_rewrite->add_permastruct($post_type,$permalink, false);
 
 
@@ -171,17 +180,6 @@ class Custom_Post_Type_Permalinks {
 		$wp_rewrite->use_verbose_page_rules = true;
 	}
 	
-	function term_id_asc($a, $b){
-	
-		if($a->term_id < $b->term_id){
-			return -1;
-		}else if($a->term_id > $b->term_id){
-			return 1;
-		}else{
-			return 0;
-		}
-	}
-
 
 	//パーマリンクの出力の変更
 	function set_permalink($post_link, $post,$leavename) {
@@ -189,23 +187,28 @@ class Custom_Post_Type_Permalinks {
 		$draft_or_pending = isset($post->post_status) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if( $draft_or_pending and !$leavename)
 			return $post_link;
+			
+		$post_type = $post->post_type;
 
-		$newlink = $wp_rewrite->get_extra_permastruct($post->post_type);
-	
-		$newlink = str_replace("%post_type%", $post->post_type, $newlink);
-		$newlink = str_replace("%post_id%", $post->ID, $newlink);
+		$permalink = $wp_rewrite->get_extra_permastruct($post_type);
+
+		$permalink = str_replace('%post_type%', $post->post_type, $permalink);
+		//$permalink = str_replace('%post_id%', $post->ID, $permalink);
+		$permalink = str_replace('%'.$post_type.'_id%', $post->ID, $permalink);
+		$permalink = str_replace('%'.$post_type.'_page%', "", $permalink);
+
 		if(!$leavename){
-			$newlink = str_replace("%$post->post_type%", $post->post_name, $newlink);
+			$permalink = str_replace('%'.$post_type.'_name%', $post->post_name, $permalink);
 		}
 
-		$newlink = str_replace("%postname%", $post->post_name, $newlink);
+		$permalink = str_replace("%postname%", $post->post_name, $permalink);
 		
 
 		//カスタム分類の対応
 		$taxonomies = get_taxonomies(array("show_ui" => true),'objects');
 		foreach ( $taxonomies as $taxonomy => $objects ) {
 			$term = '';
-			if ( strpos($newlink, "%$taxonomy%") !== false ) {
+			if ( strpos($permalink, "%$taxonomy%") !== false ) {
 			$terms = get_the_terms($post->ID,$taxonomy);
 				if ( $terms ) {
 					usort($terms, '_usort_terms_by_ID'); // order by ID
@@ -213,7 +216,7 @@ class Custom_Post_Type_Permalinks {
 					if ( $parent = $terms[0]->parent )
 						$term = get_taxonomy_parents($parent,$taxonomy, false, '/', true) . $term;
 				}
-			$newlink = str_replace("%$taxonomy%", $term, $newlink);
+			$permalink = str_replace("%$taxonomy%", $term, $permalink);
 			}
 		
 		}
@@ -222,28 +225,25 @@ class Custom_Post_Type_Permalinks {
 
 		
 		$user = get_userdata($post->post_author);
-		$newlink = str_replace("%author%", $user->user_login, $newlink);
+		$permalink = str_replace("%author%", $user->user_login, $permalink);
 
 	
 
 		$post_date = strtotime($post->post_date);
 
-		$newlink = str_replace("%year%",date("Y",$post_date), $newlink);
-		$newlink = str_replace("%monthnum%",date("m",$post_date), $newlink);
-		$newlink = str_replace("%day%",date("d",$post_date), $newlink);
-		$newlink = str_replace("%hour%",date("H",$post_date), $newlink);
-		$newlink = str_replace("%minute%",date("i",$post_date), $newlink);
-		$newlink = str_replace("%second%",date("s",$post_date), $newlink);
+		$permalink = str_replace("%year%",date("Y",$post_date), $permalink);
+		$permalink = str_replace("%monthnum%",date("m",$post_date), $permalink);
+		$permalink = str_replace("%day%",date("d",$post_date), $permalink);
+		$permalink = str_replace("%hour%",date("H",$post_date), $permalink);
+		$permalink = str_replace("%minute%",date("i",$post_date), $permalink);
+		$permalink = str_replace("%second%",date("s",$post_date), $permalink);
 
-		$newlink = str_replace('//',"/",$newlink);
+		$permalink = str_replace('//',"/",$permalink);
 	
-		$newlink = home_url(user_trailingslashit($newlink));
-		return $newlink;
+		$permalink = home_url(user_trailingslashit($permalink));
+		return $permalink;
 	}
 	
-	function set_preview_link(){
-	}
-
 
 
 	/**
@@ -403,7 +403,11 @@ class Custom_Post_Type_Permalinks_Admin {
 	function setting_callback_function(  $option  ) {
 		
 		$post_type = str_replace("_structure","" ,$option);
-		echo '/'.$post_type.'<input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . get_option($option) .'" />';
+		$slug = get_post_type_object($post_type)->rewrite['slug'];
+		if( !$slug ) {
+			$slug = $post_type;
+		}
+		echo '/'.$slug.'<input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . get_option($option) .'" />';
 
 	}
 
