@@ -6,6 +6,8 @@ Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
 Version: 0.7.2.2
+Text Domain: cptp
+Domain Path: /
 */
 
 
@@ -33,28 +35,6 @@ Version: 0.7.2.2
 /* This plugin don't support Multisite yet.*/
 
 
-function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
-	$chain = '';
-	$parent = &get_term( $id, $taxonomy, OBJECT, 'raw');
-	if ( is_wp_error( $parent ) )
-		return $parent;
-
-	if ( $nicename )
-		$name = $parent->slug;
-	else
-		$name = $parent->name;
-
-	if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $visited ) ) {
-		$visited[] = $parent->parent;
-		$chain .= get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
-	}
-
-	if ( $link )
-		$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $parent->name ) ) . '">'.$name.'</a>' . $separator;
-	else
-		$chain .= $name.$separator;
-	return $chain;
-}
 
 class Custom_Post_Type_Permalinks {
 
@@ -73,6 +53,31 @@ class Custom_Post_Type_Permalinks {
 			register_uninstall_hook(__FILE__, array(&$this,'uninstall_hook_custom_permalink'));
 		}
 	}
+	
+	function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
+		$chain = '';
+		$parent = &get_term( $id, $taxonomy, OBJECT, 'raw');
+		if ( is_wp_error( $parent ) )
+			return $parent;
+	
+		if ( $nicename )
+			$name = $parent->slug;
+		else
+			$name = $parent->name;
+	
+		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $visited ) ) {
+			$visited[] = $parent->parent;
+			$chain .= $this->get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
+		}
+	
+		if ( $link )
+			$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $parent->name ) ) . '">'.$name.'</a>' . $separator;
+		else
+			$chain .= $name.$separator;
+		return $chain;
+	}
+
+
 	
 	function set_archive_rewrite() {
 		$post_types = get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true,'show_ui' => true) );
@@ -95,6 +100,7 @@ class Custom_Post_Type_Permalinks {
 				add_rewrite_rule($slug.'/date/([0-9]{4})/(feed|rdf|rss|rss2|atom)/?$','index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type,'bottom');
 				add_rewrite_rule($slug.'/date/([0-9]{4})/page/?([0-9]{1,})/?$','index.php?year=$matches[1]&paged=$matches[2]&post_type='.$post_type,'bottom');
 				add_rewrite_rule($slug.'/date/([0-9]{4})/?$','index.php?year=$matches[1]&post_type='.$post_type,'bottom');
+				add_rewrite_rule($slug.'/author/([^/]+)/?$','index.php?author=$matches[1]&post_type='.$post_type,'bottom');
 				add_rewrite_rule($slug.'/?$','index.php?post_type='.$post_type,'bottom');
 			}
 
@@ -110,6 +116,7 @@ class Custom_Post_Type_Permalinks {
 			add_rewrite_rule($post_type.'/date/([0-9]{4})/(feed|rdf|rss|rss2|atom)/?$','index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type,'bottom');
 			add_rewrite_rule($post_type.'/date/([0-9]{4})/page/?([0-9]{1,})/?$','index.php?year=$matches[1]&paged=$matches[2]&post_type='.$post_type,'bottom');
 			add_rewrite_rule($post_type.'/date/([0-9]{4})/?$','index.php?year=$matches[1]&post_type='.$post_type,'bottom');
+			add_rewrite_rule($post_type.'/date/([0-9]{4})/?$','index.php?author=$matches[1]&post_type='.$post_type,'bottom');
 			add_rewrite_rule($post_type.'/?$','index.php?post_type='.$post_type,'bottom');
 		endforeach;
 	}
@@ -180,7 +187,7 @@ class Custom_Post_Type_Permalinks {
 					$term = $terms[0]->slug;
 					
 					if ( $parent = $terms[0]->parent ) {
-						$term = get_taxonomy_parents($parent,$taxonomy, false, '/', true) . $term;
+						$term = $this->get_taxonomy_parents($parent,$taxonomy, false, '/', true) . $term;
 					}
 				}
 				$permalink = str_replace("%$taxonomy%", $term, $permalink);
@@ -188,7 +195,7 @@ class Custom_Post_Type_Permalinks {
 		}
 		
 		$user = get_userdata($post->post_author);
-		$permalink = str_replace("%author%", $user->user_login, $permalink);
+		$permalink = str_replace("%author%", $user->user_nicename, $permalink);
 
 		$post_date = strtotime($post->post_date);
 		$permalink = str_replace("%year%",date("Y",$post_date), $permalink);
