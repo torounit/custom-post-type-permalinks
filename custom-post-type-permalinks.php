@@ -141,13 +141,14 @@ class Custom_Post_Type_Permalinks {
 			if( !$slug ) {
 				$slug = $post_type;
 			}
-
-			$permalink = '/'.$slug.'/'.$permalink.'/%'.$post_type.'_page%';			
+			
+			$permalink = '/'.$slug.'/'.$permalink;
+			$permalink = $permalink.'/%'.$post_type.'_page%';			
 			$permalink = str_replace('//','/',$permalink);
 			
 			$wp_rewrite->add_rewrite_tag('%post_type%', '([^/]+)','post_type=');
 			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=');
-			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_page%', '([0-9]{1,}?)/?',"page=");
+			$wp_rewrite->add_rewrite_tag('%'.$post_type.'_page%', '/?([0-9]{1,}?)/?',"page=");
 			$wp_rewrite->add_permastruct($post_type,$permalink, false);
 
 		endforeach;
@@ -319,8 +320,26 @@ class Custom_Post_Type_Permalinks_Admin {
 		$post_types = get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
 		foreach ($post_types as $post_type):
 			if(isset($_POST['submit'])){
-				if( strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE )
-					update_option($post_type.'_structure',esc_attr($_POST[$post_type.'_structure']));
+				if( strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
+
+					$structure = trim(esc_attr($_POST[$post_type.'_structure']));#get setting
+					
+					#default permalink structure
+					if( !$structure ) {
+						$structure = '/%year%/%monthnum%/%day%/%post_id%/';
+					}
+					$structure = str_replace('//','/','/'.$structure);# first "/"
+					
+					#last "/"
+					$lastString = substr(trim(esc_attr($_POST['permalink_structure'])),-1);
+					$structure = rtrim($structure,'/');
+					if ( $lastString == '/') {
+						$structure = $structure.'/';
+					}
+
+					update_option($post_type.'_structure', $structure );					
+				}
+
 			}
 
 	 		add_settings_field($post_type.'_structure',
@@ -342,7 +361,10 @@ class Custom_Post_Type_Permalinks_Admin {
 	function setting_section_callback_function() {
 		?>
 			<p><?php _e("Setting permalinks of custom post type.",'cptp');?><br />
-			<?php _e("The tags you can use is '%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%','%author%','%category%','%tag%' and '%{custom_taxonomy_slug}%(Replace the taxomomy term)'.",'cptp');?><br />
+			<?php _e("The tags you can use is WordPress Structure Tags and '%{custom_taxonomy_slug}%'.",'cptp');?><br />
+			<?php _e("%{custom_taxonomy_slug}% is replaced the taxonomy's term.'.",'cptp');?></p>
+			
+			<p><?php _e("Presence of the trailing '/' is unified into a standard permalink structure setting.",'cptp');?><br />
 			<?php _e("If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/.",'cptp');?>
 			</p>
 		<?php
@@ -354,7 +376,7 @@ class Custom_Post_Type_Permalinks_Admin {
 		if( !$slug ) {
 			$slug = $post_type;
 		}
-		echo '/'.$slug.'<input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . get_option($option) .'" />';
+		echo '/'.$slug.' <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . get_option($option) .'" />';
 	}
 }
 

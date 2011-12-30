@@ -30,6 +30,8 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
+=0.7.2.2=
+* Changed part for saving the data.
 
 =0.7.2=
 * Reweite bug fix.

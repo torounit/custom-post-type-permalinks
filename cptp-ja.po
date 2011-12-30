@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Custom Post Type Permalinks 0.7.0 Ja\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-21 11:00+0900\n"
-"PO-Revision-Date: 2011-12-30 07:27+0900\n"
+"PO-Revision-Date: 2011-12-30 10:57+0900\n"
 "Last-Translator: Toro_Unit <mail@torounit.com>\n"
 "Language-Team: Toro_Unit <mail@torounit.com>\n"
 "MIME-Version: 1.0\n"
@@ -30,9 +30,15 @@ msgstr "カスタム投稿タイプのパーマリンク設定"
 msgid "Setting permalinks of custom post type."
 msgstr "カスタム投稿タイプごとのパーマリンク構造を設定できます。"
 
-msgid "The tags you can use is '%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%','%author%','%category%','%tag%' and '%{custom_taxonomy_slug}%(Replace the taxomomy term)'."
-msgstr "使用できるタグは、'%year%','%monthnum%','%day%','%hour%','%minute%','%second%','%postname%','%post_id%','%author%','%category%','%tag%'、そして、'%{カスタム分類名}%'(その分類のタームに置換されます)です。"
+msgid "The tags you can use is WordPress Structure Tags and '%{custom_taxonomy_slug}%'."
+msgstr "使用できるタグは、WordPress標準のタグと '%{カスタム分類名}%' です。"
+
+msgid "%{custom_taxonomy_slug}% is replaced the taxonomy's term.'."
+msgstr "'%{カスタム分類名}%' は、そのカスタム分類のタームに置換されます。"
+
+msgid "Presence of the trailing '/' is unified into a standard permalink structure setting."
+msgstr "末尾の '/' の有無は、標準のパーマリンク構造の設定に統一されます。"
 
 msgid "If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/."
-msgstr "未入力のときは、/%year%/%monthnum%/%day%/%post_id%/に設定されます。"
+msgstr "未入力のときは、/%year%/%monthnum%/%day%/%post_id%/ に設定されます。"
 
