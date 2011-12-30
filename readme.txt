@@ -3,7 +3,7 @@ Contributors: Toro_Unit
 Tags: custom post type,permalink
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 0.7.2.2
+Stable tag: 0.7.3
 
 Lets you edit the permalink of custom post type.
 
@@ -30,7 +30,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
-=0.7.2.2=
+=0.7.3=
 * Changed part for saving the data.
 
 =0.7.2=
