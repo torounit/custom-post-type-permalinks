@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Custom Post Type Permalinks 0.7.0 Ja\n"
+"Project-Id-Version: Custom Post Type Permalinks 0.7.3 Ja\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-21 11:00+0900\n"
-"PO-Revision-Date: 2011-12-30 10:57+0900\n"
+"PO-Revision-Date: 2012-01-06 23:08+0900\n"
 "Last-Translator: Toro_Unit <mail@torounit.com>\n"
 "Language-Team: Toro_Unit <mail@torounit.com>\n"
 "MIME-Version: 1.0\n"
