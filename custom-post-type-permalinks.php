@@ -227,24 +227,20 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 
-	public $post_type_archives;
-
+	public $get_archives_where_r;
 	function get_archives_where( $where, $r ) {
+		$this->get_archives_where_r = $r;
 		if ( isset($r['post_type']) ) {
-			$this->post_type_archives = $r['post_type'];
-
 			$where = str_replace( '\'post\'', '\'' . $r['post_type'] . '\'', $where );
-		}else {
-			$this->post_type_archives = '';
 		}
 		return $where;
 	}
 
 	function get_archives_link( $link_html ) {
-		if ( '' != $this->post_type_archives ){
+		if (isset($this->get_archives_where_r['post_type'])  and  $this->get_archives_where_r['type'] != 'postbypost'){
 			$blog_url = get_bloginfo("url");
 			$blog_url = rtrim($blog_url,"/");
-			$link_html = str_replace($blog_url,$blog_url.'/'.$this->post_type_archives.'/date',$link_html);
+			$link_html = str_replace($blog_url,$blog_url.'/'.$this->get_archives_where_r['post_type'].'/date',$link_html);
 		}
 
 		return $link_html;
@@ -287,12 +283,11 @@ class Custom_Post_Type_Permalinks {
 			return $termlink;
 		}
 		$wp_home = get_option('home');
-		$wp_home = $wp_home.'/';
-		$wp_home = str_replace('//','/',$wp_home);
-		$wp_home = str_replace(':/', '://', $wp_home);
+		$wp_home = rtrim($wp_home,'/');
+
 		$post_type = $taxonomy->object_type[0];
 		$slug = get_post_type_object($post_type)->rewrite['slug'];
-		return str_replace($wp_home,$wp_home.$slug.'/',$termlink);
+		return str_replace($wp_home,$wp_home.'/'.$slug,$termlink);
 	}
 
 	static function uninstall_hook_custom_permalink () {
