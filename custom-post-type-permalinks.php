@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.7.4.2
+Version: 0.7.5
 Text Domain: cptp
 Domain Path: /
 */
@@ -33,6 +33,8 @@ Domain Path: /
 
 
 class Custom_Post_Type_Permalinks {
+
+	static public $default_structure = '/%year%/%monthnum%/%day%/%post_id%/';
 
 	function  __construct () {
 		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
@@ -119,7 +121,7 @@ class Custom_Post_Type_Permalinks {
 			$permalink = get_option( $post_type.'_structure' );
 
 			if( !$permalink )
-				$permalink = '/%year%/%monthnum%/%day%/%post_id%/';
+				$permalink = self::$default_structure;
 
 			$permalink = str_replace( '%postname%', '%'.$post_type.'%', $permalink );
 			$permalink = str_replace( '%post_id%', '%'.$post_type.'_id%', $permalink );
@@ -195,16 +197,18 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( "%second%", date("s",$post_date), $permalink );
 
 		$permalink = str_replace('//', "/", $permalink );
+
+
 		$permalink = home_url( user_trailingslashit( $permalink ) );
+		$str = rtrim( preg_replace("/%[a-z]*%/","",get_option("permalink_structure")) ,'/');
+		$permalink = str_replace($str, "", $permalink );
 
 		return $permalink;
 	}
 
 	/**
 	 *wp_get_archives fix for custom post
-	 *
-	 *How To Use:
-	 *	wp_get_archives('&post_type='.get_query_var( 'post_type' ));
+	 *Ex:wp_get_archives('&post_type='.get_query_var( 'post_type' ));
 	 */
 
 	public $get_archives_where_r;
@@ -232,7 +236,6 @@ class Custom_Post_Type_Permalinks {
 	/**
 	 * fix permalink custom taxonomy
 	 */
-
 	function add_tax_rewrite() {
 
 		if(get_option('no_taxonomy_structure'))
@@ -272,7 +275,10 @@ class Custom_Post_Type_Permalinks {
 
 		$post_type = $taxonomy->object_type[0];
 		$slug = get_post_type_object($post_type)->rewrite['slug'];
-		return str_replace( $wp_home, $wp_home.'/'.$slug, $termlink );
+		$permalink = str_replace( $wp_home, $wp_home.'/'.$slug, $termlink );
+		$str = rtrim( preg_replace("/%[a-z]*%/","",get_option("permalink_structure")) ,'/');
+		return str_replace($str, "", $permalink );
+
 	}
 }
 
@@ -304,7 +310,7 @@ class Custom_Post_Type_Permalinks_Admin {
 
 					#default permalink structure
 					if( !$structure )
-						$structure = '/%year%/%monthnum%/%day%/%post_id%/';
+						$structure = Custom_Post_Type_Permalinks::$default_structure;
 
 					$structure = str_replace('//','/','/'.$structure);# first "/"
 
