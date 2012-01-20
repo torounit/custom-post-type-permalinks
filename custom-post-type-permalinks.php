@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.7.5
+Version: 0.7.5.1
 Text Domain: cptp
 Domain Path: /
 */
@@ -298,7 +298,6 @@ class Custom_Post_Type_Permalinks_Admin {
 	function  __construct () {
 		add_action('init', array(&$this,'load_textdomain'));
 		add_action('admin_init', array(&$this,'settings_api_init'),10);
-		add_action('admin_init', array(&$this,'set_rules'),50);
 	}
 
  	function load_textdomain() {
@@ -357,13 +356,17 @@ class Custom_Post_Type_Permalinks_Admin {
 		);
 
 		register_setting('permalink','no_taxonomy_structure');
+
 		if(isset($_POST['submit']) && strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
+
 			if(!isset($_POST['no_taxonomy_structure'])){
 				$set = true;
 			}else {
 				$set = false;
 			}
 			update_option('no_taxonomy_structure', $set);
+
+			$this->set_rules();
 		}
 	}
 
@@ -373,6 +376,7 @@ class Custom_Post_Type_Permalinks_Admin {
 	}
 
 	function setting_section_callback_function() {
+
 		?>
 			<p><?php _e("Setting permalinks of custom post type.",'cptp');?><br />
 			<?php _e("The tags you can use is WordPress Structure Tags and '%{custom_taxonomy_slug}%'.",'cptp');?><br />
