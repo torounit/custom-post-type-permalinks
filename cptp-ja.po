@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Custom Post Type Permalinks 0.7.3 Ja\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-21 11:00+0900\n"
-"PO-Revision-Date: 2012-01-06 23:08+0900\n"
+"PO-Revision-Date: 2012-01-18 15:37+0900\n"
 "Last-Translator: Toro_Unit <mail@torounit.com>\n"
 "Language-Team: Toro_Unit <mail@torounit.com>\n"
 "MIME-Version: 1.0\n"
@@ -41,4 +41,10 @@ msgstr "末尾の '/' の有無は、標準のパーマリンク構造の設定�
 
 msgid "If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/."
 msgstr "未入力のときは、/%year%/%monthnum%/%day%/%post_id%/ に設定されます。"
+
+msgid "Use custom permalink of custom taxonomy archive."
+msgstr "カスタム分類のアーカイブを変更する。"
+
+msgid "If you check,The custom taxonomy's permalinks is example.com/post_type/taxonomy/term."
+msgstr "チェックした場合、カスタム分類のアーカイブのパーマリンクは example.com/post_type/taxonomy/term. に変更されます。"
 
