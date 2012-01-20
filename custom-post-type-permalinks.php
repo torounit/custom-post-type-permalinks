@@ -252,8 +252,16 @@ class Custom_Post_Type_Permalinks {
 			foreach ($post_types as $post_type):
 				$slug = get_post_type_object($post_type)->rewrite["slug"];
 				//add taxonomy slug
-				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/?$', 'index.php?taxonomy='.$taxonomy.'&term=$matches[1]', 'top' );
-				add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/?$', 'index.php?taxonomy='.$taxonomy.'&term=$matches[1]', 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/?$', 'index.php?'.$taxonomy.'=$matches[1]', 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy.'=$matches[1]&paged=$matches[2]', 'top' );
+
+				add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/?$', 'index.php?'.$taxonomy.'=$matches[1]', 'top' );
+				add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
+				add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
+				add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy.'=$matches[1]&paged=$matches[2]', 'top' );
+
 			endforeach;
 
 		endforeach;
@@ -275,9 +283,12 @@ class Custom_Post_Type_Permalinks {
 
 		$post_type = $taxonomy->object_type[0];
 		$slug = get_post_type_object($post_type)->rewrite['slug'];
-		$permalink = str_replace( $wp_home, $wp_home.'/'.$slug, $termlink );
+
+
+		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+		$termlink = str_replace( $wp_home, $wp_home.'/'.$slug, $termlink );
 		$str = rtrim( preg_replace("/%[a-z]*%/","",get_option("permalink_structure")) ,'/');
-		return str_replace($str, "", $permalink );
+		return str_replace($str, "", $termlink );
 
 	}
 }
