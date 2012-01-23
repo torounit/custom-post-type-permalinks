@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.7.5.1
+Version: 0.7.5.2
 Text Domain: cptp
 Domain Path: /
 */
@@ -14,19 +14,19 @@ Domain Path: /
 
 /*  Copyright 2011 Toro_Unit (email : mail@torounit.com)
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 /* This plugin don't support Multisite yet.*/
@@ -37,14 +37,14 @@ class Custom_Post_Type_Permalinks {
 	static public $default_structure = '/%year%/%monthnum%/%day%/%post_id%/';
 
 	function  __construct () {
-		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
-		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
+		add_action('admin_init',array(&$this,'set_archive_rewrite'),99);
+		add_action('admin_init', array(&$this,'set_rewrite'),100);
 		add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
 
 		add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
 		add_filter('get_archives_link', array(&$this,'get_archives_link'));
 
-		add_action('wp_loaded', array(&$this,'add_tax_rewrite'));
+		add_action('admin_init', array(&$this,'add_tax_rewrite'));
 		add_filter('term_link', array(&$this,'set_term_link'),10,3);
 	}
 
@@ -79,37 +79,37 @@ class Custom_Post_Type_Permalinks {
 			$permalink = get_option( $post_type.'_structure' );
 			$slug = get_post_type_object($post_type)->rewrite['slug'];
 
-			if( $slug ){
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&paged=$matches[2]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/date/([0-9]{4})/?$', 'index.php?year=$matches[1]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/author/([^/]+)/?$', 'index.php?author=$matches[1]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/?$', 'index.php?post_type='.$post_type, 'top' );
-			}
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&paged=$matches[2]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/date/([0-9]{4})/?$', 'index.php?year=$matches[1]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/author/([^/]+)/?$', 'index.php?author=$matches[1]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/?$', 'index.php?post_type='.$post_type, 'top' );
 
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&paged=$matches[2]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/?$', 'index.php?year=$matches[1]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/date/([0-9]{4})/?$', 'index.php?author=$matches[1]&post_type='.$post_type, 'top' );
-			add_rewrite_rule( $post_type.'/?$', 'index.php?post_type='.$post_type, 'top' );
+			if( $slug != $post_type ){
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&feed=$matches[3]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&paged=$matches[3]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&paged=$matches[2]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/?$', 'index.php?year=$matches[1]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/date/([0-9]{4})/?$', 'index.php?author=$matches[1]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $post_type.'/?$', 'index.php?post_type='.$post_type, 'top' );
+			}
 		endforeach;
 	}
 
@@ -148,6 +148,10 @@ class Custom_Post_Type_Permalinks {
 		endforeach;
 
 		$wp_rewrite->use_verbose_page_rules = true;
+		if(isset($_POST['submit']) && strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
+			global $wp_rewrite;
+			$wp_rewrite->flush_rules();
+		}
 	}
 
 	function set_permalink( $post_link, $post,$leavename ) {
@@ -200,7 +204,7 @@ class Custom_Post_Type_Permalinks {
 
 
 		$permalink = home_url( user_trailingslashit( $permalink ) );
-		$str = rtrim( preg_replace("/%[a-z]*%/","",get_option("permalink_structure")) ,'/');
+		$str = rtrim( preg_replace("/%[a-z,_]*%/","",get_option("permalink_structure")) ,'/');
 		$permalink = str_replace($str, "", $permalink );
 
 		return $permalink;
@@ -224,10 +228,16 @@ class Custom_Post_Type_Permalinks {
 
 	function get_archives_link( $link_html ) {
 
+		//$slug = get_post_type_object($this->get_archives_where_r['post_type'])->rewrite['slug'];
+
 		if (isset($this->get_archives_where_r['post_type'])  and  $this->get_archives_where_r['type'] != 'postbypost'){
 			$blog_url = get_bloginfo("url");
-			$blog_url = rtrim($blog_url,"/");
-			$link_html = str_replace($blog_url,$blog_url.'/'.$this->get_archives_where_r['post_type'].'/date',$link_html);
+			if($str = rtrim( preg_replace("/%[a-z,_]*%/","",get_option("permalink_structure")) ,'/')) {
+				$link_html = str_replace($str, '/'.$this->get_archives_where_r['post_type'], $link_html);
+			}else{
+				$blog_url = rtrim($blog_url,"/");
+				$link_html = str_replace($blog_url,$blog_url.'/'.$this->get_archives_where_r['post_type'].'/date',$link_html);
+			}
 		}
 
 		return $link_html;
@@ -297,15 +307,16 @@ class Custom_Post_Type_Permalinks_Admin {
 
 	function  __construct () {
 		add_action('init', array(&$this,'load_textdomain'));
-		add_action('admin_init', array(&$this,'settings_api_init'),10);
+		add_action('admin_init', array(&$this,'settings_api_init'),30);
+		//add_action('admin_init', array(&$this,'set_rules'),50);
 	}
 
- 	function load_textdomain() {
+	function load_textdomain() {
 		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks');
 	}
 
 	function settings_api_init() {
-	 	add_settings_section('cptp_setting_section',
+		add_settings_section('cptp_setting_section',
 			__("Permalink Setting for custom post type",'cptp'),
 			array(&$this,'setting_section_callback_function'),
 			'permalink'
@@ -336,7 +347,7 @@ class Custom_Post_Type_Permalinks_Admin {
 
 			}
 
-	 		add_settings_field($post_type.'_structure',
+			add_settings_field($post_type.'_structure',
 				$post_type,
 				array(&$this,'setting_structure_callback_function'),
 				'permalink',
@@ -344,7 +355,7 @@ class Custom_Post_Type_Permalinks_Admin {
 				$post_type.'_structure'
 			);
 
-		 	register_setting('permalink',$post_type.'_structure');
+			register_setting('permalink',$post_type.'_structure');
 		endforeach;
 
 		add_settings_field(
@@ -366,13 +377,16 @@ class Custom_Post_Type_Permalinks_Admin {
 			}
 			update_option('no_taxonomy_structure', $set);
 
-			$this->set_rules();
 		}
+
 	}
 
 	function set_rules() {
+
 		global $wp_rewrite;
-		$wp_rewrite->flush_rules();
+		if( strpos($_SERVER["REQUEST_URI"],'options-permalink.php') !== FALSE  ) {
+			$wp_rewrite->flush_rules();
+		}
 	}
 
 	function setting_section_callback_function() {
@@ -386,9 +400,12 @@ class Custom_Post_Type_Permalinks_Admin {
 			<?php _e("If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/.",'cptp');?>
 			</p>
 		<?php
+
+
 	}
 
 	function setting_structure_callback_function(  $option  ) {
+
 		$post_type = str_replace('_structure',"" ,$option);
 		$slug = get_post_type_object($post_type)->rewrite['slug'];
 		if( !$slug )
@@ -398,10 +415,12 @@ class Custom_Post_Type_Permalinks_Admin {
 	}
 
 	function setting_no_tax_structure_callback_function(){
+
 		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, get_option('no_taxonomy_structure'),false) . ' />　';
 		_e("If you check,The custom taxonomy's permalinks is example.com/post_type/taxonomy/term.","cptp");
 	}
 }
+
 
 
 if(get_option("permalink_structure") != "")
