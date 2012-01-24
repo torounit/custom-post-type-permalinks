@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.7.5.2
+Version: 0.7.5.5
 Text Domain: cptp
 Domain Path: /
 */
@@ -37,15 +37,17 @@ class Custom_Post_Type_Permalinks {
 	static public $default_structure = '/%year%/%monthnum%/%day%/%post_id%/';
 
 	function  __construct () {
-		add_action('admin_init',array(&$this,'set_archive_rewrite'),99);
-		add_action('admin_init', array(&$this,'set_rewrite'),100);
-		add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
+		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
+		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
+		add_action('wp_loaded', array(&$this,'add_tax_rewrite'));
 
-		add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
-		add_filter('get_archives_link', array(&$this,'get_archives_link'));
+		if(get_option("permalink_structure") != "") {
+			add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
 
-		add_action('admin_init', array(&$this,'add_tax_rewrite'));
-		add_filter('term_link', array(&$this,'set_term_link'),10,3);
+			add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
+			add_filter('get_archives_link', array(&$this,'get_archives_link'));
+			add_filter('term_link', array(&$this,'set_term_link'),10,3);
+		}
 	}
 
 	function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
@@ -148,10 +150,7 @@ class Custom_Post_Type_Permalinks {
 		endforeach;
 
 		$wp_rewrite->use_verbose_page_rules = true;
-		if(isset($_POST['submit']) && strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
-			global $wp_rewrite;
-			$wp_rewrite->flush_rules();
-		}
+
 	}
 
 	function set_permalink( $post_link, $post,$leavename ) {
@@ -267,10 +266,12 @@ class Custom_Post_Type_Permalinks {
 				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
 				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy.'=$matches[1]&paged=$matches[2]', 'top' );
 
-				add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/?$', 'index.php?'.$taxonomy.'=$matches[1]', 'top' );
-				add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
-				add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
-				add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy.'=$matches[1]&paged=$matches[2]', 'top' );
+				if( $slug != $post_type ){
+					add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/?$', 'index.php?'.$taxonomy.'=$matches[1]', 'top' );
+					add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
+					add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
+					add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy.'=$matches[1]&paged=$matches[2]', 'top' );
+				}
 
 			endforeach;
 
@@ -308,7 +309,6 @@ class Custom_Post_Type_Permalinks_Admin {
 	function  __construct () {
 		add_action('init', array(&$this,'load_textdomain'));
 		add_action('admin_init', array(&$this,'settings_api_init'),30);
-		//add_action('admin_init', array(&$this,'set_rules'),50);
 	}
 
 	function load_textdomain() {
@@ -381,14 +381,6 @@ class Custom_Post_Type_Permalinks_Admin {
 
 	}
 
-	function set_rules() {
-
-		global $wp_rewrite;
-		if( strpos($_SERVER["REQUEST_URI"],'options-permalink.php') !== FALSE  ) {
-			$wp_rewrite->flush_rules();
-		}
-	}
-
 	function setting_section_callback_function() {
 
 		?>
@@ -423,7 +415,7 @@ class Custom_Post_Type_Permalinks_Admin {
 
 
 
-if(get_option("permalink_structure") != "")
-	new Custom_Post_Type_Permalinks;
+
+new Custom_Post_Type_Permalinks;
 
 new Custom_Post_Type_Permalinks_Admin;
