@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.7.5.6
+Version: 0.7.6
 Text Domain: cptp
 Domain Path: /
 */
@@ -168,8 +168,21 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( '%'.$post_type.'_id%', $post->ID, $permalink );
 		$permalink = str_replace( '%'.$post_type.'_page%', "", $permalink );
 
-		if( !$leavename )
+		$parentsDirs = "";
+		$postId = $post->ID;
+		while ($parent = get_post($postId)->post_parent) {
+			$parentsDirs = get_post($parent)->post_name."/".$parentsDirs;
+			$postId = $parent;
+		}
+
+		$permalink = str_replace( '%'.$post_type.'%', $parentsDirs.'%'.$post_type.'%', $permalink );
+
+
+		if( !$leavename ){
+
 			$permalink = str_replace( '%'.$post_type.'%', $post->post_name, $permalink );
+		}
+
 
 		$taxonomies = get_taxonomies( array('show_ui' => true),'objects' );
 
@@ -186,7 +199,9 @@ class Custom_Post_Type_Permalinks {
 						$term = $this->get_taxonomy_parents( $parent,$taxonomy, false, '/', true ) . $term;
 				}
 
-				$permalink = str_replace( "%$taxonomy%", $term, $permalink );
+				if(isset($term)) {
+					$permalink = str_replace( "%$taxonomy%", $term, $permalink );
+				}
 			}
 		}
 
@@ -203,10 +218,9 @@ class Custom_Post_Type_Permalinks {
 
 		$permalink = str_replace('//', "/", $permalink );
 
-
-		return $permalink = home_url( user_trailingslashit( $permalink ) );
-		//$str = rtrim( preg_replace("/%[a-z,_]*%/","",get_option("permalink_structure")) ,'/');
-		//$permalink = str_replace($str, "", $permalink );
+		$permalink = home_url( user_trailingslashit( $permalink ) );
+		$str = rtrim( preg_replace("/%[a-z,_]*%/","",get_option("permalink_structure")) ,'/');
+		return $permalink = str_replace($str, "", $permalink );
 
 	}
 
@@ -295,7 +309,7 @@ class Custom_Post_Type_Permalinks {
 
 		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		$termlink = str_replace( $wp_home, $wp_home.'/'.$slug, $termlink );
-		$str = rtrim( preg_replace("/%[a-z]*%/","",get_option("permalink_structure")) ,'/');
+		$str = rtrim( preg_replace("/%[a-z_]*%/","",get_option("permalink_structure")) ,'/');
 		return str_replace($str, "", $termlink );
 
 	}
