@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.7.6
+Version: 0.7.7
 Text Domain: cptp
 Domain Path: /
 */
@@ -143,6 +143,10 @@ class Custom_Post_Type_Permalinks {
 			$wp_rewrite->add_rewrite_tag( '%post_type%', '([^/]+)', 'post_type=' );
 			$wp_rewrite->add_rewrite_tag( '%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=' );
 			$wp_rewrite->add_rewrite_tag( '%'.$post_type.'_page%', '/?([0-9]{1,}?)/?',"page=" );
+			//test
+			if(is_post_type_hierarchical($post_type)) {
+				$wp_rewrite->add_rewrite_tag( '%'.$post_type.'%', '(?:[^/]+/){1}([^/]+)/?','name=' );
+			}
 			$wp_rewrite->add_permastruct( $post_type, $permalink, false );
 
 		endforeach;
@@ -240,19 +244,31 @@ class Custom_Post_Type_Permalinks {
 		return $where;
 	}
 
-	function get_archives_link( $link_html ) {
+	function get_archives_link( $link ) {
 		//$slug = get_post_type_object($this->get_archives_where_r['post_type'])->rewrite['slug'];
 		if (isset($this->get_archives_where_r['post_type'])  and  $this->get_archives_where_r['type'] != 'postbypost'){
 			$blog_url = get_bloginfo("url");
+
+
+			// /archive/%post_id%
 			if($str = rtrim( preg_replace("/%[a-z,_]*%/","",get_option("permalink_structure")) ,'/')) {
-				$link_html = str_replace($str, '/'.$this->get_archives_where_r['post_type'], $link_html);
+				$ret_link = str_replace($str, '/'.'%link_dir%', $link);
 			}else{
 				$blog_url = rtrim($blog_url,"/");
-				$link_html = str_replace($blog_url,$blog_url.'/'.$this->get_archives_where_r['post_type'].'/date',$link_html);
+				$ret_link = str_replace($blog_url,$blog_url.'/'.'%link_dir%',$link);
 			}
+
 		}
 
-		return $link_html;
+		$link_dir = $this->get_archives_where_r['post_type'];
+
+		if(!strstr($link,'/date/')){
+			$link_dir = $link_dir .'/date';
+		}
+
+		$ret_link = str_replace('%link_dir%',$link_dir,$ret_link);
+
+		return $ret_link;
 	}
 
 	/**
