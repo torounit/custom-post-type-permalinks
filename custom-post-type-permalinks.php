@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.7.7
+Version: 0.7.8
 Text Domain: cptp
 Domain Path: /
 */
@@ -45,7 +45,7 @@ class Custom_Post_Type_Permalinks {
 			add_filter('post_type_link', array(&$this,'set_permalink'),10,3);
 
 			add_filter('getarchives_where', array(&$this,'get_archives_where'), 10, 2);
-			add_filter('get_archives_link', array(&$this,'get_archives_link'));
+			add_filter('get_archives_link', array(&$this,'get_archives_link'),20,1);
 			add_filter('term_link', array(&$this,'set_term_link'),10,3);
 		}
 	}
@@ -244,7 +244,7 @@ class Custom_Post_Type_Permalinks {
 		return $where;
 	}
 
-	function get_archives_link( $link ) {
+	public function get_archives_link( $link ) {
 		//$slug = get_post_type_object($this->get_archives_where_r['post_type'])->rewrite['slug'];
 		if (isset($this->get_archives_where_r['post_type'])  and  $this->get_archives_where_r['type'] != 'postbypost'){
 			$blog_url = get_bloginfo("url");
@@ -257,19 +257,24 @@ class Custom_Post_Type_Permalinks {
 				$blog_url = rtrim($blog_url,"/");
 				$ret_link = str_replace($blog_url,$blog_url.'/'.'%link_dir%',$link);
 			}
+			$link_dir = $this->get_archives_where_r['post_type'];
+
+			if(!strstr($link,'/date/')){
+				$link_dir = $link_dir .'/date';
+			}
+
+			$ret_link = str_replace('%link_dir%',$link_dir,$ret_link);
+
+			return $ret_link;
 
 		}
 
-		$link_dir = $this->get_archives_where_r['post_type'];
+		return $link;
 
-		if(!strstr($link,'/date/')){
-			$link_dir = $link_dir .'/date';
-		}
 
-		$ret_link = str_replace('%link_dir%',$link_dir,$ret_link);
-
-		return $ret_link;
 	}
+
+
 
 	/**
 	 * fix permalink custom taxonomy

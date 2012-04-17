@@ -3,7 +3,7 @@ Contributors: Toro_Unit
 Tags: custom post type,permalink
 Requires at least: 3.2
 Tested up to: 3.3
-Stable tag: 0.7.7
+Stable tag: 0.7.8
 
 Lets you edit the permalink of custom post type.
 
@@ -32,6 +32,8 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
+= 0.7.7 =
+* Bug fix
 
 = 0.7.6 =
 * Add parent's slug to hierarchical post type.
