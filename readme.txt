@@ -1,9 +1,9 @@
 === Custom Post Type Permalinks ===
 Contributors: Toro_Unit
 Tags: custom post type,permalink
-Requires at least: 3.2
+Requires at least: 3.4
 Tested up to: 3.4
-Stable tag: 0.7.8
+Stable tag: 0.7.9
 
 Lets you edit the permalink of custom post type.
 
@@ -32,8 +32,18 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
+= 0.7.9 =
+* Support Comment permalink.
+* Small change in setting page.
+* Change default value.
+* Bug Fix.
+
+= 0.7.8 =
+* Bug fix.
+
+
 = 0.7.7 =
-* Bug fix
+* Bug fix.
 
 = 0.7.6 =
 * Add parent's slug to hierarchical post type.

@@ -1,50 +1,54 @@
-# LANGUAGE (LOCALE) translation for Custom Post Type Permalinks.
-# Copyright (C) 2011 Toro_Unit.
-# This file is distributed under the same license as the WordPress package.
-# FIRST AUTHOR <mail@torounit.com>, YEAR.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: Custom Post Type Permalinks 0.7.3 Ja\n"
+"Project-Id-Version: Custom Post Type Permalinks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-21 11:00+0900\n"
-"PO-Revision-Date: 2012-01-18 15:37+0900\n"
+"POT-Creation-Date: 2012-07-27 22:35+0900\n"
+"PO-Revision-Date: 2012-07-27 22:35+0900\n"
 "Last-Translator: Toro_Unit <mail@torounit.com>\n"
 "Language-Team: Toro_Unit <mail@torounit.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;__\n"
+"X-Poedit-Basepath: C:\\Users\\Toro-Unit\\Documents\\Develop\\custom-post-type-permalinks\\wp-content\\plugins\\\n"
 "X-Poedit-Language: Japanese\n"
 "X-Poedit-Country: JAPAN\n"
+"X-Poedit-SearchPath-0: custom-post-type-permalinks\n"
 
-msgid "Add post archives of custom post type and customizable permalinks."
-msgstr "カスタム投稿タイプのアーカイブの追加と、パーマリンクをカスタマイズできるようにします。"
+#: custom-post-type-permalinks/custom-post-type-permalinks.php:75
+#, php-format
+msgid "View all posts in %s"
+msgstr ""
 
-msgid "Permalinks of Custom post type"
-msgstr "カスタム投稿タイプのパーマリンク"
-
+#: custom-post-type-permalinks/custom-post-type-permalinks.php:401
 msgid "Permalink Setting for custom post type"
-msgstr "カスタム投稿タイプのパーマリンク設定"
+msgstr "カスタム投稿タイプのパーマリンクの設定"
 
+#: custom-post-type-permalinks/custom-post-type-permalinks.php:443
+msgid "Use custom permalink of custom taxonomy archive."
+msgstr "カスタム分類のアーカイブのパーマリンクを変更する。"
+
+#: custom-post-type-permalinks/custom-post-type-permalinks.php:464
 msgid "Setting permalinks of custom post type."
 msgstr "カスタム投稿タイプごとのパーマリンク構造を設定できます。"
 
-msgid "The tags you can use is WordPress Structure Tags and '%{custom_taxonomy_slug}%'."
-msgstr "使用できるタグは、WordPress標準のタグと '%{カスタム分類名}%' です。"
+#: custom-post-type-permalinks/custom-post-type-permalinks.php:465
+msgid "The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug\"%'. (e.g. %actors%)"
+msgstr "使用できるタグは、WordPress標準のタグと '%\"カスタム分類名\"%' です。 (例： %actors%)"
 
-msgid "%{custom_taxonomy_slug}% is replaced the taxonomy's term.'."
-msgstr "'%{カスタム分類名}%' は、そのカスタム分類のタームに置換されます。"
+#: custom-post-type-permalinks/custom-post-type-permalinks.php:466
+msgid "%\"custom_taxonomy_slug\"% is replaced the taxonomy's term.'."
+msgstr "'%\"カスタム分類名\"%' は、そのカスタム分類のタームに置換されます。"
 
+#: custom-post-type-permalinks/custom-post-type-permalinks.php:468
 msgid "Presence of the trailing '/' is unified into a standard permalink structure setting."
 msgstr "末尾の '/' の有無は、標準のパーマリンク構造の設定に統一されます。"
 
-msgid "If you don't entered permalink structure, permalink is configured /%year%/%monthnum%/%day%/%post_id%/."
-msgstr "未入力のときは、/%year%/%monthnum%/%day%/%post_id%/ に設定されます。"
+#: custom-post-type-permalinks/custom-post-type-permalinks.php:469
+msgid "If you don't entered permalink structure, permalink is configured /%postname%/'."
+msgstr "未入力のときは、/%postname%/ に設定されます。"
 
-msgid "Use custom permalink of custom taxonomy archive."
-msgstr "カスタム分類のアーカイブを変更する。"
-
+#: custom-post-type-permalinks/custom-post-type-permalinks.php:485
 msgid "If you check,The custom taxonomy's permalinks is example.com/post_type/taxonomy/term."
 msgstr "チェックした場合、カスタム分類のアーカイブのパーマリンクは example.com/post_type/taxonomy/term. に変更されます。"
 
