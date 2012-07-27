@@ -175,9 +175,7 @@ class Custom_Post_Type_Permalinks {
 
 		$permalink = str_replace( '%'.$post_type.'%', $parentsDirs.'%'.$post_type.'%', $permalink );
 
-
 		if( !$leavename ){
-
 			$permalink = str_replace( '%'.$post_type.'%', $post->post_name, $permalink );
 		}
 
@@ -260,12 +258,9 @@ class Custom_Post_Type_Permalinks {
 			$ret_link = str_replace('%link_dir%',$link_dir,$ret_link);
 
 			return $ret_link;
-
 		}
 
 		return $link;
-
-
 	}
 
 
@@ -286,19 +281,21 @@ class Custom_Post_Type_Permalinks {
 			$post_types = get_taxonomy($taxonomy)->object_type;
 
 			foreach ($post_types as $post_type):
-				$slug = get_post_type_object($post_type)->rewrite["slug"];
+				$post_type_obj = get_post_type_object($post_type);
+				$slug = $post_type_obj->rewrite['slug'];
+				if(!$slug) {
+					$slug = $post_type;
+				}
+
+				if(is_string($post_type_obj->has_archive)){
+					$slug = $post_type_obj->has_archive;
+				};
+
 				//add taxonomy slug
-				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/?$', 'index.php?'.$taxonomy.'=$matches[1]', 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy.'=$matches[1]&paged=$matches[2]', 'top' );
 				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
 				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy.'=$matches[1]&paged=$matches[2]', 'top' );
-
-				if( $slug != $post_type ){
-					add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/?$', 'index.php?'.$taxonomy.'=$matches[1]', 'top' );
-					add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
-					add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy.'=$matches[1]&feed=$matches[2]', 'top' );
-					add_rewrite_rule( $post_type.'/'.$taxonomy.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy.'=$matches[1]&paged=$matches[2]', 'top' );
-				}
+				add_rewrite_rule( $slug.'/'.$taxonomy.'/(.+?)/?$', 'index.php?'.$taxonomy.'=$matches[1]', 'top' );
 
 			endforeach;
 
@@ -347,11 +344,10 @@ class Custom_Post_Type_Permalinks_Admin {
 		$type_count = count($post_types);
 		$i = 0;
 		foreach ($post_types as $post_type):
-			$i++;
-			if( $i >= $type_count ){
-				add_action('update_option_'.$post_type.'_structure',array(&$this,'flush_rules'),10,2);
-			}
+			add_action('update_option_'.$post_type.'_structure',array(&$this,'flush_rules'),10,2);
 		endforeach;
+		add_action('update_option_no_taxonomy_structure',array(&$this,'flush_rules'),10,2);
+
 
 	}
 
