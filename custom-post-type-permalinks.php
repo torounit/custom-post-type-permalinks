@@ -152,13 +152,8 @@ class Custom_Post_Type_Permalinks {
 			$wp_rewrite->add_rewrite_tag( '%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=' );
 			$wp_rewrite->add_rewrite_tag( '%'.$post_type.'_page%', '([0-9]{1,}?)',"page=" );
 
-			//test
-			if( is_post_type_hierarchical($post_type) ) {
-				$wp_rewrite->add_rewrite_tag( '%'.$post_type.'%', '(?:[^/]+/){1}([^/]+)/?','name=' );
-			}
-			//$wp_rewrite->add_permastruct( $post_type, $permalink, false );
 			$wp_rewrite->generate_rewrite_rules( $permalink, EP_NONE, true, true, true,true);
-
+			//$wp_rewrite->add_permastruct( $post_type, $permalink, false );
 		endforeach;
 
 		$taxonomies = get_taxonomies( array("show_ui" => true, "_builtin" => false), 'objects' );
