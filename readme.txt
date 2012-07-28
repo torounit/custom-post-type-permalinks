@@ -3,7 +3,7 @@ Contributors: Toro_Unit
 Tags: custom post type,permalink
 Requires at least: 3.4
 Tested up to: 3.4
-Stable tag: 0.7.9.1
+Stable tag: 0.7.9.2
 
 Lets you edit the permalink of custom post type.
 
