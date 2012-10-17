@@ -281,7 +281,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 * get_archive_join
 	 * @author Steve
-	 * @since 0.7.10
+	 * @since 0.8
 	 * @version 1.0
 	 *
 	 *
