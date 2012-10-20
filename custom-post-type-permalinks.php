@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.8.1
+Version: 0.8.4
 Text Domain: cptp
 Domain Path: /
 */
@@ -139,7 +139,7 @@ class Custom_Post_Type_Permalinks {
 	/**
 	 *
 	 * Add Rewrite rule for single posts.
-	 * @version 1.5
+	 * @version 2.0
 	 *
 	 */
 	public function set_rewrite() {
@@ -168,8 +168,18 @@ class Custom_Post_Type_Permalinks {
 			$wp_rewrite->add_rewrite_tag( '%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=' );
 			$wp_rewrite->add_rewrite_tag( '%'.$post_type.'_page%', '([0-9]{1,}?)',"page=" );
 
-			$wp_rewrite->generate_rewrite_rules( $permalink, EP_NONE, true, true, true,true);
-			$wp_rewrite->add_permastruct( $post_type, $permalink, false );
+			$param = array(
+				'with_front' => false,
+				'ep_mask' => EP_ALL,
+				'paged' => true,
+				'feed' => true,
+				'forcomments' => true,
+				'walk_dirs' => true,
+				'endpoints' => true,
+			);
+
+			//$wp_rewrite->generate_rewrite_rules( $permalink, EP_NONE, true, true, true,true);
+			$wp_rewrite->add_permastruct( $post_type, $permalink, $param );
 		endforeach;
 
 		$taxonomies = get_taxonomies( array("show_ui" => true, "_builtin" => false), 'objects' );
@@ -183,10 +193,15 @@ class Custom_Post_Type_Permalinks {
 	/**
 	 *
 	 * Fix permalinks output.
-	 * @version 1.0
+	 *
+	 * @param String $post_link　
+	 * @param Object $post　投稿情報
+	 * @param String $leavename 記事編集画面でのみ渡される
+	 *
+	 * @version 1.2
 	 *
 	 */
-	public function set_permalink( $post_link, $post,$leavename ) {
+	public function set_permalink( $post_link, $post, $leavename ) {
 		global $wp_rewrite;
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if( $draft_or_pending and !$leavename )
@@ -201,10 +216,12 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( '%'.$post_type.'_cpage%', "", $permalink );
 
 		$parentsDirs = "";
-		$postId = $post->ID;
-		while ($parent = get_post($postId)->post_parent) {
-			$parentsDirs = get_post($parent)->post_name."/".$parentsDirs;
-			$postId = $parent;
+		if( !$leavename ){
+			$postId = $post->ID;
+			while ($parent = get_post($postId)->post_parent) {
+				$parentsDirs = get_post($parent)->post_name."/".$parentsDirs;
+				$postId = $parent;
+			}
 		}
 
 		$permalink = str_replace( '%'.$post_type.'%', $parentsDirs.'%'.$post_type.'%', $permalink );
@@ -307,14 +324,15 @@ class Custom_Post_Type_Permalinks {
 		$this->get_archives_where_r['post_type'] = isset($this->get_archives_where_r['post_type_slug']) ? $this->get_archives_where_r['post_type_slug'] : $t; // [steve] [*** bug fixing]
 
 		if (isset($this->get_archives_where_r['post_type'])  and  $this->get_archives_where_r['type'] != 'postbypost'){
-			$blog_url = get_bloginfo("url");
+			$blog_url = rtrim( get_bloginfo("url") ,'/');
 
-			// /archive/%post_id%
-			$str = rtrim( preg_replace("/\.[a-z,_]*/","",get_option("permalink_structure")) ,'');
-			if($str = rtrim( preg_replace("/%[a-z,_]*%/","",$str) ,'/')) {
+			//remove .ext
+			$str = preg_replace("/\.[a-z,_]*/","",get_option("permalink_structure"));
+
+			if($str = rtrim( preg_replace("/%[a-z,_]*%/","",$str) ,'/')) { // /archive/%post_id%
 				$ret_link = str_replace($str, '/'.'%link_dir%', $link);
 			}else{
-				$blog_url = rtrim($blog_url,"/");
+				$blog_url = preg_replace('/https?:\/\//', '', $blog_url);
 				$ret_link = str_replace($blog_url,$blog_url.'/'.'%link_dir%',$link);
 			}
 
@@ -573,3 +591,4 @@ class Custom_Post_Type_Permalinks_Admin {
 
 $custom_post_type_permalinks = new Custom_Post_Type_Permalinks;
 $custom_post_type_permalinks_admin =  new Custom_Post_Type_Permalinks_Admin;
+
