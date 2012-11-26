@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro-Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.8.3
+Version: 0.8.5
 Text Domain: cptp
 Domain Path: /
 */
@@ -47,7 +47,7 @@ class Custom_Post_Type_Permalinks {
 	 * @version 2.0
 	 */
 
-	public function  __construct () {
+	public function  add_hook () {
 		add_action('wp_loaded',array(&$this,'set_archive_rewrite'),99);
 		add_action('wp_loaded', array(&$this,'set_rewrite'),100);
 		add_action('wp_loaded', array(&$this,'add_tax_rewrite'));
@@ -140,6 +140,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 * Add Rewrite rule for single posts.
 	 * @version 2.0
+	 * 
 	 *
 	 */
 	public function set_rewrite() {
@@ -161,12 +162,12 @@ class Custom_Post_Type_Permalinks {
 				$slug = $post_type;
 
 			$permalink = '/'.$slug.'/'.$permalink;
-			//$permalink = $permalink.'/%'.$post_type.'_page%';
+			$permalink = $permalink.'/%'.$post_type.'_page%';
 			$permalink = str_replace( '//', '/', $permalink );
 
 			$wp_rewrite->add_rewrite_tag( '%post_type%', '([^/]+)', 'post_type=' );
 			$wp_rewrite->add_rewrite_tag( '%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=' );
-			//$wp_rewrite->add_rewrite_tag( '%'.$post_type.'_page%', '([0-9]{1,}?)',"page=" );
+			$wp_rewrite->add_rewrite_tag( '%'.$post_type.'_page%', '([0-9]{1,}?)',"page=" );
 
 			$param = array(
 				'with_front' => false,
@@ -454,10 +455,12 @@ class Custom_Post_Type_Permalinks {
 
 class Custom_Post_Type_Permalinks_Admin {
 
-	public function  __construct () {
+	public function  add_hook () {
 		add_action('init', array(&$this,'load_textdomain'));
 		add_action('init', array(&$this, 'update_rules'));
 		add_action('admin_init', array(&$this,'settings_api_init'),30);
+		add_action('admin_enqueue_scripts', array(&$this,'enqueue_css_js'));
+		add_action('admin_footer',array(&$this,'pointer_js'));
 	}
 
 	public function load_textdomain() {
@@ -568,7 +571,7 @@ class Custom_Post_Type_Permalinks_Admin {
 			<?php _e("The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug\"%'. (e.g. %actors%)",'cptp');?><br />
 			<?php _e("%\"custom_taxonomy_slug\"% is replaced the taxonomy's term.'.",'cptp');?></p>
 
-			<p><?php _e("Presence of the trailing '/' is unified into a standard permalink structure setting.",'cptp');?><br />
+			<p><?php _e("Presence of the trailing '/' is unified into a standard permalink structure setting.",'cptp');?>
 			<?php _e("If you don't entered permalink structure, permalink is configured /%postname%/'.",'cptp');?>
 			</p>
 		<?php
@@ -580,15 +583,54 @@ class Custom_Post_Type_Permalinks_Admin {
 		if( !$slug )
 			$slug = $post_type;
 
-		echo '/'.$slug.' <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . get_option($option) .'" />';
+		$value = get_option($option);
+		if( !$value )
+			$value = Custom_Post_Type_Permalinks::$default_structure;
+
+		echo '<code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" />';
 	}
 
 	public function setting_no_tax_structure_callback_function(){
 		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, get_option('no_taxonomy_structure'),false) . ' />　';
-		_e("If you check,The custom taxonomy's permalinks is example.com/post_type/taxonomy/term.","cptp");
+		$txt = __("If you check,The custom taxonomy's permalinks is <code>%s/post_type/taxonomy/term</code>.","cptp");
+		printf($txt , home_url());
+	}
+
+
+	public function enqueue_css_js() {
+		wp_enqueue_style('wp-pointer');
+		wp_enqueue_script('wp-pointer');
+	}
+
+	public function pointer_js() {
+		$dismissed = explode(',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ));
+		if(array_search('cptp_pointer', $dismissed) === false){
+		?>
+			<script type="text/javascript">
+			jQuery(function($) { 
+				$("#menu-settings").pointer({
+					content: "<h3>Custom Post Type Permalinks</h3><p><a href='options-permalink.php'>パーマリンク設定</a>より、カスタム投稿タイプごとのパーマリンクを設定できます。</p>",
+					position: {"edge":"left","align":"center"},
+					close: function() {
+						$.post('admin-ajax.php', {
+							action:'dismiss-wp-pointer',
+							pointer: 'cptp_pointer'
+						})
+
+					}
+				}).pointer("open");
+			});
+			</script>
+		<?php
+		}
 	}
 }
 
 $custom_post_type_permalinks = new Custom_Post_Type_Permalinks;
-$custom_post_type_permalinks_admin =  new Custom_Post_Type_Permalinks_Admin;
+$custom_post_type_permalinks = apply_filters('custom_post_type_permalinks', $custom_post_type_permalinks);
+$custom_post_type_permalinks->add_hook();
 
+$custom_post_type_permalinks_admin =  new Custom_Post_Type_Permalinks_Admin;
+$custom_post_type_permalinks_admin = apply_filters('custom_post_type_permalinks_admin', $custom_post_type_permalinks_admin);
+$custom_post_type_permalinks_admin->add_hook();
+?>
