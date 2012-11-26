@@ -501,7 +501,12 @@ class Custom_Post_Type_Permalinks_Admin {
 	}
 
 
-
+	/**
+	 *
+	 * Setting Init
+	 * @since 0.7
+	 *
+	 */
 	public function settings_api_init() {
 		add_settings_section('cptp_setting_section',
 			__("Permalink Setting for custom post type",'cptp'),
@@ -597,31 +602,47 @@ class Custom_Post_Type_Permalinks_Admin {
 	}
 
 
+	/**
+	 *
+	 * enqueue CSS and JS
+	 * @since 0.8.5
+	 *
+	 */
 	public function enqueue_css_js() {
 		wp_enqueue_style('wp-pointer');
 		wp_enqueue_script('wp-pointer');
 	}
 
-	public function pointer_js() {
-		$dismissed = explode(',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ));
-		if(array_search('cptp_pointer', $dismissed) === false){
-		?>
-			<script type="text/javascript">
-			jQuery(function($) { 
-				$("#menu-settings").pointer({
-					content: "<h3>Custom Post Type Permalinks</h3><p><a href='options-permalink.php'>パーマリンク設定</a>より、カスタム投稿タイプごとのパーマリンクを設定できます。</p>",
-					position: {"edge":"left","align":"center"},
-					close: function() {
-						$.post('admin-ajax.php', {
-							action:'dismiss-wp-pointer',
-							pointer: 'cptp_pointer'
-						})
 
-					}
-				}).pointer("open");
-			});
-			</script>
-		<?php
+	/**
+	 *
+	 * add js for pointer
+	 * @since 0.8.5
+	 */
+	public function pointer_js() {
+		if(!is_network_admin()) {
+			$dismissed = explode(',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ));
+			if(array_search('cptp_pointer085', $dismissed) === false){
+			?>
+				<script type="text/javascript">
+				jQuery(function($) {
+					
+					if (userSetting) {};
+					$("#menu-settings .wp-has-submenu").pointer({
+						content: "<h3>Custom Post Type Permalinks</h3><p><a href='options-permalink.php'>パーマリンク設定</a>より、カスタム投稿タイプごとのパーマリンクを設定できます。</p>",
+						position: {"edge":"left","align":"center"},
+						close: function() {
+							$.post('admin-ajax.php', {
+								action:'dismiss-wp-pointer',
+								pointer: 'cptp_pointer085'
+							})
+
+						}
+					}).pointer("open");
+				});
+				</script>
+			<?php
+			}
 		}
 	}
 }
