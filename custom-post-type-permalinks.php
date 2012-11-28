@@ -162,7 +162,11 @@ class Custom_Post_Type_Permalinks {
 				$slug = $post_type;
 
 			$permalink = '/'.$slug.'/'.$permalink;
-			$permalink = $permalink.'/%'.$post_type.'_page%';
+			
+			if( strpos( $permalink , '%'.$post_type.'%' ) === false ) {
+				$permalink = $permalink.'/%'.$post_type.'_page%';	
+			}
+
 			$permalink = str_replace( '//', '/', $permalink );
 
 			$wp_rewrite->add_rewrite_tag( '%post_type%', '([^/]+)', 'post_type=' );
@@ -627,7 +631,6 @@ class Custom_Post_Type_Permalinks_Admin {
 				<script type="text/javascript">
 				jQuery(function($) {
 					
-					if (userSetting) {};
 					$("#menu-settings .wp-has-submenu").pointer({
 						content: "<h3>Custom Post Type Permalinks</h3><p><a href='options-permalink.php'>パーマリンク設定</a>より、カスタム投稿タイプごとのパーマリンクを設定できます。</p>",
 						position: {"edge":"left","align":"center"},
