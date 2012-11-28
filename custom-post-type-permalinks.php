@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.8.7
+Version: 0.8.7.1
 Text Domain: cptp
 Domain Path: /
 */
@@ -38,7 +38,7 @@ Domain Path: /
  */
 class Custom_Post_Type_Permalinks {
 
-	public $version = "0.8.7";
+	public $version = "0.8.7.1";
 	public $default_structure = '/%postname%/';
 
 	/**
@@ -664,7 +664,7 @@ class Custom_Post_Type_Permalinks {
 	public function pointer_js() {
 		if(!is_network_admin()) {
 			$dismissed = explode(',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ));
-			if(array_search('cptp_pointer.0.8.7', $dismissed) === false){
+			if(array_search('cptp_pointer0871', $dismissed) === false){
 				$content = __("<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>", "cptp");
 			?>
 				<script type="text/javascript">
@@ -676,7 +676,7 @@ class Custom_Post_Type_Permalinks {
 						close: function() {
 							$.post('admin-ajax.php', {
 								action:'dismiss-wp-pointer',
-								pointer: 'cptp_pointer.0.8.7'
+								pointer: 'cptp_pointer0871'
 							})
 
 						}
