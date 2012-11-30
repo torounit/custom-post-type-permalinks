@@ -7,6 +7,7 @@ Author: Toro_Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
 Version: 0.8.7.1
 Text Domain: cptp
+License: GPL2 or later
 Domain Path: /
 */
 
@@ -28,11 +29,11 @@ Domain Path: /
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-/* This plugin don't support Multisite yet.*/
+
 
 /**
  *
- * Custom Permalink Class
+ * Custom Post Type Permalinks
  *
  *
  */
@@ -401,7 +402,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 * Add rewrite rules for custom taxonomies.
 	 * @since 0.6
-	 * @version 2.0
+	 * @version 2.1
 	 *
 	 */
 	public function add_tax_rewrite() {
@@ -419,7 +420,8 @@ class Custom_Post_Type_Permalinks {
 		}
 
 		foreach ($taxonomies as $taxonomy) :
-			$post_types = get_taxonomy($taxonomy)->object_type;
+			$taxonomyObject = get_taxonomy($taxonomy);
+			$post_types = $taxonomyObject->object_type;
 
 			foreach ($post_types as $post_type):
 				$post_type_obj = get_post_type_object($post_type);
@@ -432,13 +434,20 @@ class Custom_Post_Type_Permalinks {
 					$slug = $post_type_obj->has_archive;
 				};
 
-				if($taxonomy == 'category'){
+				if ( $taxonomy == 'category' ){
 					$taxonomypat = ($cb = get_option('category_base')) ? $cb : $taxonomy;
 					$tax = 'category_name';
-				 }else{
-				 	$taxonomypat = $taxonomy;
+				} else {
+					// Edit by [Xiphe]
+				 	if (isset($taxonomyObject->rewrite['slug'])) {
+				 		$taxonomypat = $taxonomyObject->rewrite['slug'];
+				 	} else {
+				 		$taxonomypat = $taxonomy;
+				 	}
+				 	// [Xiphe] stop
+
 				 	$tax = $taxonomy;
-				 }
+				}
 
 
 				//add taxonomy slug
@@ -487,7 +496,7 @@ class Custom_Post_Type_Permalinks {
 
 		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		$termlink = str_replace( $wp_home, $wp_home.'/'.$slug, $termlink );
-		$str = rtrim( preg_replace("/%[a-z_]*%/","",get_option("permalink_structure")) ,'/');
+		$str = rtrim( preg_replace("/%[a-z_]*%/","",get_option("permalink_structure")) ,'/');//remove with front
 		return str_replace($str, "", $termlink );
 
 	}
