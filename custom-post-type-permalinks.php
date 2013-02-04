@@ -56,12 +56,14 @@ class Custom_Post_Type_Permalinks {
 		add_action( 'wp_loaded', array(&$this,'set_rewrite'), 100 );
 		add_action( 'wp_loaded', array(&$this,'add_tax_rewrite') );
 
+
 		if(get_option( "permalink_structure") != "") {
 			add_filter( 'post_type_link', array(&$this,'set_permalink'), 10, 3 );
 			add_filter( 'getarchives_join', array(&$this,'get_archives_join'), 10, 2 ); // [steve]
 			add_filter( 'getarchives_where', array(&$this,'get_archives_where'), 10 , 2 );
 			add_filter( 'get_archives_link', array(&$this,'get_archives_link'), 20, 1 );
 			add_filter( 'term_link', array(&$this,'set_term_link'), 10, 3 );
+			add_filter( 'attachment_link', array(&$this, 'attachment_link'), 20 , 2);
 		}
 
 		add_action( 'init', array(&$this,'load_textdomain') );
@@ -161,7 +163,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 * Add Rewrite rule for single posts.
 	 * @version 2.0
-	 * 
+	 *
 	 *
 	 */
 	public function set_rewrite() {
@@ -172,7 +174,7 @@ class Custom_Post_Type_Permalinks {
 			$permalink = get_option( $post_type.'_structure' );
 
 			if( !$permalink ) {
-				$permalink = $this->default_structure;				
+				$permalink = $this->default_structure;
 			}
 
 			$permalink = str_replace( '%postname%', '%'.$post_type.'%', $permalink );
@@ -181,13 +183,13 @@ class Custom_Post_Type_Permalinks {
 			$slug = get_post_type_object($post_type)->rewrite['slug'];
 
 			if( !$slug ) {
-				$slug = $post_type;				
+				$slug = $post_type;
 			}
 
 			$permalink = '/'.$slug.'/'.$permalink;
-			
+
 			if( strpos( $permalink , '%'.$post_type.'%' ) === false ) {
-				$permalink = $permalink.'/%'.$post_type.'_page%';	
+				$permalink = $permalink.'/%'.$post_type.'_page%';
 			}
 
 			$permalink = str_replace( '//', '/', $permalink );
@@ -219,12 +221,29 @@ class Custom_Post_Type_Permalinks {
 	}
 
 
+	/**
+	 *
+	 * fix attachment output
+	 *
+	 * @version 1
+	 * @since 0.8.2
+	 *
+	 */
+
+
+	public function attachment_link( $link , $postID) {
+		$post = get_post( $postID );
+		$link = str_replace($post->post_name , "attachment/".$post->post_name, $link);
+		return $link;
+	}
+
+
 
 	/**
 	 *
 	 * Fix permalinks output.
 	 *
-	 * @param String $post_link 
+	 * @param String $post_link
 	 * @param Object $post 投稿情報
 	 * @param String $leavename 記事編集画面でのみ渡される
 	 *
@@ -271,7 +290,7 @@ class Custom_Post_Type_Permalinks {
 					$term = $terms[0]->slug;
 
 					if ( $parent = $terms[0]->parent ) {
-						$term = $this->get_taxonomy_parents( $parent,$taxonomy, false, '/', true ) . $term;						
+						$term = $this->get_taxonomy_parents( $parent,$taxonomy, false, '/', true ) . $term;
 					}
 
 				}
@@ -317,7 +336,7 @@ class Custom_Post_Type_Permalinks {
 	public function get_archives_where( $where, $r ) {
 		$this->get_archives_where_r = $r;
 		if ( isset($r['post_type']) ) {
-			$where = str_replace( '\'post\'', '\'' . $r['post_type'] . '\'', $where );			
+			$where = str_replace( '\'post\'', '\'' . $r['post_type'] . '\'', $where );
 		}
 
 		if(isset($r['taxonomy']) && is_array($r['taxonomy']) ){
@@ -407,7 +426,7 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function add_tax_rewrite() {
 		if(get_option('no_taxonomy_structure')) {
-			return false;			
+			return false;
 		}
 
 
@@ -416,7 +435,7 @@ class Custom_Post_Type_Permalinks {
 		$taxonomies['category'] = 'category';
 
 		if(empty($taxonomies)) {
-			return false;			
+			return false;
 		}
 
 		foreach ($taxonomies as $taxonomy) :
@@ -478,7 +497,7 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function set_term_link( $termlink, $term, $taxonomy ) {
 		if( get_option('no_taxonomy_structure') ) {
-			return  $termlink;			
+			return  $termlink;
 		}
 
 		$taxonomy = get_taxonomy($taxonomy);
@@ -678,7 +697,7 @@ class Custom_Post_Type_Permalinks {
 			?>
 				<script type="text/javascript">
 				jQuery(function($) {
-					
+
 					$("#menu-settings .wp-has-submenu").pointer({
 						content: "<?php echo $content;?>",
 						position: {"edge":"left","align":"center"},
