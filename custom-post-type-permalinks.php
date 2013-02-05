@@ -231,9 +231,18 @@ class Custom_Post_Type_Permalinks {
 	 */
 
 
-	public function attachment_link( $link , $postID) {
+	public function attachment_link( $link , $postID ) {
 		$post = get_post( $postID );
-		$link = str_replace($post->post_name , "attachment/".$post->post_name, $link);
+		$post_parent = get_post( $post->post_parent );
+		$permalink = get_option( $post_parent->post_type.'_structure' );
+		$post_type = get_post_type_object( $post_parent->post_type );
+
+		if( $post_type->_builtin == false ) {
+			if(strpos( $permalink, "%postname%" ) < strrpos( $permalink, "%post_id%" )){
+				$link = str_replace($post->post_name , "attachment/".$post->post_name, $link);
+			}
+		}
+
 		return $link;
 	}
 
