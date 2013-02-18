@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.8.7.1
+Version: 0.8.7.5
 Text Domain: cptp
 License: GPL2 or later
 Domain Path: /
@@ -256,7 +256,7 @@ class Custom_Post_Type_Permalinks {
 	 * @param Object $post 投稿情報
 	 * @param String $leavename 記事編集画面でのみ渡される
 	 *
-	 * @version 1.2
+	 * @version 1.3
 	 *
 	 */
 	public function set_permalink( $post_link, $post, $leavename ) {
@@ -267,6 +267,7 @@ class Custom_Post_Type_Permalinks {
 
 		$post_type = $post->post_type;
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
+
 
 		$permalink = str_replace( '%post_type%', get_post_type_object($post->post_type)->rewrite['slug'], $permalink );
 		$permalink = str_replace( '%'.$post_type.'_id%', $post->ID, $permalink );
@@ -287,6 +288,15 @@ class Custom_Post_Type_Permalinks {
 		if( !$leavename ){
 			$permalink = str_replace( '%'.$post_type.'%', $post->post_name, $permalink );
 		}
+
+		//%post_id%/attachment/%attachement_name%;
+		if(  isset($_GET["post"]) &&$_GET["post"] != $post->ID ) {
+
+			if( "%post_id%" == array_pop(explode("/",get_option( $post_type.'_structure' )))) {
+				$permalink = $permalink."/attachment/";
+			};
+		}
+
 
 		$taxonomies = get_taxonomies( array('show_ui' => true),'objects' );
 
