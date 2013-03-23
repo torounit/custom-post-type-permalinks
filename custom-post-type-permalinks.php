@@ -305,10 +305,10 @@ class Custom_Post_Type_Permalinks {
 				$terms = get_the_terms( $post->ID, $taxonomy );
 
 				if ( $terms ) {
-					usort($terms, '_usort_terms_by_ID'); // order by ID
-					$term = $terms[0]->slug;
+					$keys = array_keys($terms);
+					$term = $terms[$keys[0]]->slug;
 
-					if ( $parent = $terms[0]->parent ) {
+					if ( $parent = $terms[$keys[0]]->parent ) {
 						$term = $this->get_taxonomy_parents( $parent,$taxonomy, false, '/', true ) . $term;
 					}
 
