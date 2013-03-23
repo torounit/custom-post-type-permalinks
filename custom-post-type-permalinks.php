@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.8.7.6
+Version: 0.8.7.7
 Text Domain: cptp
 License: GPL2 or later
 Domain Path: /
@@ -39,7 +39,7 @@ Domain Path: /
  */
 class Custom_Post_Type_Permalinks {
 
-	public $version = "0.8.7.6";
+	public $version = "0.8.7.7";
 	public $default_structure = '/%postname%/';
 
 	/**
