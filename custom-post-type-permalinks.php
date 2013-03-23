@@ -61,7 +61,7 @@ class Custom_Post_Type_Permalinks {
 			add_filter( 'getarchives_join', array(&$this,'getarchives_join'), 10, 2 ); // [steve]
 			add_filter( 'getarchives_where', array(&$this,'getarchives_where'), 10 , 2 );
 			add_filter( 'get_archives_link', array(&$this,'get_archives_link'), 20, 1 );
-			add_filter( 'term_link', array(&$this,'set_term_link'), 10, 3 );
+			add_filter( 'term_link', array(&$this,'term_link'), 10, 3 );
 			add_filter( 'attachment_link', array(&$this, 'attachment_link'), 20 , 2);
 		}
 
@@ -76,15 +76,28 @@ class Custom_Post_Type_Permalinks {
 
 	}
 
+	/**
+	 *
+	 * dequeue flush rules
+	 * @since 0.9
+	 *
+	 */
+
 	public function dequeue_flush_rules () {
 		if(get_option("queue_flush_rules")){
 			flush_rewrite_rules();
 			update_option( "queue_flush_rules", 0 );
 
 		}
-
 	}
 
+
+	/**
+	 *
+	 * dequeue flush rules
+	 * @since 0.8.6
+	 *
+	 */
 
 	public function check_version() {
 		$version = get_option('cptp_version', 0);
@@ -130,7 +143,7 @@ class Custom_Post_Type_Permalinks {
 	/**
 	 *
 	 * Add rewrite rules for archives.
-	 * @version 1.0
+	 * @version 1.1
 	 *
 	 */
 	public function add_archive_rewrite_rules() {
@@ -249,7 +262,7 @@ class Custom_Post_Type_Permalinks {
 	 * @param Object $post 投稿情報
 	 * @param String $leavename 記事編集画面でのみ渡される
 	 *
-	 * @version 1.3
+	 * @version 2.0
 	 *
 	 */
 	public function post_type_link( $post_link, $post, $leavename ) {
@@ -395,7 +408,7 @@ class Custom_Post_Type_Permalinks {
 	/**
 	 *
 	 * get_arcihves_link
-	 * @version 2.0
+	 * @version 2.1
 	 *
 	 */
 	public function get_archives_link( $link ) {
@@ -518,7 +531,7 @@ class Custom_Post_Type_Permalinks {
 	 * @version 1.0
 	 *
 	 */
-	public function set_term_link( $termlink, $term, $taxonomy ) {
+	public function term_link( $termlink, $term, $taxonomy ) {
 		if( get_option('no_taxonomy_structure') ) {
 			return  $termlink;
 		}
