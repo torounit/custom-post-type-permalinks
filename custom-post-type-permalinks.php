@@ -305,15 +305,21 @@ class Custom_Post_Type_Permalinks {
 				$terms = get_the_terms( $post->ID, $taxonomy );
 
 				if ( $terms ) {
-					$keys = array_keys($terms);
-					$term = $terms[$keys[0]]->slug;
 
-					if ( $parent = $terms[$keys[0]]->parent ) {
-						$term = $this->get_taxonomy_parents( $parent,$taxonomy, false, '/', true ) . $term;
+					if($terms[0]->parent == 0){
+						$keys = array_keys($terms);
+						$term = $terms[$keys[1]]->slug;
+						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
+							$term = $this->get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
+						}
+					}else{
+						$keys = array_keys($terms);
+						$term = $terms[$keys[0]]->slug;
+						if ( $terms[$keys[1]]->term_id == $terms[$keys[0]]->parent ) {
+							$term = $this->get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
+						}
 					}
-
 				}
-
 				if( isset($term) ) {
 					$permalink = str_replace( "%$taxonomy%", $term, $permalink );
 				}
@@ -477,14 +483,14 @@ class Custom_Post_Type_Permalinks {
 					$tax = 'category_name';
 				} else {
 					// Edit by [Xiphe]
-				 	if (isset($taxonomyObject->rewrite['slug'])) {
-				 		$taxonomypat = $taxonomyObject->rewrite['slug'];
-				 	} else {
-				 		$taxonomypat = $taxonomy;
-				 	}
-				 	// [Xiphe] stop
+					if (isset($taxonomyObject->rewrite['slug'])) {
+						$taxonomypat = $taxonomyObject->rewrite['slug'];
+					} else {
+						$taxonomypat = $taxonomy;
+					}
+					// [Xiphe] stop
 
-				 	$tax = $taxonomy;
+					$tax = $taxonomy;
 				}
 
 
