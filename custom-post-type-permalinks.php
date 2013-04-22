@@ -61,7 +61,7 @@ class Custom_Post_Type_Permalinks {
 			add_filter( 'getarchives_join', array(&$this,'getarchives_join'), 10, 2 ); // [steve]
 			add_filter( 'getarchives_where', array(&$this,'getarchives_where'), 10 , 2 );
 			add_filter( 'get_archives_link', array(&$this,'get_archives_link'), 20, 1 );
-			add_filter( 'term_link', array(&$this,'set_term_link'), 10, 3 );
+			add_filter( 'term_link', array(&$this,'term_link'), 10, 3 );
 			add_filter( 'attachment_link', array(&$this, 'attachment_link'), 20 , 2);
 		}
 
@@ -518,7 +518,7 @@ class Custom_Post_Type_Permalinks {
 	 * @version 1.0
 	 *
 	 */
-	public function set_term_link( $termlink, $term, $taxonomy ) {
+	public function term_link( $termlink, $term, $taxonomy ) {
 		if( get_option('no_taxonomy_structure') ) {
 			return  $termlink;
 		}
