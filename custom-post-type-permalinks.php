@@ -208,7 +208,6 @@ class Custom_Post_Type_Permalinks {
 				'endpoints' => true,
 			);
 
-			//$wp_rewrite->generate_rewrite_rules( $permalink, EP_NONE, true, true, true,true);
 			$wp_rewrite->add_permastruct( $post_type, $permalink, $param );
 		endforeach;
 
@@ -260,6 +259,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function set_permalink( $post_link, $post, $leavename ) {
+		//return $post_link;
 		global $wp_rewrite;
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if( $draft_or_pending and !$leavename )
@@ -296,7 +296,6 @@ class Custom_Post_Type_Permalinks {
 				$permalink = $permalink."/attachment/";
 			};
 		}
-
 
 		$taxonomies = get_taxonomies( array('show_ui' => true),'objects' );
 
@@ -337,12 +336,8 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( "%minute%", 	date("i",$post_date), $permalink );
 		$permalink = str_replace( "%second%", 	date("s",$post_date), $permalink );
 
-		$permalink = str_replace('//', "/", $permalink );
-
-		return $permalink = home_url( user_trailingslashit( $permalink ) );
-		//$str = rtrim( preg_replace("/%[a-z,_]*%/","",get_option("permalink_structure")) ,'/');
-		//return $permalink = str_replace($str, "", $permalink );
-
+		$permalink = str_replace('//', "/", home_url().user_trailingslashit($permalink) );
+		return $permalink;
 	}
 
 
