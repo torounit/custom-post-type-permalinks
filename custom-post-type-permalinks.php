@@ -53,12 +53,13 @@ class Custom_Post_Type_Permalinks {
 		add_action( 'plugins_loaded', array(&$this,'check_version') );
 
 		add_action( 'wp_loaded', array(&$this,'set_archive_rewrite'), 99 );
-		add_action( 'wp_loaded', array(&$this,'set_rewrite'), 100 );
+		//add_action( 'wp_loaded', array(&$this,'set_rewrite'), 100 );
 		add_action( 'wp_loaded', array(&$this,'add_tax_rewrite') );
+		add_action( 'registered_post_type', array(&$this,'registered_post_type'), 10, 2 );
 
 
 		if(get_option( "permalink_structure") != "") {
-			add_filter( 'post_type_link', array(&$this,'set_permalink'), 10, 3 );
+			add_filter( 'post_type_link', array(&$this,'set_permalink'), 10, 4 );
 			add_filter( 'getarchives_join', array(&$this,'get_archives_join'), 10, 2 ); // [steve]
 			add_filter( 'getarchives_where', array(&$this,'get_archives_where'), 10 , 2 );
 			add_filter( 'get_archives_link', array(&$this,'get_archives_link'), 20, 1 );
@@ -157,6 +158,45 @@ class Custom_Post_Type_Permalinks {
 		endforeach;
 	}
 
+	/**
+	 *
+	 * registered_post_type
+	 *  ** add rewrite tag for Custom Post Type.
+	 *
+	 *
+	 */
+
+	public function registered_post_type( $post_type, $args ) {
+		if( $args->_builtin or !$args->publicly_queryable or !$args->show_ui ){
+			return false;
+		}
+
+		global $wp_post_types, $wp_rewrite, $wp;
+
+		$permalink = get_option( $post_type.'_structure' );
+
+		if( !$permalink ) {
+			$permalink = $this->default_structure;
+		}
+
+		$permalink = str_replace( '%postname%', '%'.$post_type.'%', $permalink );
+		//$permalink = str_replace( '%post_id%', '%'.$post_type.'_id%', $permalink );
+
+		//add_rewrite_tag( '%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=' );
+		//add_rewrite_tag( '%'.$post_type.'_page%', '([0-9]{1,}?)',"page=" );
+
+		$taxonomies = get_taxonomies( array("show_ui" => true, "_builtin" => false), 'objects' );
+		foreach ( $taxonomies as $taxonomy => $objects ):
+			$wp_rewrite->add_rewrite_tag( "%$taxonomy%", '(.+?)', "$taxonomy=" );
+		endforeach;
+
+		$wp_rewrite->use_verbose_page_rules = true;
+
+		$permalink = trim($permalink, "/" );
+		add_permastruct( $post_type, $args->rewrite["slug"]."/".$permalink, $args->rewrite );
+
+	}
+
 
 
 	/**
@@ -237,10 +277,11 @@ class Custom_Post_Type_Permalinks {
 		$post_type = get_post_type_object( $post_parent->post_type );
 
 		if( $post_type->_builtin == false ) {
-			if(strpos( $permalink, "%postname%" ) < strrpos( $permalink, "%post_id%" )){
+			if(strpos( $permalink, "%postname%" ) < strrpos( $permalink, "%post_id%" ) && strrpos( $permalink, "attachment/" ) === FALSE ){
 				$link = str_replace($post->post_name , "attachment/".$post->post_name, $link);
 			}
 		}
+
 
 		return $link;
 	}
@@ -259,7 +300,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function set_permalink( $post_link, $post, $leavename ) {
-		//return $post_link;
+
 		global $wp_rewrite;
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if( $draft_or_pending and !$leavename )
@@ -269,7 +310,11 @@ class Custom_Post_Type_Permalinks {
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
 
 
+		$permalink = str_replace( '%ptype%', get_post_type_object($post->post_type)->rewrite['slug'], $permalink );
+
 		$permalink = str_replace( '%post_type%', get_post_type_object($post->post_type)->rewrite['slug'], $permalink );
+		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
+
 		$permalink = str_replace( '%'.$post_type.'_id%', $post->ID, $permalink );
 		$permalink = str_replace( '%'.$post_type.'_page%', "", $permalink );
 		$permalink = str_replace( '%'.$post_type.'_cpage%', "", $permalink );
@@ -290,9 +335,9 @@ class Custom_Post_Type_Permalinks {
 		}
 
 		//%post_id%/attachment/%attachement_name%;
-		if(  isset($_GET["post"]) &&$_GET["post"] != $post->ID ) {
-
-			if( "%post_id%" == array_pop(explode("/",get_option( $post_type.'_structure' )))) {
+		if( isset($_GET["post"]) && $_GET["post"] != $post->ID ) {
+			$parent_structure = trim(get_option( $post->post_type.'_structure' ), "/");
+			if( "%post_id%" == $parent_structure or "%post_id%" == array_pop( explode( "/", $parent_structure ) ) ) {
 				$permalink = $permalink."/attachment/";
 			};
 		}
@@ -336,7 +381,9 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( "%minute%", 	date("i",$post_date), $permalink );
 		$permalink = str_replace( "%second%", 	date("s",$post_date), $permalink );
 
-		$permalink = home_url( user_trailingslashit( $permalink ));
+
+		$permalink = home_url().user_trailingslashit( $permalink );
+		//$permalink = str_replace("//", "/", $permalink);
 		return $permalink;
 	}
 
