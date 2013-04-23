@@ -41,7 +41,6 @@ class Custom_Post_Type_Permalinks {
 
 
 
-
 	public $version = "0.9";
 
 	public $default_structure = '/%postname%/';
