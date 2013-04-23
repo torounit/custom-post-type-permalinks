@@ -214,7 +214,12 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( '%postname%', '%'.$post_type.'%', $permalink );
 		$permalink = str_replace( '%post_id%', '%'.$post_type.'_id%', $permalink );
 
+<<<<<<< HEAD
 		add_rewrite_tag( '%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=' );
+=======
+			$wp_rewrite->add_permastruct( $post_type, $permalink, $param );
+		endforeach;
+>>>>>>> wpml fix
 
 		$taxonomies = get_taxonomies( array("show_ui" => true, "_builtin" => false), 'objects' );
 		foreach ( $taxonomies as $taxonomy => $objects ):
@@ -269,8 +274,13 @@ class Custom_Post_Type_Permalinks {
 	 * @version 2.0
 	 *
 	 */
+<<<<<<< HEAD
 	public function post_type_link( $post_link, $post, $leavename ) {
 
+=======
+	public function set_permalink( $post_link, $post, $leavename ) {
+		//return $post_link;
+>>>>>>> wpml fix
 		global $wp_rewrite;
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if( $draft_or_pending and !$leavename )
@@ -361,9 +371,13 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( "%minute%", 	date("i",$post_date), $permalink );
 		$permalink = str_replace( "%second%", 	date("s",$post_date), $permalink );
 
+<<<<<<< HEAD
 
 		$permalink = home_url().user_trailingslashit( $permalink );
 		//$permalink = str_replace("//", "/", $permalink);
+=======
+		$permalink = str_replace('//', "/", home_url().user_trailingslashit($permalink) );
+>>>>>>> wpml fix
 		return $permalink;
 	}
 
