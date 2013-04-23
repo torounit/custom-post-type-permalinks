@@ -214,12 +214,7 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( '%postname%', '%'.$post_type.'%', $permalink );
 		$permalink = str_replace( '%post_id%', '%'.$post_type.'_id%', $permalink );
 
-<<<<<<< HEAD
 		add_rewrite_tag( '%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=' );
-=======
-			$wp_rewrite->add_permastruct( $post_type, $permalink, $param );
-		endforeach;
->>>>>>> wpml fix
 
 		$taxonomies = get_taxonomies( array("show_ui" => true, "_builtin" => false), 'objects' );
 		foreach ( $taxonomies as $taxonomy => $objects ):
@@ -274,13 +269,8 @@ class Custom_Post_Type_Permalinks {
 	 * @version 2.0
 	 *
 	 */
-<<<<<<< HEAD
 	public function post_type_link( $post_link, $post, $leavename ) {
 
-=======
-	public function set_permalink( $post_link, $post, $leavename ) {
-		//return $post_link;
->>>>>>> wpml fix
 		global $wp_rewrite;
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if( $draft_or_pending and !$leavename )
@@ -326,15 +316,9 @@ class Custom_Post_Type_Permalinks {
 			if ( strpos($permalink, "%$taxonomy%") !== false ) {
 				$terms = get_the_terms( $post->ID, $taxonomy );
 
-<<<<<<< HEAD
 				if ( $terms and count($terms) > 1 ) {
 					if(reset($terms)->parent == 0){
 
-=======
-				if ( $terms ) {
-
-					if($terms[0]->parent == 0){
->>>>>>> Marcus Franke fix.
 						$keys = array_keys($terms);
 						$term = $terms[$keys[1]]->slug;
 						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
@@ -347,12 +331,9 @@ class Custom_Post_Type_Permalinks {
 							$term = $this->get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
 						}
 					}
-<<<<<<< HEAD
 				}else if( $terms ){
 					$term = array_shift($terms);
 					$term = $term->slug;
-=======
->>>>>>> Marcus Franke fix.
 				}
 				if( isset($term) ) {
 					$permalink = str_replace( "%$taxonomy%", $term, $permalink );
@@ -371,13 +352,9 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( "%minute%", 	date("i",$post_date), $permalink );
 		$permalink = str_replace( "%second%", 	date("s",$post_date), $permalink );
 
-<<<<<<< HEAD
 
 		$permalink = home_url().user_trailingslashit( $permalink );
 		//$permalink = str_replace("//", "/", $permalink);
-=======
-		$permalink = str_replace('//', "/", home_url().user_trailingslashit($permalink) );
->>>>>>> wpml fix
 		return $permalink;
 	}
 
