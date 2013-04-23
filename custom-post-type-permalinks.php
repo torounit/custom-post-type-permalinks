@@ -532,7 +532,7 @@ class Custom_Post_Type_Permalinks {
 		if( empty($taxonomy) )
 			return $termlink;
 
-		$wp_home = rtrim( get_option('home'), '/' );
+		$wp_home = rtrim( home_url(), '/' );
 
 		$post_type = $taxonomy->object_type[0];
 		$slug = get_post_type_object($post_type)->rewrite['slug'];
