@@ -316,9 +316,15 @@ class Custom_Post_Type_Permalinks {
 			if ( strpos($permalink, "%$taxonomy%") !== false ) {
 				$terms = get_the_terms( $post->ID, $taxonomy );
 
+<<<<<<< HEAD
 				if ( $terms and count($terms) > 1 ) {
 					if(reset($terms)->parent == 0){
 
+=======
+				if ( $terms ) {
+
+					if($terms[0]->parent == 0){
+>>>>>>> Marcus Franke fix.
 						$keys = array_keys($terms);
 						$term = $terms[$keys[1]]->slug;
 						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
@@ -331,9 +337,12 @@ class Custom_Post_Type_Permalinks {
 							$term = $this->get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
 						}
 					}
+<<<<<<< HEAD
 				}else if( $terms ){
 					$term = array_shift($terms);
 					$term = $term->slug;
+=======
+>>>>>>> Marcus Franke fix.
 				}
 				if( isset($term) ) {
 					$permalink = str_replace( "%$taxonomy%", $term, $permalink );
