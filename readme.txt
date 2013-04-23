@@ -40,7 +40,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 * Change hook custom post link.
 * Use Slug in wp_get_archive().
 * Fix attachment link.
-*
+* Bug fix.
 
 = 0.8.7 =
 * Translate Bug Fix.
