@@ -39,10 +39,14 @@ Domain Path: /
  */
 class Custom_Post_Type_Permalinks {
 
+<<<<<<< HEAD
 
 
 	public $version = "0.9";
 
+=======
+	public $version = "0.8.7.6";
+>>>>>>> version up
 	public $default_structure = '/%postname%/';
 
 	/**
