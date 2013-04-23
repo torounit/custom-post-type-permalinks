@@ -319,7 +319,6 @@ class Custom_Post_Type_Permalinks {
 					if(reset($terms)->parent == 0){
 
 						$keys = array_keys($terms);
-						var_dump($keys);
 						$term = $terms[$keys[1]]->slug;
 						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
 							$term = $this->get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
