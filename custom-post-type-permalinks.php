@@ -353,8 +353,9 @@ class Custom_Post_Type_Permalinks {
 		$permalink = str_replace( "%second%", 	date("s",$post_date), $permalink );
 
 
-		$permalink = home_url().user_trailingslashit( $permalink );
-		//$permalink = str_replace("//", "/", $permalink);
+		$permalink = home_url()."/".user_trailingslashit( $permalink );
+		$permalink = str_replace("//", "/", $permalink);
+		$permalink = str_replace("/:", "//:", $permalink);
 		return $permalink;
 	}
 
