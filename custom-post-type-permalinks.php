@@ -690,12 +690,16 @@ class Custom_Post_Type_Permalinks {
 	public function setting_structure_callback_function(  $option  ) {
 		$post_type = str_replace('_structure',"" ,$option);
 		$slug = get_post_type_object($post_type)->rewrite['slug'];
-		if( !$slug )
-			$slug = $post_type;
 
 		$value = get_option($option);
 		if( !$value )
 			$value = $this->default_structure;
+
+		global $wp_rewrite;
+		$front = substr( $wp_rewrite->front, 1 );
+		if( $front ) {
+			$slug = $front.$slug;
+		}
 
 		echo '<code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" />';
 	}
