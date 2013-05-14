@@ -621,7 +621,7 @@ class Custom_Post_Type_Permalinks {
 
 		$post_types = get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
 		foreach ($post_types as $post_type):
-			if(isset($_POST['submit'])){
+			if(isset($_POST['submit']) and isset($_POST['_wp_http_referer'])){
 				if( strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
 
 					$structure = trim(esc_attr($_POST[$post_type.'_structure']));#get setting
