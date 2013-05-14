@@ -3,7 +3,7 @@ Contributors: Toro_Unit
 Tags: permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 3.4
 Tested up to: 3.6
-Stable tag: 0.9.2
+Stable tag: 0.9.2.1
 
 Lets you edit the permalink of custom post type.
 
@@ -14,6 +14,7 @@ Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_na
 
 Nightly Build https://github.com/Toro-Unit/custom-post-type-permalinks
 
+Donation: Please send Amazon Gift to donate[at]torounit.com.
 
 
 
