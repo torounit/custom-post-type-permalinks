@@ -3,37 +3,47 @@ Contributors: Toro_Unit
 Tags: permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 3.4
 Tested up to: 3.6
-Stable tag: 0.9.2.1
+Stable tag: 0.9.3
 
 Lets you edit the permalink of custom post type.
 
 == Description ==
+
 Custom Post Type Permalinks lets you edit the permalink structure of custom post type.
 
 Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_name/term_slug". Can disable this fix.
 
-Nightly Build https://github.com/Toro-Unit/custom-post-type-permalinks
+[This Plugin published on GitHub.](https://github.com/Toro-Unit/custom-post-type-permalinks)
 
 Donation: Please send Amazon Gift to donate[at]torounit.com.
 
+= Translators =
+* Japanese(ja) - [Toro_Unit](http://www.torounit.com/)
+* Russian(ru_RU) - [Olart](http://olart.ru)
 
 
 == Installation ==
 
-1. Download the custom-post-type-permalinks.zip file to your computer.
-1. Unzip the file.
-1. Upload the `custom-post-type-permalinks` directory to your `/wp-content/plugins/` directory.
-1. Activate the plugin through the 'Plugins' menu in WordPress.
+*. Download the custom-post-type-permalinks.zip file to your computer.
+*. Unzip the file.
+*. Upload the `custom-post-type-permalinks` directory to your `/wp-content/plugins/` directory.
+*. Activate the plugin through the 'Plugins' menu in WordPress.
 
 That's it. You can access the permalinks setting by going to *Settings -> Permalinks*.
 
 
 == Screenshots ==
 
-1. screenshot-1.png
+*. screenshot-1.png
 
 
 == Changelog ==
+
+= 0.9.3 =
+* Admin page fix.
+* slngle pageing link fix.
+* Add Russian translation.
+
 
 = 0.9 =
 * Add custom post type archive only has_archive->true

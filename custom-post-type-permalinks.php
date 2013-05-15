@@ -565,7 +565,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function load_textdomain() {
-		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks');
+		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks/language');
 	}
 
 
