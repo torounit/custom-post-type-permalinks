@@ -5,10 +5,10 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.9.2.1
+Version: 0.9.3
 Text Domain: cptp
 License: GPL2 or later
-Domain Path: /
+Domain Path: /language/
 */
 
 
@@ -193,7 +193,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 * registered_post_type
 	 *  ** add rewrite tag for Custom Post Type.
-	 * @version 1.0
+	 * @version 1.1
 	 * @since 0.9
 	 *
 	 */
@@ -211,20 +211,18 @@ class Custom_Post_Type_Permalinks {
 			$permalink = $this->default_structure;
 		}
 
+		$permalink = '%'.$post_type.'_slug%'.$permalink;
 		$permalink = str_replace( '%postname%', '%'.$post_type.'%', $permalink );
-		$permalink = str_replace( '%post_id%', '%'.$post_type.'_id%', $permalink );
 
-		add_rewrite_tag( '%'.$post_type.'_id%', '([0-9]{1,})','post_type='.$post_type.'&p=' );
+		add_rewrite_tag( '%'.$post_type.'_slug%', '('.$args->rewrite['slug'].')','post_type='.$post_type.'&slug=' );
 
 		$taxonomies = get_taxonomies( array("show_ui" => true, "_builtin" => false), 'objects' );
 		foreach ( $taxonomies as $taxonomy => $objects ):
 			$wp_rewrite->add_rewrite_tag( "%$taxonomy%", '(.+?)', "$taxonomy=" );
 		endforeach;
 
-		$wp_rewrite->use_verbose_page_rules = true;
-
 		$permalink = trim($permalink, "/" );
-		add_permastruct( $post_type, $args->rewrite['slug']."/".$permalink, $args->rewrite );
+		add_permastruct( $post_type, $permalink, $args->rewrite );
 
 	}
 
@@ -279,9 +277,7 @@ class Custom_Post_Type_Permalinks {
 		$post_type = $post->post_type;
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
-		$permalink = str_replace( '%'.$post_type.'_id%', $post->ID, $permalink );
-
-
+		$permalink = str_replace( '%'.$post_type.'_slug%', get_post_type_object( $post_type )->rewrite['slug'], $permalink );
 
 
 		$parentsDirs = "";
