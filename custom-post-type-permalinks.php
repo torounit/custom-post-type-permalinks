@@ -241,6 +241,9 @@ class Custom_Post_Type_Permalinks {
 
 	public function attachment_link( $link , $postID ) {
 		$post = get_post( $postID );
+		if (!$post->post_parent){
+			return $link;
+		}
 		$post_parent = get_post( $post->post_parent );
 		$permalink = get_option( $post_parent->post_type.'_structure' );
 		$post_type = get_post_type_object( $post_parent->post_type );
