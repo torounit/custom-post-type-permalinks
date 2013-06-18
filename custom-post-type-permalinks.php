@@ -57,6 +57,7 @@ class Custom_Post_Type_Permalinks {
 		add_action( 'wp_loaded', array(&$this,'add_archive_rewrite_rules'), 99 );
 		add_action( 'wp_loaded', array(&$this,'add_tax_rewrite_rules') );
 		add_action( 'wp_loaded', array(&$this, "dequeue_flush_rules"),100);
+		add_action( 'parse_request', array(&$this, "parse_request") );
 		add_action( 'registered_post_type', array(&$this,'registered_post_type'), 10, 2 );
 
 
@@ -517,13 +518,13 @@ class Custom_Post_Type_Permalinks {
 				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&paged=$matches[2]', 'top' );
 				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
 				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/([^/]+)/?$', 'index.php?'.$tax.'=$matches[1]', 'top' );  // modified by [steve] [*** bug fixing]
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/?$', 'index.php?'.$tax.'=$matches[1]', 'top' );  // modified by [steve] [*** bug fixing]
 
 				// below rules were added by [steve]
-				add_rewrite_rule( $taxonomypat.'/([^/]+)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $taxonomypat.'/([^/]+)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/([^/]+)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/([^/]+)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
 
 			endforeach;
 		endforeach;
@@ -559,9 +560,27 @@ class Custom_Post_Type_Permalinks {
 
 		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		$termlink = str_replace( $wp_home, $wp_home.'/'.$slug, $termlink );
+		$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		$str = rtrim( preg_replace("/%[a-z_]*%/","",get_option("permalink_structure")) ,'/');//remove with front
 		return str_replace($str, "", $termlink );
+	}
 
+	/**
+	 *
+	 * Fix taxonomy = parent/child => taxonomy => child
+	 * @since 0.9.3
+	 *
+	 */
+	public function parse_request($obj) {
+		$taxes = get_taxonomies(array( '_builtin' => false));
+		print_r($taxes);
+		foreach ($taxes as $key => $tax) {
+			if(isset($obj->query_vars[$tax])) {
+				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
+					$obj->query_vars[$tax] = array_pop(explode("/", $obj->query_vars[$tax]));
+				}
+			}
+		}
 	}
 
 
