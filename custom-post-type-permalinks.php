@@ -314,7 +314,6 @@ class Custom_Post_Type_Permalinks {
 		foreach ( $taxonomies as $taxonomy => $objects ) {
 			if ( strpos($permalink, "%$taxonomy%") !== false ) {
 				$terms = get_the_terms( $post->ID, $taxonomy );
-
 				if ( $terms and count($terms) > 1 ) {
 					if(reset($terms)->parent == 0){
 
@@ -331,9 +330,15 @@ class Custom_Post_Type_Permalinks {
 						}
 					}
 				}else if( $terms ){
-					$term = array_shift($terms);
-					$term = $term->slug;
+
+					$term_obj = array_shift($terms);
+					$term = $term_obj->slug;
+
+					if(isset($term_obj->parent) and $term_obj->parent != 0) {
+						$term = $this->get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
+					}
 				}
+
 				if( isset($term) ) {
 					$permalink = str_replace( "%$taxonomy%", $term, $permalink );
 				}
