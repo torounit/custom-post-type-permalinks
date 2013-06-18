@@ -573,7 +573,6 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function parse_request($obj) {
 		$taxes = get_taxonomies(array( '_builtin' => false));
-		print_r($taxes);
 		foreach ($taxes as $key => $tax) {
 			if(isset($obj->query_vars[$tax])) {
 				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
