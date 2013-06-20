@@ -315,6 +315,15 @@ class Custom_Post_Type_Permalinks {
 		foreach ( $taxonomies as $taxonomy => $objects ) {
 			if ( strpos($permalink, "%$taxonomy%") !== false ) {
 				$terms = get_the_terms( $post->ID, $taxonomy );
+				
+				$aSortedTerms	= array();
+				
+				foreach($terms as $oTerm){
+					$aSortedTerms[$oTerm->term_id] = $oTerm;
+				}
+				krsort($aSortedTerms);
+				
+				$terms	= array_values($aSortedTerms);
 				if ( $terms and count($terms) > 1 ) {
 					if(reset($terms)->parent == 0){
 
