@@ -347,7 +347,9 @@ class Custom_Post_Type_Permalinks {
 		}
 
 		$user = get_userdata( $post->post_author );
-		$permalink = str_replace( "%author%", $user->user_nicename, $permalink );
+		if(isset($user->user_nicename)) {
+			$permalink = str_replace( "%author%", $user->user_nicename, $permalink );
+		}
 
 		$post_date = strtotime( $post->post_date );
 		$permalink = str_replace( "%year%", 	date("Y",$post_date), $permalink );
