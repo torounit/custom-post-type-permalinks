@@ -314,7 +314,7 @@ class Custom_Post_Type_Permalinks {
 		//運用でケアすべきかも。
 		foreach ( $taxonomies as $taxonomy => $objects ) {
 			if ( strpos($permalink, "%$taxonomy%") !== false ) {
-				$terms = get_the_terms( $post->ID, $taxonomy );
+				$terms = wp_get_post_terms( $post->ID, $taxonomy, array('orderby' => 'term_id'));
 				if ( $terms and count($terms) > 1 ) {
 					if(reset($terms)->parent == 0){
 
