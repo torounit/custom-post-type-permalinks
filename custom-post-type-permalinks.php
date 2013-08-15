@@ -424,7 +424,9 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function get_archives_link( $link ) {
 		$c = isset($this->get_archives_where_r['taxonomy']) && is_array($this->get_archives_where_r['taxonomy']) ? $this->get_archives_where_r['taxonomy'] : "";  //[steve]
-		$t = $this->get_archives_where_r['post_type']; // [steve] [*** bug fixing]
+		$t = isset($this->get_archives_where_r['post_type']) ? $this->get_archives_where_r['post_type'] : "";
+
+
 		$this->get_archives_where_r['post_type'] = isset($this->get_archives_where_r['post_type_slug']) ? $this->get_archives_where_r['post_type_slug'] : $t; // [steve] [*** bug fixing]
 
 		if (isset($this->get_archives_where_r['post_type'])  and  $this->get_archives_where_r['type'] != 'postbypost'){
@@ -454,12 +456,12 @@ class Custom_Post_Type_Permalinks {
 			}
 
 			$ret_link = str_replace('%link_dir%',$link_dir,$ret_link);
-			$this->get_archives_where_r['post_type'] = $t; // [steve] reverting post_type to previous value
-			return $ret_link;
+		}else {
+			$ret_link = $link;
 		}
 		$this->get_archives_where_r['post_type'] = $t;	// [steve] reverting post_type to previous value
 
-		return $link;
+		return $ret_link;
 	}
 
 
