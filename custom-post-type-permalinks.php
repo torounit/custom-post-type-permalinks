@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.9.3
+Version: 0.9.3.1
 Text Domain: cptp
 License: GPL2 or later
 Domain Path: /language/
@@ -560,13 +560,22 @@ class Custom_Post_Type_Permalinks {
 
 		$post_type = $taxonomy->object_type[0];
 		$slug = get_post_type_object($post_type)->rewrite['slug'];
+		$with_front = get_post_type_object($post_type)->rewrite['with_front'];
 
 
 		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
-		$termlink = str_replace( $wp_home, $wp_home.'/'.$slug, $termlink );
-		$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		$str = rtrim( preg_replace("/%[a-z_]*%/","",get_option("permalink_structure")) ,'/');//remove with front
-		return str_replace($str, "", $termlink );
+		$termlink = str_replace($str."/", "/", $termlink );
+		if(is_string($with_front) and $with_front !== "1" ) {
+			$str = "/".$with_front;
+		}elseif($with_front === false) {
+			$str = "";
+		}
+		$slug = $str."/".$slug;
+
+		$termlink = str_replace( $wp_home, $wp_home.$slug, $termlink );
+		$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+		return $termlink;
 	}
 
 	/**
