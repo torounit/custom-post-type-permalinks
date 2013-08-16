@@ -444,7 +444,12 @@ class Custom_Post_Type_Permalinks {
 
 			$post_type = get_post_type_object( $this->get_archives_where_r['post_type'] );
 			if(empty($c) ){    // [steve]
-				$link_dir = $post_type->rewrite["slug"];
+				if(isset( $post_type->rewrite["slug"] )) {
+					$link_dir = $post_type->rewrite["slug"];
+				}
+				else{
+					$link_dir = $this->get_archives_where_r['post_type'];
+				}
 			}
 			else{   // [steve]
 				$c['name'] = ($c['name'] == 'category' && get_option('category_base')) ? get_option('category_base') : $c['name'];
@@ -562,13 +567,11 @@ class Custom_Post_Type_Permalinks {
 		$slug = get_post_type_object($post_type)->rewrite['slug'];
 		$with_front = get_post_type_object($post_type)->rewrite['with_front'];
 
-
 		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
-		$str = rtrim( preg_replace("/%[a-z_]*%/","",get_option("permalink_structure")) ,'/');//remove with front
+		$str = rtrim( preg_replace( "/%[a-z_]*%/", "" ,get_option("permalink_structure")) ,'/' );//remove with front
 		$termlink = str_replace($str."/", "/", $termlink );
-		if(is_string($with_front) and $with_front !== "1" ) {
-			$str = "/".$with_front;
-		}elseif($with_front === false) {
+
+		if( $with_front === false ) {
 			$str = "";
 		}
 		$slug = $str."/".$slug;
