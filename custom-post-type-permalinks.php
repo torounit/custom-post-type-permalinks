@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.9.3.1
+Version: 0.9.3.2
 Text Domain: cptp
 License: GPL2 or later
 Domain Path: /language/
@@ -423,8 +423,11 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function get_archives_link( $link ) {
+		if(!isset($this->get_archives_where_r['post_type'])) {
+			return $link;
+		}
 		$c = isset($this->get_archives_where_r['taxonomy']) && is_array($this->get_archives_where_r['taxonomy']) ? $this->get_archives_where_r['taxonomy'] : "";  //[steve]
-		$t = isset($this->get_archives_where_r['post_type']) ? $this->get_archives_where_r['post_type'] : "";
+		$t =  $this->get_archives_where_r['post_type'];
 
 
 		$this->get_archives_where_r['post_type'] = isset($this->get_archives_where_r['post_type_slug']) ? $this->get_archives_where_r['post_type_slug'] : $t; // [steve] [*** bug fixing]
