@@ -50,6 +50,11 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function add_hook () {
 
+		add_action( 'init', array( $this,'load_textdomain') );
+		add_action( 'init', array( $this, 'update_rules') );
+		add_action( 'update_option_cptp_version', array( $this, 'update_rules') );
+
+
 		add_action( 'plugins_loaded', array( $this,'check_version') );
 		add_action( 'wp_loaded', array( $this,'add_archive_rewrite_rules'), 99 );
 		add_action( 'wp_loaded', array( $this,'add_tax_rewrite_rules') );
@@ -68,9 +73,6 @@ class Custom_Post_Type_Permalinks {
 		}
 
 
-		add_action( 'init', array( $this,'load_textdomain') );
-		add_action( 'init', array( $this, 'update_rules') );
-		add_action( 'update_option_cptp_version', array( $this, 'update_rules') );
 		add_action( 'admin_init', array( $this,'settings_api_init'), 30 );
 		add_action( 'admin_enqueue_scripts', array( $this,'enqueue_css_js') );
 		add_action( 'admin_footer', array( $this,'pointer_js') );
@@ -116,7 +118,7 @@ class Custom_Post_Type_Permalinks {
 	 */
 	private function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
 		$chain = '';
-		$parent = &get_term( $id, $taxonomy, OBJECT, 'raw');
+		$parent = get_term( $id, $taxonomy );
 		if ( is_wp_error( $parent ) ) {
 			return $parent;
 		}
@@ -142,12 +144,19 @@ class Custom_Post_Type_Permalinks {
 
 
 
-	protected function get_post_types() {
+	private function get_post_types() {
 		return get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
 	}
 
-	protected function get_taxonomies() {
-		return ;
+	private function get_taxonomies( $objects = false ) {
+		if( $objects ){
+			$output = "objects";
+		}
+		else {
+			$output = "names";
+
+		}
+		return get_taxonomies( array("show_ui" => true, "_builtin" => false), $output );
 	}
 
 
@@ -192,7 +201,6 @@ class Custom_Post_Type_Permalinks {
 				add_rewrite_rule( $slug.'/author/([^/]+)/?$', 'index.php?author_name=$matches[1]&post_type='.$post_type, 'top' );
 			}
 
-
 		endforeach;
 	}
 
@@ -223,7 +231,7 @@ class Custom_Post_Type_Permalinks {
 
 		add_rewrite_tag( '%'.$post_type.'_slug%', '('.$args->rewrite['slug'].')','post_type='.$post_type.'&slug=' );
 
-		$taxonomies = get_taxonomies( array("show_ui" => true, "_builtin" => false), 'objects' );
+		$taxonomies = $this->get_taxonomies( ture );
 		foreach ( $taxonomies as $taxonomy => $objects ):
 			$wp_rewrite->add_rewrite_tag( "%$taxonomy%", '(.+?)', "$taxonomy=" );
 		endforeach;
@@ -232,9 +240,6 @@ class Custom_Post_Type_Permalinks {
 		add_permastruct( $post_type, $permalink, $args->rewrite );
 
 	}
-
-
-
 
 
 	/**
@@ -265,62 +270,24 @@ class Custom_Post_Type_Permalinks {
 	}
 
 
-
 	/**
 	 *
-	 * Fix permalinks output.
+	 * create %tax% -> term
 	 *
-	 * @param String $post_link
-	 * @param Object $post 投稿情報
-	 * @param String $leavename 記事編集画面でのみ渡される
-	 *
-	 * @version 2.0
-	 *
-	 */
-	public function post_type_link( $post_link, $post, $leavename ) {
+	 * */
+	private function create_taxonomy_replace_tag( $post_id ) {
+		$search = array();
+		$replace = array();
 
-		global $wp_rewrite;
-		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
-		if( $draft_or_pending and !$leavename )
-			return $post_link;
-
-		$post_type = $post->post_type;
-		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
-		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
-		$permalink = str_replace( '%'.$post_type.'_slug%', get_post_type_object( $post_type )->rewrite['slug'], $permalink );
-
-
-		$parentsDirs = "";
-		if( !$leavename ){
-			$postId = $post->ID;
-			while ($parent = get_post($postId)->post_parent) {
-				$parentsDirs = get_post($parent)->post_name."/".$parentsDirs;
-				$postId = $parent;
-			}
-		}
-
-		$permalink = str_replace( '%'.$post_type.'%', $parentsDirs.'%'.$post_type.'%', $permalink );
-
-		if( !$leavename ){
-			$permalink = str_replace( '%'.$post_type.'%', $post->post_name, $permalink );
-		}
-
-		//%post_id%/attachment/%attachement_name%;
-		//画像の編集ページでのリンク
-		if( isset($_GET["post"]) && $_GET["post"] != $post->ID ) {
-			$parent_structure = trim(get_option( $post->post_type.'_structure' ), "/");
-			if( "%post_id%" == $parent_structure or "%post_id%" == array_pop( explode( "/", $parent_structure ) ) ) {
-				$permalink = $permalink."/attachment/";
-			};
-		}
-
-		$taxonomies = get_taxonomies( array('show_ui' => true), 'objects' );
+		$taxonomies = $this->get_taxonomies( true );
 
 		//%taxnomomy% -> parent/child
 		//運用でケアすべきかも。
+
 		foreach ( $taxonomies as $taxonomy => $objects ) {
 			if ( strpos($permalink, "%$taxonomy%") !== false ) {
-				$terms = wp_get_post_terms( $post->ID, $taxonomy, array('orderby' => 'term_id'));
+				$terms = wp_get_post_terms( $post_id, $taxonomy, array('orderby' => 'term_id'));
+
 				if ( $terms and count($terms) > 1 ) {
 					if(reset($terms)->parent == 0){
 
@@ -347,10 +314,76 @@ class Custom_Post_Type_Permalinks {
 				}
 
 				if( isset($term) ) {
-					$permalink = str_replace( "%$taxonomy%", $term, $permalink );
+					$search[] = "%$taxonomy%";
+					$replace[] = $term;
 				}
+
 			}
 		}
+		return array("search" => $search, "replace" => $replace );
+	}
+
+	/**
+	 *
+	 * Fix permalinks output.
+	 *
+	 * @param String $post_link
+	 * @param Object $post 投稿情報
+	 * @param String $leavename 記事編集画面でのみ渡される
+	 *
+	 * @version 2.0
+	 *
+	 */
+	public function post_type_link( $post_link, $post, $leavename ) {
+
+		global $wp_rewrite;
+
+		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
+		if( $draft_or_pending and !$leavename )
+			return $post_link;
+
+
+
+		$post_type = $post->post_type;
+		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
+
+		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
+		$permalink = str_replace( '%'.$post_type.'_slug%', get_post_type_object( $post_type )->rewrite['slug'], $permalink );
+
+
+
+		//親ページが有るとき。
+		$parentsDirs = "";
+		if( !$leavename ){
+			$postId = $post->ID;
+			while ($parent = get_post($postId)->post_parent) {
+				$parentsDirs = get_post($parent)->post_name."/".$parentsDirs;
+				$postId = $parent;
+			}
+		}
+
+		$permalink = str_replace( '%'.$post_type.'%', $parentsDirs.'%'.$post_type.'%', $permalink );
+
+		if( !$leavename ){
+			$permalink = str_replace( '%'.$post_type.'%', $post->post_name, $permalink );
+		}
+
+		//%post_id%/attachment/%attachement_name%;
+		//画像の編集ページでのリンク
+		if( isset($_GET["post"]) && $_GET["post"] != $post->ID ) {
+			$parent_structure = trim(get_option( $post->post_type.'_structure' ), "/");
+			if( "%post_id%" == $parent_structure or "%post_id%" == array_pop( explode( "/", $parent_structure ) ) ) {
+				$permalink = $permalink."/attachment/";
+			};
+		}
+
+		$search = array();
+		$replace = array();
+
+		$replace_tag = $this->create_taxonomy_replace_tag( $post->ID );
+		$search = $search + $replace_tag["search"];
+		$replace = $replace + $replace_tag["replace"];
+
 
 		$user = get_userdata( $post->post_author );
 		if(isset($user->user_nicename)) {
@@ -358,17 +391,29 @@ class Custom_Post_Type_Permalinks {
 		}
 
 		$post_date = strtotime( $post->post_date );
-		$permalink = str_replace( "%year%", 	date("Y",$post_date), $permalink );
-		$permalink = str_replace( "%monthnum%", date("m",$post_date), $permalink );
-		$permalink = str_replace( "%day%", 		date("d",$post_date), $permalink );
-		$permalink = str_replace( "%hour%", 	date("H",$post_date), $permalink );
-		$permalink = str_replace( "%minute%", 	date("i",$post_date), $permalink );
-		$permalink = str_replace( "%second%", 	date("s",$post_date), $permalink );
+		$search = $search + array(
+			"%year%",
+			"%monthnum%",
+			"%day%",
+			"%hour%",
+			"%minute%",
+			"%second%"
+		);
 
+		$replace = $replace + array(
+			date("Y",$post_date),
+			date("m",$post_date),
+			date("d",$post_date),
+			date("H",$post_date),
+			date("i",$post_date),
+			date("s",$post_date)
+		);
+		$permalink = str_replace($search, $replace, $permalink);
 
 		$permalink = home_url()."/".user_trailingslashit( $permalink );
 		$permalink = str_replace("//", "/", $permalink);
 		$permalink = str_replace(":/", "://", $permalink);
+
 		return $permalink;
 	}
 
@@ -494,7 +539,7 @@ class Custom_Post_Type_Permalinks {
 
 
 		global $wp_rewrite;
-		$taxonomies = get_taxonomies(array( '_builtin' => false));
+		$taxonomies = $this->get_taxonomies();
 		$taxonomies['category'] = 'category';
 
 		if(empty($taxonomies)) {
@@ -598,7 +643,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function parse_request($obj) {
-		$taxes = get_taxonomies(array( '_builtin' => false));
+		$taxes = $this->get_taxonomies();
 		foreach ($taxes as $key => $tax) {
 			if(isset($obj->query_vars[$tax])) {
 				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
