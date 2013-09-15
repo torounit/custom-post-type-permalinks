@@ -39,9 +39,6 @@ Domain Path: /language/
  */
 class Custom_Post_Type_Permalinks {
 
-
-
-
 	public $version = "0.9";
 
 	public $default_structure = '/%postname%/';
@@ -53,30 +50,30 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function add_hook () {
 
-		add_action( 'plugins_loaded', array(&$this,'check_version') );
-		add_action( 'wp_loaded', array(&$this,'add_archive_rewrite_rules'), 99 );
-		add_action( 'wp_loaded', array(&$this,'add_tax_rewrite_rules') );
-		add_action( 'wp_loaded', array(&$this, "dequeue_flush_rules"),100);
-		add_action( 'parse_request', array(&$this, "parse_request") );
-		add_action( 'registered_post_type', array(&$this,'registered_post_type'), 10, 2 );
+		add_action( 'plugins_loaded', array( $this,'check_version') );
+		add_action( 'wp_loaded', array( $this,'add_archive_rewrite_rules'), 99 );
+		add_action( 'wp_loaded', array( $this,'add_tax_rewrite_rules') );
+		add_action( 'wp_loaded', array( $this, "dequeue_flush_rules"),100);
+		add_action( 'parse_request', array( $this, "parse_request") );
+		add_action( 'registered_post_type', array( $this,'registered_post_type'), 10, 2 );
 
 
 		if(get_option( "permalink_structure") != "") {
-			add_filter( 'post_type_link', array(&$this,'post_type_link'), 10, 4 );
-			add_filter( 'getarchives_join', array(&$this,'getarchives_join'), 10, 2 ); // [steve]
-			add_filter( 'getarchives_where', array(&$this,'getarchives_where'), 10 , 2 );
-			add_filter( 'get_archives_link', array(&$this,'get_archives_link'), 20, 1 );
-			add_filter( 'term_link', array(&$this,'term_link'), 10, 3 );
-			add_filter( 'attachment_link', array(&$this, 'attachment_link'), 20 , 2);
+			add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
+			add_filter( 'getarchives_join', array( $this,'getarchives_join'), 10, 2 ); // [steve]
+			add_filter( 'getarchives_where', array( $this,'getarchives_where'), 10 , 2 );
+			add_filter( 'get_archives_link', array( $this,'get_archives_link'), 20, 1 );
+			add_filter( 'term_link', array( $this,'term_link'), 10, 3 );
+			add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
 		}
 
 
-		add_action( 'init', array(&$this,'load_textdomain') );
-		add_action( 'init', array(&$this, 'update_rules') );
-		add_action( 'update_option_cptp_version', array(&$this, 'update_rules') );
-		add_action( 'admin_init', array(&$this,'settings_api_init'), 30 );
-		add_action( 'admin_enqueue_scripts', array(&$this,'enqueue_css_js') );
-		add_action( 'admin_footer', array(&$this,'pointer_js') );
+		add_action( 'init', array( $this,'load_textdomain') );
+		add_action( 'init', array( $this, 'update_rules') );
+		add_action( 'update_option_cptp_version', array( $this, 'update_rules') );
+		add_action( 'admin_init', array( $this,'settings_api_init'), 30 );
+		add_action( 'admin_enqueue_scripts', array( $this,'enqueue_css_js') );
+		add_action( 'admin_footer', array( $this,'pointer_js') );
 
 
 	}
@@ -145,6 +142,15 @@ class Custom_Post_Type_Permalinks {
 
 
 
+	protected function get_post_types() {
+		return get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
+	}
+
+	protected function get_taxonomies() {
+		return ;
+	}
+
+
 	/**
 	 *
 	 * Add rewrite rules for archives.
@@ -152,7 +158,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function add_archive_rewrite_rules() {
-		$post_types = get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true,'show_ui' => true) );
+		$post_types = $this->get_post_types();
 
 		foreach ( $post_types as $post_type ):
 			if( !$post_type ) {
@@ -308,7 +314,7 @@ class Custom_Post_Type_Permalinks {
 			};
 		}
 
-		$taxonomies = get_taxonomies( array('show_ui' => true),'objects' );
+		$taxonomies = get_taxonomies( array('show_ui' => true), 'objects' );
 
 		//%taxnomomy% -> parent/child
 		//運用でケアすべきかも。
@@ -584,6 +590,7 @@ class Custom_Post_Type_Permalinks {
 		return $termlink;
 	}
 
+
 	/**
 	 *
 	 * Fix taxonomy = parent/child => taxonomy => child
@@ -623,13 +630,13 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function update_rules() {
 
-		$post_types = get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
+		$post_types = $this->get_post_types();
 		$type_count = count($post_types);
 		$i = 0;
 		foreach ($post_types as $post_type):
-			add_action('update_option_'.$post_type.'_structure',array(&$this,'queue_flush_rules'),10,2);
+			add_action('update_option_'.$post_type.'_structure',array( $this,'queue_flush_rules'),10,2);
 		endforeach;
-		add_action('update_option_no_taxonomy_structure',array(&$this,'queue_flush_rules'),10,2);
+		add_action('update_option_no_taxonomy_structure',array( $this,'queue_flush_rules'),10,2);
 	}
 
 
@@ -656,11 +663,11 @@ class Custom_Post_Type_Permalinks {
 	public function settings_api_init() {
 		add_settings_section('cptp_setting_section',
 			__("Permalink Setting for custom post type",'cptp'),
-			array(&$this,'setting_section_callback_function'),
+			array( $this,'setting_section_callback_function'),
 			'permalink'
 		);
 
-		$post_types = get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
+		$post_types = $this->get_post_types();
 		foreach ($post_types as $post_type):
 			if(isset($_POST['submit']) and isset($_POST['_wp_http_referer'])){
 				if( strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
@@ -686,7 +693,7 @@ class Custom_Post_Type_Permalinks {
 
 			add_settings_field($post_type.'_structure',
 				$post_type,
-				array(&$this,'setting_structure_callback_function'),
+				array( $this,'setting_structure_callback_function'),
 				'permalink',
 				'cptp_setting_section',
 				$post_type.'_structure'
@@ -698,7 +705,7 @@ class Custom_Post_Type_Permalinks {
 		add_settings_field(
 			'no_taxonomy_structure',
 			__("Use custom permalink of custom taxonomy archive.",'cptp'),
-			array(&$this,'setting_no_tax_structure_callback_function'),
+			array( $this,'setting_no_tax_structure_callback_function'),
 			'permalink',
 			'cptp_setting_section'
 		);
