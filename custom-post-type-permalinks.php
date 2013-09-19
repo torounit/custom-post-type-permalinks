@@ -223,7 +223,9 @@ class Custom_Post_Type_Permalinks {
 		endforeach;
 
 		$permalink = trim($permalink, "/" );
-		add_permastruct( $post_type, $permalink, $args->rewrite );
+		$rewrite_args = $args->rewrite;
+		$rewrite_args["walk_dirs"] = false;
+		add_permastruct( $post_type, $permalink, $rewrite_args);
 
 	}
 
