@@ -38,6 +38,7 @@ Domain Path: /language/
  *
  */
 class Custom_Post_Type_Permalinks {
+	public $debug;
 
 	public $version = "0.9";
 
@@ -116,7 +117,7 @@ class Custom_Post_Type_Permalinks {
 	 * @version 1.0
 	 *
 	 */
-	private function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
+	public static function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
 		$chain = '';
 		$parent = get_term( $id, $taxonomy );
 		if ( is_wp_error( $parent ) ) {
@@ -131,7 +132,7 @@ class Custom_Post_Type_Permalinks {
 
 		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $visited ) ) {
 			$visited[] = $parent->parent;
-			$chain .= $this->get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
+			$chain .= self::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
 		}
 
 		if ( $link ) {
@@ -143,12 +144,12 @@ class Custom_Post_Type_Permalinks {
 	}
 
 
-
-	private function get_post_types() {
+	public static function get_post_types() {
 		return get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
 	}
 
-	private function get_taxonomies( $objects = false ) {
+
+	public static function get_taxonomies( $objects = false ) {
 		if( $objects ){
 			$output = "objects";
 		}
@@ -167,7 +168,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function add_archive_rewrite_rules() {
-		$post_types = $this->get_post_types();
+		$post_types = self::get_post_types();
 
 		foreach ( $post_types as $post_type ):
 			if( !$post_type ) {
@@ -231,7 +232,7 @@ class Custom_Post_Type_Permalinks {
 
 		add_rewrite_tag( '%'.$post_type.'_slug%', '('.$args->rewrite['slug'].')','post_type='.$post_type.'&slug=' );
 
-		$taxonomies = $this->get_taxonomies( ture );
+		$taxonomies = self::get_taxonomies( true );
 		foreach ( $taxonomies as $taxonomy => $objects ):
 			$wp_rewrite->add_rewrite_tag( "%$taxonomy%", '(.+?)', "$taxonomy=" );
 		endforeach;
@@ -275,11 +276,11 @@ class Custom_Post_Type_Permalinks {
 	 * create %tax% -> term
 	 *
 	 * */
-	private function create_taxonomy_replace_tag( $post_id ) {
+	private function create_taxonomy_replace_tag( $post_id , $permalink ) {
 		$search = array();
 		$replace = array();
 
-		$taxonomies = $this->get_taxonomies( true );
+		$taxonomies = self::get_taxonomies( true );
 
 		//%taxnomomy% -> parent/child
 		//運用でケアすべきかも。
@@ -294,13 +295,13 @@ class Custom_Post_Type_Permalinks {
 						$keys = array_keys($terms);
 						$term = $terms[$keys[1]]->slug;
 						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
-							$term = $this->get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
+							$term = self::get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
 						}
 					}else{
 						$keys = array_keys($terms);
 						$term = $terms[$keys[0]]->slug;
 						if ( $terms[$keys[1]]->term_id == $terms[$keys[0]]->parent ) {
-							$term = $this->get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
+							$term = self::get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
 						}
 					}
 				}else if( $terms ){
@@ -309,7 +310,7 @@ class Custom_Post_Type_Permalinks {
 					$term = $term_obj->slug;
 
 					if(isset($term_obj->parent) and $term_obj->parent != 0) {
-						$term = $this->get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
+						$term = self::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
 					}
 				}
 
@@ -380,7 +381,7 @@ class Custom_Post_Type_Permalinks {
 		$search = array();
 		$replace = array();
 
-		$replace_tag = $this->create_taxonomy_replace_tag( $post->ID );
+		$replace_tag = $this->create_taxonomy_replace_tag( $post->ID , $permalink );
 		$search = $search + $replace_tag["search"];
 		$replace = $replace + $replace_tag["replace"];
 
@@ -409,10 +410,7 @@ class Custom_Post_Type_Permalinks {
 			date("s",$post_date)
 		);
 		$permalink = str_replace($search, $replace, $permalink);
-
-		$permalink = home_url()."/".user_trailingslashit( $permalink );
-		$permalink = str_replace("//", "/", $permalink);
-		$permalink = str_replace(":/", "://", $permalink);
+		$permalink = rtrim( home_url(),"/")."/".ltrim( $permalink ,"/" );
 
 		return $permalink;
 	}
@@ -539,7 +537,7 @@ class Custom_Post_Type_Permalinks {
 
 
 		global $wp_rewrite;
-		$taxonomies = $this->get_taxonomies();
+		$taxonomies = self::get_taxonomies();
 		$taxonomies['category'] = 'category';
 
 		if(empty($taxonomies)) {
@@ -621,7 +619,7 @@ class Custom_Post_Type_Permalinks {
 		$slug = get_post_type_object($post_type)->rewrite['slug'];
 		$with_front = get_post_type_object($post_type)->rewrite['with_front'];
 
-		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+		//$termlink = str_replace( $term->slug.'/', self::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		$str = rtrim( preg_replace( "/%[a-z_]*%/", "" ,get_option("permalink_structure")) ,'/' );//remove with front
 		$termlink = str_replace($str."/", "/", $termlink );
 
@@ -631,7 +629,7 @@ class Custom_Post_Type_Permalinks {
 		$slug = $str."/".$slug;
 
 		$termlink = str_replace( $wp_home, $wp_home.$slug, $termlink );
-		$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+		$termlink = str_replace( $term->slug.'/', self::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		return $termlink;
 	}
 
@@ -643,7 +641,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function parse_request($obj) {
-		$taxes = $this->get_taxonomies();
+		$taxes = self::get_taxonomies();
 		foreach ($taxes as $key => $tax) {
 			if(isset($obj->query_vars[$tax])) {
 				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
@@ -675,7 +673,7 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function update_rules() {
 
-		$post_types = $this->get_post_types();
+		$post_types = self::get_post_types();
 		$type_count = count($post_types);
 		$i = 0;
 		foreach ($post_types as $post_type):
@@ -712,7 +710,7 @@ class Custom_Post_Type_Permalinks {
 			'permalink'
 		);
 
-		$post_types = $this->get_post_types();
+		$post_types = self::get_post_types();
 		foreach ($post_types as $post_type):
 			if(isset($_POST['submit']) and isset($_POST['_wp_http_referer'])){
 				if( strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
@@ -855,4 +853,16 @@ class Custom_Post_Type_Permalinks {
 $custom_post_type_permalinks = new Custom_Post_Type_Permalinks;
 $custom_post_type_permalinks = apply_filters('custom_post_type_permalinks', $custom_post_type_permalinks);
 $custom_post_type_permalinks->add_hook();
+
+
+add_action("template_redirect",function(){
+	if($GLOBALS['DebugMyPlugin']) {
+		global $custom_post_type_permalinks;
+		$GLOBALS['DebugMyPlugin']->panels['main']->addMessage('I Want To Say:','<pre>'.print_r($custom_post_type_permalinks->debug, true).'</pre>');
+	}
+
+});
+
+
+
 ?>
