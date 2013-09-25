@@ -13,7 +13,7 @@ Custom Post Type Permalinks lets you edit the permalink structure of custom post
 
 Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_name/term_slug". Can disable this fix.
 
-[This Plugin published on GitHub.](https://github.com/Toro-Unit/custom-post-type-permalinks)
+[This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
 Donation: Please send Amazon Gift to donate[at]torounit.com.
 
