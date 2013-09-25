@@ -573,7 +573,10 @@ class Custom_Post_Type_Permalinks {
 		$with_front = get_post_type_object($post_type)->rewrite['with_front'];
 
 		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
-		$str = rtrim( preg_replace( "/%[a-z_]*%/", "" ,get_option("permalink_structure")) ,'/' );//remove with front
+
+		//拡張子を削除。
+		$str = array_shift(explode(".", get_option("permalink_structure")));
+		$str = rtrim( preg_replace( "/%[a-z_]*%/", "" ,$str) ,'/' );//remove with front
 		$termlink = str_replace($str."/", "/", $termlink );
 
 		if( $with_front === false ) {
