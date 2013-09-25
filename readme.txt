@@ -15,7 +15,7 @@ Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_na
 
 [This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
-Donation: Please send Amazon Gift to donate[at]torounit.com.
+Donation: Please send amazon.co.jp Gift to donate[at]torounit.com.
 
 = Translators =
 * Japanese(ja) - [Toro_Unit](http://www.torounit.com/)
