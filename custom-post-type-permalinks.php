@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.9.3.2
+Version: 0.9.3.3
 Text Domain: cptp
 License: GPL2 or later
 Domain Path: /language/
@@ -186,6 +186,11 @@ class Custom_Post_Type_Permalinks {
 					$slug = $post_type_obj->has_archive;
 				};
 
+				if($post_type_obj->rewrite['with_front']) {
+					global $wp_rewrite;
+					$slug = substr( $wp_rewrite->front, 1 ).$slug;
+				}
+
 
 				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
 				add_rewrite_rule( $slug.'/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type='.$post_type, 'top' );
@@ -238,7 +243,9 @@ class Custom_Post_Type_Permalinks {
 		endforeach;
 
 		$permalink = trim($permalink, "/" );
-		add_permastruct( $post_type, $permalink, $args->rewrite );
+		$rewrite_args = $args->rewrite;
+		$rewrite_args["walk_dirs"] = false;
+		add_permastruct( $post_type, $permalink, $rewrite_args);
 
 	}
 
@@ -512,6 +519,12 @@ class Custom_Post_Type_Permalinks {
 				$link_dir = $link_dir .'/date';
 			}
 
+			if($post_type->rewrite['with_front']) {
+				global $wp_rewrite;
+				$link_dir = substr( $wp_rewrite->front, 1 ).$link_dir;
+			}
+
+
 			$ret_link = str_replace('%link_dir%',$link_dir,$ret_link);
 		}else {
 			$ret_link = $link;
@@ -551,6 +564,8 @@ class Custom_Post_Type_Permalinks {
 			foreach ($post_types as $post_type):
 				$post_type_obj = get_post_type_object($post_type);
 				$slug = $post_type_obj->rewrite['slug'];
+
+
 				if(!$slug) {
 					$slug = $post_type;
 				}
@@ -558,6 +573,10 @@ class Custom_Post_Type_Permalinks {
 				if(is_string($post_type_obj->has_archive)) {
 					$slug = $post_type_obj->has_archive;
 				};
+
+				if($post_type_obj->rewrite['with_front']) {
+					$slug = substr( $wp_rewrite->front, 1 ).$slug;
+				}
 
 				if ( $taxonomy == 'category' ){
 					$taxonomypat = ($cb = get_option('category_base')) ? $cb : $taxonomy;
@@ -616,12 +635,17 @@ class Custom_Post_Type_Permalinks {
 		$wp_home = rtrim( home_url(), '/' );
 
 		$post_type = $taxonomy->object_type[0];
-		$slug = get_post_type_object($post_type)->rewrite['slug'];
-		$with_front = get_post_type_object($post_type)->rewrite['with_front'];
+		$post_type_obj = get_post_type_object($post_type);
+		$slug = $post_type_obj->rewrite['slug'];
+		$with_front = $post_type_obj->rewrite['with_front'];
 
-		//$termlink = str_replace( $term->slug.'/', self::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
-		$str = rtrim( preg_replace( "/%[a-z_]*%/", "" ,get_option("permalink_structure")) ,'/' );//remove with front
+		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+
+		//拡張子を削除。
+		$str = array_shift(explode(".", get_option("permalink_structure")));
+		$str = rtrim( preg_replace( "/%[a-z_]*%/", "" ,$str) ,'/' );//remove with front
 		$termlink = str_replace($str."/", "/", $termlink );
+
 
 		if( $with_front === false ) {
 			$str = "";
