@@ -605,7 +605,8 @@ class Custom_Post_Type_Permalinks {
 
 		$termlink = str_replace( $wp_home, $wp_home.$slug, $termlink );
 		if ( ! $taxonomy->rewrite['hierarchical'] ) {
-			$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+			$termlink = str_replace( $term->slug.'/', self::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+
 		}
 		return $termlink;
 	}
