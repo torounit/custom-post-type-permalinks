@@ -38,9 +38,7 @@ Domain Path: /language/
  *
  */
 class Custom_Post_Type_Permalinks {
-
-
-
+	public $debug;
 
 	public $version = "0.9";
 
@@ -53,30 +51,32 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function add_hook () {
 
-		add_action( 'plugins_loaded', array(&$this,'check_version') );
-		add_action( 'wp_loaded', array(&$this,'add_archive_rewrite_rules'), 99 );
-		add_action( 'wp_loaded', array(&$this,'add_tax_rewrite_rules') );
-		add_action( 'wp_loaded', array(&$this, "dequeue_flush_rules"),100);
-		add_action( 'parse_request', array(&$this, "parse_request") );
-		add_action( 'registered_post_type', array(&$this,'registered_post_type'), 10, 2 );
+		add_action( 'init', array( $this,'load_textdomain') );
+		add_action( 'init', array( $this, 'update_rules') );
+		add_action( 'update_option_cptp_version', array( $this, 'update_rules') );
+
+
+		add_action( 'plugins_loaded', array( $this,'check_version') );
+		add_action( 'wp_loaded', array( $this,'add_archive_rewrite_rules'), 99 );
+		add_action( 'wp_loaded', array( $this,'add_tax_rewrite_rules') );
+		add_action( 'wp_loaded', array( $this, "dequeue_flush_rules"),100);
+		add_action( 'parse_request', array( $this, "parse_request") );
+		add_action( 'registered_post_type', array( $this,'registered_post_type'), 10, 2 );
 
 
 		if(get_option( "permalink_structure") != "") {
-			add_filter( 'post_type_link', array(&$this,'post_type_link'), 10, 4 );
-			add_filter( 'getarchives_join', array(&$this,'getarchives_join'), 10, 2 ); // [steve]
-			add_filter( 'getarchives_where', array(&$this,'getarchives_where'), 10 , 2 );
-			add_filter( 'get_archives_link', array(&$this,'get_archives_link'), 20, 1 );
-			add_filter( 'term_link', array(&$this,'term_link'), 10, 3 );
-			add_filter( 'attachment_link', array(&$this, 'attachment_link'), 20 , 2);
+			add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
+			add_filter( 'getarchives_join', array( $this,'getarchives_join'), 10, 2 ); // [steve]
+			add_filter( 'getarchives_where', array( $this,'getarchives_where'), 10 , 2 );
+			add_filter( 'get_archives_link', array( $this,'get_archives_link'), 20, 1 );
+			add_filter( 'term_link', array( $this,'term_link'), 10, 3 );
+			add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
 		}
 
 
-		add_action( 'init', array(&$this,'load_textdomain') );
-		add_action( 'init', array(&$this, 'update_rules') );
-		add_action( 'update_option_cptp_version', array(&$this, 'update_rules') );
-		add_action( 'admin_init', array(&$this,'settings_api_init'), 30 );
-		add_action( 'admin_enqueue_scripts', array(&$this,'enqueue_css_js') );
-		add_action( 'admin_footer', array(&$this,'pointer_js') );
+		add_action( 'admin_init', array( $this,'settings_api_init'), 30 );
+		add_action( 'admin_enqueue_scripts', array( $this,'enqueue_css_js') );
+		add_action( 'admin_footer', array( $this,'pointer_js') );
 
 
 	}
@@ -117,9 +117,9 @@ class Custom_Post_Type_Permalinks {
 	 * @version 1.0
 	 *
 	 */
-	private function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
+	public static function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
 		$chain = '';
-		$parent = &get_term( $id, $taxonomy, OBJECT, 'raw');
+		$parent = get_term( $id, $taxonomy );
 		if ( is_wp_error( $parent ) ) {
 			return $parent;
 		}
@@ -132,7 +132,7 @@ class Custom_Post_Type_Permalinks {
 
 		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $visited ) ) {
 			$visited[] = $parent->parent;
-			$chain .= $this->get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
+			$chain .= self::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
 		}
 
 		if ( $link ) {
@@ -144,6 +144,22 @@ class Custom_Post_Type_Permalinks {
 	}
 
 
+	public static function get_post_types() {
+		return get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
+	}
+
+
+	public static function get_taxonomies( $objects = false ) {
+		if( $objects ){
+			$output = "objects";
+		}
+		else {
+			$output = "names";
+
+		}
+		return get_taxonomies( array("show_ui" => true, "_builtin" => false), $output );
+	}
+
 
 	/**
 	 *
@@ -152,7 +168,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function add_archive_rewrite_rules() {
-		$post_types = get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true,'show_ui' => true) );
+		$post_types = self::get_post_types();
 
 		foreach ( $post_types as $post_type ):
 			if( !$post_type ) {
@@ -191,7 +207,6 @@ class Custom_Post_Type_Permalinks {
 				add_rewrite_rule( $slug.'/author/([^/]+)/?$', 'index.php?author_name=$matches[1]&post_type='.$post_type, 'top' );
 			}
 
-
 		endforeach;
 	}
 
@@ -222,7 +237,7 @@ class Custom_Post_Type_Permalinks {
 
 		add_rewrite_tag( '%'.$post_type.'_slug%', '('.$args->rewrite['slug'].')','post_type='.$post_type.'&slug=' );
 
-		$taxonomies = get_taxonomies( array("show_ui" => true, "_builtin" => false), 'objects' );
+		$taxonomies = self::get_taxonomies( true );
 		foreach ( $taxonomies as $taxonomy => $objects ):
 			$wp_rewrite->add_rewrite_tag( "%$taxonomy%", '(.+?)', "$taxonomy=" );
 		endforeach;
@@ -233,9 +248,6 @@ class Custom_Post_Type_Permalinks {
 		add_permastruct( $post_type, $permalink, $rewrite_args);
 
 	}
-
-
-
 
 
 	/**
@@ -266,6 +278,58 @@ class Custom_Post_Type_Permalinks {
 	}
 
 
+	/**
+	 *
+	 * create %tax% -> term
+	 *
+	 * */
+	private function create_taxonomy_replace_tag( $post_id , $permalink ) {
+		$search = array();
+		$replace = array();
+
+		$taxonomies = self::get_taxonomies( true );
+
+		//%taxnomomy% -> parent/child
+		//運用でケアすべきかも。
+
+		foreach ( $taxonomies as $taxonomy => $objects ) {
+			if ( strpos($permalink, "%$taxonomy%") !== false ) {
+				$terms = wp_get_post_terms( $post_id, $taxonomy, array('orderby' => 'term_id'));
+
+				if ( $terms and count($terms) > 1 ) {
+					if(reset($terms)->parent == 0){
+
+						$keys = array_keys($terms);
+						$term = $terms[$keys[1]]->slug;
+						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
+							$term = self::get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
+						}
+					}else{
+						$keys = array_keys($terms);
+						$term = $terms[$keys[0]]->slug;
+						if ( $terms[$keys[1]]->term_id == $terms[$keys[0]]->parent ) {
+							$term = self::get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
+						}
+					}
+				}else if( $terms ){
+
+					$term_obj = array_shift($terms);
+					$term = $term_obj->slug;
+
+					if(isset($term_obj->parent) and $term_obj->parent != 0) {
+						$term = self::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
+					}
+				}
+
+				if( isset($term) ) {
+					$search[] = "%$taxonomy%";
+					$replace[] = $term;
+				}
+
+			}
+		}
+		return array("search" => $search, "replace" => $replace );
+	}
 
 	/**
 	 *
@@ -281,16 +345,22 @@ class Custom_Post_Type_Permalinks {
 	public function post_type_link( $post_link, $post, $leavename ) {
 
 		global $wp_rewrite;
+
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if( $draft_or_pending and !$leavename )
 			return $post_link;
 
+
+
 		$post_type = $post->post_type;
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
+
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
 		$permalink = str_replace( '%'.$post_type.'_slug%', get_post_type_object( $post_type )->rewrite['slug'], $permalink );
 
 
+
+		//親ページが有るとき。
 		$parentsDirs = "";
 		if( !$leavename ){
 			$postId = $post->ID;
@@ -315,43 +385,13 @@ class Custom_Post_Type_Permalinks {
 			};
 		}
 
-		$taxonomies = get_taxonomies( array('show_ui' => true),'objects' );
+		$search = array();
+		$replace = array();
 
-		//%taxnomomy% -> parent/child
-		//運用でケアすべきかも。
-		foreach ( $taxonomies as $taxonomy => $objects ) {
-			if ( strpos($permalink, "%$taxonomy%") !== false ) {
-				$terms = wp_get_post_terms( $post->ID, $taxonomy, array('orderby' => 'term_id'));
-				if ( $terms and count($terms) > 1 ) {
-					if(reset($terms)->parent == 0){
+		$replace_tag = $this->create_taxonomy_replace_tag( $post->ID , $permalink );
+		$search = $search + $replace_tag["search"];
+		$replace = $replace + $replace_tag["replace"];
 
-						$keys = array_keys($terms);
-						$term = $terms[$keys[1]]->slug;
-						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
-							$term = $this->get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
-						}
-					}else{
-						$keys = array_keys($terms);
-						$term = $terms[$keys[0]]->slug;
-						if ( $terms[$keys[1]]->term_id == $terms[$keys[0]]->parent ) {
-							$term = $this->get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
-						}
-					}
-				}else if( $terms ){
-
-					$term_obj = array_shift($terms);
-					$term = $term_obj->slug;
-
-					if(isset($term_obj->parent) and $term_obj->parent != 0) {
-						$term = $this->get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
-					}
-				}
-
-				if( isset($term) ) {
-					$permalink = str_replace( "%$taxonomy%", $term, $permalink );
-				}
-			}
-		}
 
 		$user = get_userdata( $post->post_author );
 		if(isset($user->user_nicename)) {
@@ -359,17 +399,26 @@ class Custom_Post_Type_Permalinks {
 		}
 
 		$post_date = strtotime( $post->post_date );
-		$permalink = str_replace( "%year%", 	date("Y",$post_date), $permalink );
-		$permalink = str_replace( "%monthnum%", date("m",$post_date), $permalink );
-		$permalink = str_replace( "%day%", 		date("d",$post_date), $permalink );
-		$permalink = str_replace( "%hour%", 	date("H",$post_date), $permalink );
-		$permalink = str_replace( "%minute%", 	date("i",$post_date), $permalink );
-		$permalink = str_replace( "%second%", 	date("s",$post_date), $permalink );
+		$search = $search + array(
+			"%year%",
+			"%monthnum%",
+			"%day%",
+			"%hour%",
+			"%minute%",
+			"%second%"
+		);
 
+		$replace = $replace + array(
+			date("Y",$post_date),
+			date("m",$post_date),
+			date("d",$post_date),
+			date("H",$post_date),
+			date("i",$post_date),
+			date("s",$post_date)
+		);
+		$permalink = str_replace($search, $replace, $permalink);
+		$permalink = rtrim( home_url(),"/")."/".ltrim( $permalink ,"/" );
 
-		$permalink = home_url()."/".user_trailingslashit( $permalink );
-		$permalink = str_replace("//", "/", $permalink);
-		$permalink = str_replace(":/", "://", $permalink);
 		return $permalink;
 	}
 
@@ -501,7 +550,7 @@ class Custom_Post_Type_Permalinks {
 
 
 		global $wp_rewrite;
-		$taxonomies = get_taxonomies(array( '_builtin' => false));
+		$taxonomies = self::get_taxonomies();
 		$taxonomies['category'] = 'category';
 
 		if(empty($taxonomies)) {
@@ -605,11 +654,12 @@ class Custom_Post_Type_Permalinks {
 
 		$termlink = str_replace( $wp_home, $wp_home.$slug, $termlink );
 		if ( ! $taxonomy->rewrite['hierarchical'] ) {
-			$termlink = str_replace( $term->slug.'/', self::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
-
+		$termlink = str_replace( $term->slug.'/', self::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		}
+
 		return $termlink;
 	}
+
 
 	/**
 	 *
@@ -618,7 +668,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function parse_request($obj) {
-		$taxes = get_taxonomies(array( '_builtin' => false));
+		$taxes = self::get_taxonomies();
 		foreach ($taxes as $key => $tax) {
 			if(isset($obj->query_vars[$tax])) {
 				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
@@ -650,13 +700,13 @@ class Custom_Post_Type_Permalinks {
 	 */
 	public function update_rules() {
 
-		$post_types = get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
+		$post_types = self::get_post_types();
 		$type_count = count($post_types);
 		$i = 0;
 		foreach ($post_types as $post_type):
-			add_action('update_option_'.$post_type.'_structure',array(&$this,'queue_flush_rules'),10,2);
+			add_action('update_option_'.$post_type.'_structure',array( $this,'queue_flush_rules'),10,2);
 		endforeach;
-		add_action('update_option_no_taxonomy_structure',array(&$this,'queue_flush_rules'),10,2);
+		add_action('update_option_no_taxonomy_structure',array( $this,'queue_flush_rules'),10,2);
 	}
 
 
@@ -683,11 +733,11 @@ class Custom_Post_Type_Permalinks {
 	public function settings_api_init() {
 		add_settings_section('cptp_setting_section',
 			__("Permalink Setting for custom post type",'cptp'),
-			array(&$this,'setting_section_callback_function'),
+			array( $this,'setting_section_callback_function'),
 			'permalink'
 		);
 
-		$post_types = get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
+		$post_types = self::get_post_types();
 		foreach ($post_types as $post_type):
 			if(isset($_POST['submit']) and isset($_POST['_wp_http_referer'])){
 				if( strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
@@ -713,7 +763,7 @@ class Custom_Post_Type_Permalinks {
 
 			add_settings_field($post_type.'_structure',
 				$post_type,
-				array(&$this,'setting_structure_callback_function'),
+				array( $this,'setting_structure_callback_function'),
 				'permalink',
 				'cptp_setting_section',
 				$post_type.'_structure'
@@ -725,7 +775,7 @@ class Custom_Post_Type_Permalinks {
 		add_settings_field(
 			'no_taxonomy_structure',
 			__("Use custom permalink of custom taxonomy archive.",'cptp'),
-			array(&$this,'setting_no_tax_structure_callback_function'),
+			array( $this,'setting_no_tax_structure_callback_function'),
 			'permalink',
 			'cptp_setting_section'
 		);
@@ -830,4 +880,16 @@ class Custom_Post_Type_Permalinks {
 $custom_post_type_permalinks = new Custom_Post_Type_Permalinks;
 $custom_post_type_permalinks = apply_filters('custom_post_type_permalinks', $custom_post_type_permalinks);
 $custom_post_type_permalinks->add_hook();
+
+
+add_action("template_redirect",function(){
+	if($GLOBALS['DebugMyPlugin']) {
+		global $custom_post_type_permalinks;
+		$GLOBALS['DebugMyPlugin']->panels['main']->addMessage('I Want To Say:','<pre>'.print_r($custom_post_type_permalinks->debug, true).'</pre>');
+	}
+
+});
+
+
+
 ?>
