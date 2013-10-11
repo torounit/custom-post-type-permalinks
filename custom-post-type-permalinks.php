@@ -54,6 +54,7 @@ class CPTP {
 		$this->admin = new CPTP_Admin();
 		$this->permalink = new CPTP_Permalink();
 		$this->getArchives = new CPTP_Get_Archives();
+		$this->flush_rules = new CPTP_Flush_Rules();
 	}
 
 	/**
@@ -64,27 +65,36 @@ class CPTP {
 	public function add_hook () {
 
 		add_action( 'init', array( $this->core,'load_textdomain') );
-		add_action( 'init', array( $this->core, 'update_rules') );
-		add_action( 'update_option_cptp_version', array( $this->core, 'update_rules') );
+
 
 
 		add_action( 'plugins_loaded', array( $this->core,'check_version') );
+		add_action( 'parse_request', array( $this->core, "parse_request") );
+
+
 		add_action( 'wp_loaded', array( $this->rewrite,'add_archive_rewrite_rules'), 99 );
 		add_action( 'wp_loaded', array( $this->rewrite,'add_tax_rewrite_rules') );
-
-		add_action( 'wp_loaded', array( $this->core, "dequeue_flush_rules"),100);
-		add_action( 'parse_request', array( $this->core, "parse_request") );
 		add_action( 'registered_post_type', array( $this->rewrite,'registered_post_type'), 10, 2 );
+
+
+
+		add_action( 'init', array( $this->flush_rules, 'update_rules') );
+		add_action( 'update_option_cptp_version', array( $this->flush_rules, 'update_rules') );
+		add_action( 'wp_loaded', array( $this->flush_rules, "dequeue_flush_rules"),100);
+
 
 
 		if(get_option( "permalink_structure") != "") {
 			add_filter( 'post_type_link', array( $this->permalink,'post_type_link'), 10, 4 );
+			add_filter( 'term_link', array( $this->permalink,'term_link'), 10, 3 );
+			add_filter( 'attachment_link', array( $this->permalink, 'attachment_link'), 20 , 2);
+
 			add_filter( 'getarchives_join', array( $this->getArchives,'getarchives_join'), 10, 2 ); // [steve]
 			add_filter( 'getarchives_where', array( $this->getArchives,'getarchives_where'), 10 , 2 );
 			add_filter( 'get_archives_link', array( $this->getArchives,'get_archives_link'), 20, 1 );
-			add_filter( 'term_link', array( $this->permalink,'term_link'), 10, 3 );
-			add_filter( 'attachment_link', array( $this->permalink, 'attachment_link'), 20 , 2);
+
 		}
+
 
 
 		add_action( 'admin_init', array( $this->admin,'settings_api_init'), 30 );
@@ -505,11 +515,9 @@ class CPTP_Get_Archives {
 class CPTP_Core {
 
 
-
-
 	/**
 	 *
-	 * dequeue flush rules
+	 * check_version
 	 * @since 0.8.6
 	 *
 	 */
@@ -551,7 +559,12 @@ class CPTP_Core {
 		}
 	}
 
+}
 
+
+
+
+class CPTP_Flush_Rules {
 
 	/**
 	 *
@@ -604,7 +617,6 @@ class CPTP_Core {
 }
 
 class CPTP_Admin {
-
 
 
 	/**
