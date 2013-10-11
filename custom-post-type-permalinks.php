@@ -37,49 +37,43 @@ Domain Path: /language/
  *
  *
  */
-class Custom_Post_Type_Permalinks {
-	public $debug;
+class CPTP_Permalink {
 
-	public $version = "0.9";
+}
 
-	public $default_structure = '/%postname%/';
+class CPTP_Core {
+
 
 	/**
 	 *
-	 * Add Action & filter hooks.
+	 * load textdomain
+	 * @since 0.6.2
 	 *
 	 */
-	public function add_hook () {
-
-		add_action( 'init', array( $this,'load_textdomain') );
-		add_action( 'init', array( $this, 'update_rules') );
-		add_action( 'update_option_cptp_version', array( $this, 'update_rules') );
-
-
-		add_action( 'plugins_loaded', array( $this,'check_version') );
-		add_action( 'wp_loaded', array( $this,'add_archive_rewrite_rules'), 99 );
-		add_action( 'wp_loaded', array( $this,'add_tax_rewrite_rules') );
-		add_action( 'wp_loaded', array( $this, "dequeue_flush_rules"),100);
-		add_action( 'parse_request', array( $this, "parse_request") );
-		add_action( 'registered_post_type', array( $this,'registered_post_type'), 10, 2 );
-
-
-		if(get_option( "permalink_structure") != "") {
-			add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
-			add_filter( 'getarchives_join', array( $this,'getarchives_join'), 10, 2 ); // [steve]
-			add_filter( 'getarchives_where', array( $this,'getarchives_where'), 10 , 2 );
-			add_filter( 'get_archives_link', array( $this,'get_archives_link'), 20, 1 );
-			add_filter( 'term_link', array( $this,'term_link'), 10, 3 );
-			add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
-		}
-
-
-		add_action( 'admin_init', array( $this,'settings_api_init'), 30 );
-		add_action( 'admin_enqueue_scripts', array( $this,'enqueue_css_js') );
-		add_action( 'admin_footer', array( $this,'pointer_js') );
-
-
+	public function load_textdomain() {
+		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks/language');
 	}
+
+
+
+	/**
+	 *
+	 * Fix taxonomy = parent/child => taxonomy => child
+	 * @since 0.9.3
+	 *
+	 */
+	public function parse_request($obj) {
+		$taxes = CPTP::get_taxonomies();
+		foreach ($taxes as $key => $tax) {
+			if(isset($obj->query_vars[$tax])) {
+				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
+					$obj->query_vars[$tax] = array_pop(explode("/", $obj->query_vars[$tax]));
+				}
+			}
+		}
+	}
+
+
 
 	/**
 	 *
@@ -99,67 +93,43 @@ class Custom_Post_Type_Permalinks {
 
 	/**
 	 *
-	 * dequeue flush rules
-	 * @since 0.8.6
+	 * Add hook flush_rules
+	 * @since 0.7.9
 	 *
 	 */
+	public function update_rules() {
 
-	public function check_version() {
-		$version = get_option('cptp_version', 0);
-		if($version != $this->version) {
-			update_option('cptp_version', $this->version);
-		}
+		$post_types = CPTP::get_post_types();
+		$type_count = count($post_types);
+		$i = 0;
+		foreach ($post_types as $post_type):
+			add_action('update_option_'.$post_type.'_structure',array( $this,'queue_flush_rules'),10,2);
+		endforeach;
+		add_action('update_option_no_taxonomy_structure',array( $this,'queue_flush_rules'),10,2);
 	}
+
+
 
 	/**
+	 * Flush rules
 	 *
-	 * Get Custom Taxonomies parents.
-	 * @version 1.0
+	 * @since 0.7.9
 	 *
 	 */
-	public static function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
-		$chain = '';
-		$parent = get_term( $id, $taxonomy );
-		if ( is_wp_error( $parent ) ) {
-			return $parent;
-		}
 
-		if ( $nicename ){
-			$name = $parent->slug;
-		}else {
-			$name = $parent->name;
-		}
-
-		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $visited ) ) {
-			$visited[] = $parent->parent;
-			$chain .= self::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
-		}
-
-		if ( $link ) {
-			$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $parent->name ) ) . '">'.$name.'</a>' . $separator;
-		}else {
-			$chain .= $name.$separator;
-		}
-		return $chain;
+	public function queue_flush_rules(){
+		update_option( "queue_flush_rules", 1 );
 	}
 
 
-	public static function get_post_types() {
-		return get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
-	}
 
+}
 
-	public static function get_taxonomies( $objects = false ) {
-		if( $objects ){
-			$output = "objects";
-		}
-		else {
-			$output = "names";
+class CPTP_Admin {
 
-		}
-		return get_taxonomies( array("show_ui" => true, "_builtin" => false), $output );
-	}
+}
 
+class CPTP_Rewrite {
 
 	/**
 	 *
@@ -168,7 +138,7 @@ class Custom_Post_Type_Permalinks {
 	 *
 	 */
 	public function add_archive_rewrite_rules() {
-		$post_types = self::get_post_types();
+		$post_types = CPTP::get_post_types();
 
 		foreach ( $post_types as $post_type ):
 			if( !$post_type ) {
@@ -210,6 +180,8 @@ class Custom_Post_Type_Permalinks {
 		endforeach;
 	}
 
+
+
 	/**
 	 *
 	 * registered_post_type
@@ -237,7 +209,7 @@ class Custom_Post_Type_Permalinks {
 
 		add_rewrite_tag( '%'.$post_type.'_slug%', '('.$args->rewrite['slug'].')','post_type='.$post_type.'&slug=' );
 
-		$taxonomies = self::get_taxonomies( true );
+		$taxonomies = CPTP::get_taxonomies( true );
 		foreach ( $taxonomies as $taxonomy => $objects ):
 			$wp_rewrite->add_rewrite_tag( "%$taxonomy%", '(.+?)', "$taxonomy=" );
 		endforeach;
@@ -248,6 +220,207 @@ class Custom_Post_Type_Permalinks {
 		add_permastruct( $post_type, $permalink, $rewrite_args);
 
 	}
+
+	/**
+	 *
+	 * Add rewrite rules for custom taxonomies.
+	 * @since 0.6
+	 * @version 2.1
+	 *
+	 */
+	public function add_tax_rewrite_rules() {
+		if(get_option('no_taxonomy_structure')) {
+			return false;
+		}
+
+
+		global $wp_rewrite;
+		$taxonomies = CPTP::get_taxonomies();
+		$taxonomies['category'] = 'category';
+
+		if(empty($taxonomies)) {
+			return false;
+		}
+
+		foreach ($taxonomies as $taxonomy) :
+			$taxonomyObject = get_taxonomy($taxonomy);
+			$post_types = $taxonomyObject->object_type;
+
+			foreach ($post_types as $post_type):
+				$post_type_obj = get_post_type_object($post_type);
+				$slug = $post_type_obj->rewrite['slug'];
+
+
+				if(!$slug) {
+					$slug = $post_type;
+				}
+
+				if(is_string($post_type_obj->has_archive)) {
+					$slug = $post_type_obj->has_archive;
+				};
+
+				if($post_type_obj->rewrite['with_front']) {
+					$slug = substr( $wp_rewrite->front, 1 ).$slug;
+				}
+
+				if ( $taxonomy == 'category' ){
+					$taxonomypat = ($cb = get_option('category_base')) ? $cb : $taxonomy;
+					$tax = 'category_name';
+				} else {
+					// Edit by [Xiphe]
+					if (isset($taxonomyObject->rewrite['slug'])) {
+						$taxonomypat = $taxonomyObject->rewrite['slug'];
+					} else {
+						$taxonomypat = $taxonomy;
+					}
+					// [Xiphe] stop
+
+					$tax = $taxonomy;
+				}
+
+
+				//add taxonomy slug
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&paged=$matches[2]', 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/?$', 'index.php?'.$tax.'=$matches[1]', 'top' );  // modified by [steve] [*** bug fixing]
+
+				// below rules were added by [steve]
+				add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
+
+			endforeach;
+		endforeach;
+	}
+
+
+
+}
+
+
+
+
+class CPTP {
+
+	public $version = "0.9";
+
+	public $default_structure = '/%postname%/';
+
+	public function __construct() {
+		$this->$core = new CPTP_Core();
+		$this->$rewrite = new CPTP_Rewrite();
+		$this->$admin = new CPTP_Admin();
+		$this->$permalink = new CPTP_Permalink();
+	}
+
+	/**
+	 *
+	 * Add Action & filter hooks.
+	 *
+	 */
+	public function add_hook () {
+
+		add_action( 'init', array( $this->core,'load_textdomain') );
+		add_action( 'init', array( $this->core, 'update_rules') );
+		add_action( 'update_option_cptp_version', array( $this->core, 'update_rules') );
+
+
+		add_action( 'plugins_loaded', array( $this->core,'check_version') );
+		add_action( 'wp_loaded', array( $this->$rewrite,'add_archive_rewrite_rules'), 99 );
+		add_action( 'wp_loaded', array( $this->$rewrite,'add_tax_rewrite_rules') );
+
+		add_action( 'wp_loaded', array( $this->core, "dequeue_flush_rules"),100);
+		add_action( 'parse_request', array( $this->core, "parse_request") );
+		add_action( 'registered_post_type', array( $this->$rewrite,'registered_post_type'), 10, 2 );
+
+
+		if(get_option( "permalink_structure") != "") {
+			add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
+			add_filter( 'getarchives_join', array( $this,'getarchives_join'), 10, 2 ); // [steve]
+			add_filter( 'getarchives_where', array( $this,'getarchives_where'), 10 , 2 );
+			add_filter( 'get_archives_link', array( $this,'get_archives_link'), 20, 1 );
+			add_filter( 'term_link', array( $this,'term_link'), 10, 3 );
+			add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
+		}
+
+
+		add_action( 'admin_init', array( $this,'settings_api_init'), 30 );
+		add_action( 'admin_enqueue_scripts', array( $this,'enqueue_css_js') );
+		add_action( 'admin_footer', array( $this,'pointer_js') );
+
+
+	}
+
+
+
+	/**
+	 *
+	 * dequeue flush rules
+	 * @since 0.8.6
+	 *
+	 */
+
+	public function check_version() {
+		$version = get_option('cptp_version', 0);
+		if($version != $this->version) {
+			update_option('cptp_version', $this->version);
+		}
+	}
+
+	/**
+	 *
+	 * Get Custom Taxonomies parents.
+	 * @version 1.0
+	 *
+	 */
+	public static function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
+		$chain = '';
+		$parent = get_term( $id, $taxonomy );
+		if ( is_wp_error( $parent ) ) {
+			return $parent;
+		}
+
+		if ( $nicename ){
+			$name = $parent->slug;
+		}else {
+			$name = $parent->name;
+		}
+
+		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $visited ) ) {
+			$visited[] = $parent->parent;
+			$chain .= CPTP::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
+		}
+
+		if ( $link ) {
+			$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $parent->name ) ) . '">'.$name.'</a>' . $separator;
+		}else {
+			$chain .= $name.$separator;
+		}
+		return $chain;
+	}
+
+
+	public static function get_post_types() {
+		return get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
+	}
+
+
+	public static function get_taxonomies( $objects = false ) {
+		if( $objects ){
+			$output = "objects";
+		}
+		else {
+			$output = "names";
+
+		}
+		return get_taxonomies( array("show_ui" => true, "_builtin" => false), $output );
+	}
+
+
+
+
 
 
 	/**
@@ -287,7 +460,7 @@ class Custom_Post_Type_Permalinks {
 		$search = array();
 		$replace = array();
 
-		$taxonomies = self::get_taxonomies( true );
+		$taxonomies = CPTP::get_taxonomies( true );
 
 		//%taxnomomy% -> parent/child
 		//運用でケアすべきかも。
@@ -302,13 +475,13 @@ class Custom_Post_Type_Permalinks {
 						$keys = array_keys($terms);
 						$term = $terms[$keys[1]]->slug;
 						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
-							$term = self::get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
+							$term = CPTP::get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
 						}
 					}else{
 						$keys = array_keys($terms);
 						$term = $terms[$keys[0]]->slug;
 						if ( $terms[$keys[1]]->term_id == $terms[$keys[0]]->parent ) {
-							$term = self::get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
+							$term = CPTP::get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
 						}
 					}
 				}else if( $terms ){
@@ -317,7 +490,7 @@ class Custom_Post_Type_Permalinks {
 					$term = $term_obj->slug;
 
 					if(isset($term_obj->parent) and $term_obj->parent != 0) {
-						$term = self::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
+						$term = CPTP::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
 					}
 				}
 
@@ -536,82 +709,6 @@ class Custom_Post_Type_Permalinks {
 
 
 
-	/**
-	 *
-	 * Add rewrite rules for custom taxonomies.
-	 * @since 0.6
-	 * @version 2.1
-	 *
-	 */
-	public function add_tax_rewrite_rules() {
-		if(get_option('no_taxonomy_structure')) {
-			return false;
-		}
-
-
-		global $wp_rewrite;
-		$taxonomies = self::get_taxonomies();
-		$taxonomies['category'] = 'category';
-
-		if(empty($taxonomies)) {
-			return false;
-		}
-
-		foreach ($taxonomies as $taxonomy) :
-			$taxonomyObject = get_taxonomy($taxonomy);
-			$post_types = $taxonomyObject->object_type;
-
-			foreach ($post_types as $post_type):
-				$post_type_obj = get_post_type_object($post_type);
-				$slug = $post_type_obj->rewrite['slug'];
-
-
-				if(!$slug) {
-					$slug = $post_type;
-				}
-
-				if(is_string($post_type_obj->has_archive)) {
-					$slug = $post_type_obj->has_archive;
-				};
-
-				if($post_type_obj->rewrite['with_front']) {
-					$slug = substr( $wp_rewrite->front, 1 ).$slug;
-				}
-
-				if ( $taxonomy == 'category' ){
-					$taxonomypat = ($cb = get_option('category_base')) ? $cb : $taxonomy;
-					$tax = 'category_name';
-				} else {
-					// Edit by [Xiphe]
-					if (isset($taxonomyObject->rewrite['slug'])) {
-						$taxonomypat = $taxonomyObject->rewrite['slug'];
-					} else {
-						$taxonomypat = $taxonomy;
-					}
-					// [Xiphe] stop
-
-					$tax = $taxonomy;
-				}
-
-
-				//add taxonomy slug
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&paged=$matches[2]', 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/?$', 'index.php?'.$tax.'=$matches[1]', 'top' );  // modified by [steve] [*** bug fixing]
-
-				// below rules were added by [steve]
-				add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&post_type='.$post_type, 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]&post_type='.$post_type, 'top' );
-
-			endforeach;
-		endforeach;
-	}
-
-
-
 
 	/**
 	 *
@@ -654,73 +751,16 @@ class Custom_Post_Type_Permalinks {
 
 		$termlink = str_replace( $wp_home, $wp_home.$slug, $termlink );
 		if ( ! $taxonomy->rewrite['hierarchical'] ) {
-		$termlink = str_replace( $term->slug.'/', self::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+			$termlink = str_replace( $term->slug.'/', CPTP::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		}
 
 		return $termlink;
 	}
 
 
-	/**
-	 *
-	 * Fix taxonomy = parent/child => taxonomy => child
-	 * @since 0.9.3
-	 *
-	 */
-	public function parse_request($obj) {
-		$taxes = self::get_taxonomies();
-		foreach ($taxes as $key => $tax) {
-			if(isset($obj->query_vars[$tax])) {
-				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
-					$obj->query_vars[$tax] = array_pop(explode("/", $obj->query_vars[$tax]));
-				}
-			}
-		}
-	}
 
 
 
-	/**
-	 *
-	 * load textdomain
-	 * @since 0.6.2
-	 *
-	 */
-	public function load_textdomain() {
-		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks/language');
-	}
-
-
-
-	/**
-	 *
-	 * Add hook flush_rules
-	 * @since 0.7.9
-	 *
-	 */
-	public function update_rules() {
-
-		$post_types = self::get_post_types();
-		$type_count = count($post_types);
-		$i = 0;
-		foreach ($post_types as $post_type):
-			add_action('update_option_'.$post_type.'_structure',array( $this,'queue_flush_rules'),10,2);
-		endforeach;
-		add_action('update_option_no_taxonomy_structure',array( $this,'queue_flush_rules'),10,2);
-	}
-
-
-
-	/**
-	 * Flush rules
-	 *
-	 * @since 0.7.9
-	 *
-	 */
-
-	public function queue_flush_rules(){
-		update_option( "queue_flush_rules", 1 );
-	}
 
 
 
@@ -737,7 +777,7 @@ class Custom_Post_Type_Permalinks {
 			'permalink'
 		);
 
-		$post_types = self::get_post_types();
+		$post_types = CPTP::get_post_types();
 		foreach ($post_types as $post_type):
 			if(isset($_POST['submit']) and isset($_POST['_wp_http_referer'])){
 				if( strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
@@ -877,19 +917,8 @@ class Custom_Post_Type_Permalinks {
 	}
 }
 
-$custom_post_type_permalinks = new Custom_Post_Type_Permalinks;
-$custom_post_type_permalinks = apply_filters('custom_post_type_permalinks', $custom_post_type_permalinks);
-$custom_post_type_permalinks->add_hook();
+$cptp = new CPTP();
+$cptp  = apply_filters('custom_post_type_permalinks', $cptp );
+$cptp->add_hook();
 
 
-add_action("template_redirect",function(){
-	if($GLOBALS['DebugMyPlugin']) {
-		global $custom_post_type_permalinks;
-		$GLOBALS['DebugMyPlugin']->panels['main']->addMessage('I Want To Say:','<pre>'.print_r($custom_post_type_permalinks->debug, true).'</pre>');
-	}
-
-});
-
-
-
-?>
