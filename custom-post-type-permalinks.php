@@ -5,7 +5,7 @@ Plugin URI: http://www.torounit.com
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: http://www.torounit.com/plugins/custom-post-type-permalinks/
-Version: 0.9.3.3
+Version: 0.9.4.dev
 Text Domain: cptp
 License: GPL2 or later
 Domain Path: /language/
@@ -35,10 +35,20 @@ Domain Path: /language/
  *
  * Custom Post Type Permalinks
  *
+ * @package Custom_Post_Type_Permalinks
+ * @version 0.9.4
  *
  */
 
-
+/**
+ *
+ * CPTP
+ *
+ * Facade.
+ * @package Custom_Post_Type_Permalinks
+ * @since 0.9.4
+ *
+ * */
 
 class CPTP {
 
@@ -46,14 +56,14 @@ class CPTP {
 
 	public static $default_structure = '/%postname%/';
 
-	public $core,$rewrite,$admin,$permalink,$getArchives;
+	public $core,$rewrite,$admin,$permalink,$get_archives;
 
 	public function __construct() {
 		$this->core = new CPTP_Core();
 		$this->rewrite = new CPTP_Rewrite();
 		$this->admin = new CPTP_Admin();
 		$this->permalink = new CPTP_Permalink();
-		$this->getArchives = new CPTP_Get_Archives();
+		$this->get_archives = new CPTP_Get_Archives();
 		$this->flush_rules = new CPTP_Flush_Rules();
 	}
 
@@ -62,15 +72,12 @@ class CPTP {
 	 * Add Action & filter hooks.
 	 *
 	 */
-	public function add_hook () {
+	public function add_hook() {
 
 		add_action( 'init', array( $this->core,'load_textdomain') );
 
-
-
 		add_action( 'plugins_loaded', array( $this->core,'check_version') );
-		add_action( 'parse_request', array( $this->core, "parse_request") );
-
+		add_action( 'parse_request', array( $this->rewrite, "parse_request") );
 
 		add_action( 'wp_loaded', array( $this->rewrite,'add_archive_rewrite_rules'), 99 );
 		add_action( 'wp_loaded', array( $this->rewrite,'add_tax_rewrite_rules') );
@@ -89,20 +96,52 @@ class CPTP {
 			add_filter( 'term_link', array( $this->permalink,'term_link'), 10, 3 );
 			add_filter( 'attachment_link', array( $this->permalink, 'attachment_link'), 20 , 2);
 
-			add_filter( 'getarchives_join', array( $this->getArchives,'getarchives_join'), 10, 2 ); // [steve]
-			add_filter( 'getarchives_where', array( $this->getArchives,'getarchives_where'), 10 , 2 );
-			add_filter( 'get_archives_link', array( $this->getArchives,'get_archives_link'), 20, 1 );
+			add_filter( 'getarchives_join', array( $this->get_archives,'getarchives_join'), 10, 2 ); // [steve]
+			add_filter( 'getarchives_where', array( $this->get_archives,'getarchives_where'), 10 , 2 );
+			add_filter( 'get_archives_link', array( $this->get_archives,'get_archives_link'), 20, 1 );
 
 		}
-
-
 
 		add_action( 'admin_init', array( $this->admin,'settings_api_init'), 30 );
 		add_action( 'admin_enqueue_scripts', array( $this->admin,'enqueue_css_js') );
 		add_action( 'admin_footer', array( $this->admin,'pointer_js') );
 
-
 	}
+
+}
+
+
+
+/**
+ *
+ * Utilty Class
+ *
+ * @package Custom_Post_Type_Permalinks
+ * @since 0.9.4
+ *
+ * */
+
+class CPTP_Util {
+
+	private function __construct() {
+	}
+
+	public static function get_post_types() {
+		return get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
+	}
+
+
+	public static function get_taxonomies( $objects = false ) {
+		if( $objects ){
+			$output = "objects";
+		}
+		else {
+			$output = "names";
+
+		}
+		return get_taxonomies( array("show_ui" => true, "_builtin" => false), $output );
+	}
+
 
 
 	/**
@@ -126,7 +165,7 @@ class CPTP {
 
 		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && !in_array( $parent->parent, $visited ) ) {
 			$visited[] = $parent->parent;
-			$chain .= CPTP::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
+			$chain .= CPTP_Util::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
 		}
 
 		if ( $link ) {
@@ -138,28 +177,20 @@ class CPTP {
 	}
 
 
-	public static function get_post_types() {
-		return get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
-	}
-
-
-	public static function get_taxonomies( $objects = false ) {
-		if( $objects ){
-			$output = "objects";
-		}
-		else {
-			$output = "names";
-
-		}
-		return get_taxonomies( array("show_ui" => true, "_builtin" => false), $output );
-	}
-
 
 }
 
 
 
-
+/**
+ *
+ * CPTP_Permalink
+ *
+ * Override Permalinks
+ * @package Custom_Post_Type_Permalinks
+ * @since 0.9.4
+ *
+ * */
 
 
 class CPTP_Permalink {
@@ -268,7 +299,7 @@ class CPTP_Permalink {
 		$search = array();
 		$replace = array();
 
-		$taxonomies = CPTP::get_taxonomies( true );
+		$taxonomies = CPTP_Util::get_taxonomies( true );
 
 		//%taxnomomy% -> parent/child
 		//運用でケアすべきかも。
@@ -283,13 +314,13 @@ class CPTP_Permalink {
 						$keys = array_keys($terms);
 						$term = $terms[$keys[1]]->slug;
 						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
-							$term = CPTP::get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
+							$term = CPTP_Util::get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
 						}
 					}else{
 						$keys = array_keys($terms);
 						$term = $terms[$keys[0]]->slug;
 						if ( $terms[$keys[1]]->term_id == $terms[$keys[0]]->parent ) {
-							$term = CPTP::get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
+							$term = CPTP_Util::get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
 						}
 					}
 				}else if( $terms ){
@@ -298,7 +329,7 @@ class CPTP_Permalink {
 					$term = $term_obj->slug;
 
 					if(isset($term_obj->parent) and $term_obj->parent != 0) {
-						$term = CPTP::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
+						$term = CPTP_Util::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
 					}
 				}
 
@@ -382,7 +413,7 @@ class CPTP_Permalink {
 
 		$termlink = str_replace( $wp_home, $wp_home.$slug, $termlink );
 		if ( ! $taxonomy->rewrite['hierarchical'] ) {
-			$termlink = str_replace( $term->slug.'/', CPTP::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+			$termlink = str_replace( $term->slug.'/', CPTP_Util::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		}
 
 		return $termlink;
@@ -392,6 +423,14 @@ class CPTP_Permalink {
 
 
 
+/**
+ *
+ * wp_get_archive hooks.
+ *
+ * @package Custom_Post_Type_Permalinks
+ * @since 0.9.4
+ *
+ * */
 
 class CPTP_Get_Archives {
 
@@ -509,7 +548,14 @@ class CPTP_Get_Archives {
 }
 
 
-
+/**
+ *
+ * For load plugin.
+ *
+ * @package Custom_Post_Type_Permalinks
+ * @since 0.9.4
+ *
+ * */
 
 
 class CPTP_Core {
@@ -540,29 +586,18 @@ class CPTP_Core {
 		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks/language');
 	}
 
-
-
-	/**
-	 *
-	 * Fix taxonomy = parent/child => taxonomy => child
-	 * @since 0.9.3
-	 *
-	 */
-	public function parse_request($obj) {
-		$taxes = CPTP::get_taxonomies();
-		foreach ($taxes as $key => $tax) {
-			if(isset($obj->query_vars[$tax])) {
-				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
-					$obj->query_vars[$tax] = array_pop(explode("/", $obj->query_vars[$tax]));
-				}
-			}
-		}
-	}
-
 }
 
 
 
+/**
+ *
+ * Reflush Rewrite Rules
+ *
+ * @package Custom_Post_Type_Permalinks
+ * @since 0.9.4
+ *
+ * */
 
 class CPTP_Flush_Rules {
 
@@ -590,7 +625,7 @@ class CPTP_Flush_Rules {
 	 */
 	public function update_rules() {
 
-		$post_types = CPTP::get_post_types();
+		$post_types = CPTP_Util::get_post_types();
 		$type_count = count($post_types);
 		$i = 0;
 		foreach ($post_types as $post_type):
@@ -612,9 +647,17 @@ class CPTP_Flush_Rules {
 		update_option( "queue_flush_rules", 1 );
 	}
 
-
-
 }
+
+
+/**
+ *
+ * Admin Page.
+ *
+ * @package Custom_Post_Type_Permalinks
+ * @since 0.9.4
+ *
+ * */
 
 class CPTP_Admin {
 
@@ -632,7 +675,7 @@ class CPTP_Admin {
 			'permalink'
 		);
 
-		$post_types = CPTP::get_post_types();
+		$post_types = CPTP_Util::get_post_types();
 		foreach ($post_types as $post_type):
 			if(isset($_POST['submit']) and isset($_POST['_wp_http_referer'])){
 				if( strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
@@ -772,6 +815,17 @@ class CPTP_Admin {
 	}
 }
 
+
+
+/**
+ *
+ * Add Rewrite Rules
+ *
+ * @package Custom_Post_Type_Permalinks
+ * @since 0.9.4
+ *
+ * */
+
 class CPTP_Rewrite {
 
 	/**
@@ -781,7 +835,7 @@ class CPTP_Rewrite {
 	 *
 	 */
 	public function add_archive_rewrite_rules() {
-		$post_types = CPTP::get_post_types();
+		$post_types = CPTP_Util::get_post_types();
 
 		foreach ( $post_types as $post_type ):
 			if( !$post_type ) {
@@ -852,7 +906,7 @@ class CPTP_Rewrite {
 
 		add_rewrite_tag( '%'.$post_type.'_slug%', '('.$args->rewrite['slug'].')','post_type='.$post_type.'&slug=' );
 
-		$taxonomies = CPTP::get_taxonomies( true );
+		$taxonomies = CPTP_Util::get_taxonomies( true );
 		foreach ( $taxonomies as $taxonomy => $objects ):
 			$wp_rewrite->add_rewrite_tag( "%$taxonomy%", '(.+?)', "$taxonomy=" );
 		endforeach;
@@ -878,7 +932,7 @@ class CPTP_Rewrite {
 
 
 		global $wp_rewrite;
-		$taxonomies = CPTP::get_taxonomies();
+		$taxonomies = CPTP_Util::get_taxonomies();
 		$taxonomies['category'] = 'category';
 
 		if(empty($taxonomies)) {
@@ -923,10 +977,10 @@ class CPTP_Rewrite {
 
 
 				//add taxonomy slug
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&paged=$matches[2]', 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
-				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/?$', 'index.php?'.$tax.'=$matches[1]', 'top' );  // modified by [steve] [*** bug fixing]
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&paged=$matches[2]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]&post_type='.$post_type, 'top' );
+				add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/?$', 'index.php?'.$tax.'=$matches[1]&post_type='.$post_type, 'top' );  // modified by [steve] [*** bug fixing]
 
 				// below rules were added by [steve]
 				add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&post_type='.$post_type, 'top' );
@@ -938,6 +992,24 @@ class CPTP_Rewrite {
 		endforeach;
 	}
 
+
+
+	/**
+	 *
+	 * Fix taxonomy = parent/child => taxonomy => child
+	 * @since 0.9.3
+	 *
+	 */
+	public function parse_request($obj) {
+		$taxes = CPTP_Util::get_taxonomies();
+		foreach ($taxes as $key => $tax) {
+			if(isset($obj->query_vars[$tax])) {
+				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
+					$obj->query_vars[$tax] = array_pop(explode("/", $obj->query_vars[$tax]));
+				}
+			}
+		}
+	}
 
 
 }
