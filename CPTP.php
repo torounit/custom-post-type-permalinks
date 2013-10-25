@@ -10,6 +10,7 @@
  *
  * */
 
+require_once dirname(__FILE__).'/CPTP/Util.php';
 require_once dirname(__FILE__).'/CPTP/Setting.php';
 require_once dirname(__FILE__).'/CPTP/Rewrite.php';
 require_once dirname(__FILE__).'/CPTP/Admin.php';
@@ -42,7 +43,7 @@ class CPTP {
 	 */
 	public function add_hook() {
 		$this->setting->add_hook();
-		$this->rewirte->add_hook();
+		$this->rewrite->add_hook();
 		$this->admin->add_hook();
 		if(get_option( "permalink_structure") != "") {
 			$this->permalink->add_hook();
