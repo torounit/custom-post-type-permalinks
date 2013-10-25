@@ -398,7 +398,6 @@ class CPTP_Permalink {
 		$slug = $post_type_obj->rewrite['slug'];
 		$with_front = $post_type_obj->rewrite['with_front'];
 
-		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 
 		//拡張子を削除。
 		$str = array_shift(explode(".", get_option("permalink_structure")));
