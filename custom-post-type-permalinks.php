@@ -73,38 +73,16 @@ class CPTP {
 	 *
 	 */
 	public function add_hook() {
-
-		add_action( 'init', array( $this->core,'load_textdomain') );
-
-		add_action( 'plugins_loaded', array( $this->core,'check_version') );
-		add_action( 'parse_request', array( $this->rewrite, "parse_request") );
-
-		add_action( 'wp_loaded', array( $this->rewrite,'add_archive_rewrite_rules'), 99 );
-		add_action( 'wp_loaded', array( $this->rewrite,'add_tax_rewrite_rules') );
-		add_action( 'registered_post_type', array( $this->rewrite,'registered_post_type'), 10, 2 );
-
-
-
-		add_action( 'init', array( $this->flush_rules, 'update_rules') );
-		add_action( 'update_option_cptp_version', array( $this->flush_rules, 'update_rules') );
-		add_action( 'wp_loaded', array( $this->flush_rules, "dequeue_flush_rules"),100);
-
-
+		$this->core->add_hook();
+		$this->rewirte->add_hook();
+		$this->admin->add_hook();
 
 		if(get_option( "permalink_structure") != "") {
-			add_filter( 'post_type_link', array( $this->permalink,'post_type_link'), 10, 4 );
-			add_filter( 'term_link', array( $this->permalink,'term_link'), 10, 3 );
-			add_filter( 'attachment_link', array( $this->permalink, 'attachment_link'), 20 , 2);
-
-			add_filter( 'getarchives_join', array( $this->get_archives,'getarchives_join'), 10, 2 ); // [steve]
-			add_filter( 'getarchives_where', array( $this->get_archives,'getarchives_where'), 10 , 2 );
-			add_filter( 'get_archives_link', array( $this->get_archives,'get_archives_link'), 20, 1 );
-
+			$this->permalink->add_hook();
+			$this->get_archives->add_hook();
 		}
 
-		add_action( 'admin_init', array( $this->admin,'settings_api_init'), 30 );
-		add_action( 'admin_enqueue_scripts', array( $this->admin,'enqueue_css_js') );
-		add_action( 'admin_footer', array( $this->admin,'pointer_js') );
+		$this->flush_rules->add_hook();
 
 	}
 
@@ -196,6 +174,11 @@ class CPTP_Util {
 class CPTP_Permalink {
 
 
+	public function add_hook() {
+		add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
+		add_filter( 'term_link', array( $this,'term_link'), 10, 3 );
+		add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
+	}
 
 	/**
 	 *
@@ -433,6 +416,12 @@ class CPTP_Permalink {
 
 class CPTP_Get_Archives {
 
+	public function add_hook() {
+		add_filter( 'getarchives_join', array( $this,'getarchives_join'), 10, 2 ); // [steve]
+		add_filter( 'getarchives_where', array( $this,'getarchives_where'), 10 , 2 );
+		add_filter( 'get_archives_link', array( $this,'get_archives_link'), 20, 1 );
+	}
+
 	/**
 	 *
 	 * wp_get_archives fix for custom post
@@ -559,6 +548,10 @@ class CPTP_Get_Archives {
 
 class CPTP_Core {
 
+	public function add_hook() {
+		add_action( 'init', array( $this,'load_textdomain') );
+		add_action( 'plugins_loaded', array( $this,'check_version') );
+	}
 
 	/**
 	 *
@@ -599,6 +592,13 @@ class CPTP_Core {
  * */
 
 class CPTP_Flush_Rules {
+
+
+	public function add_hook() {
+		add_action( 'init', array( $this, 'update_rules') );
+		add_action( 'update_option_cptp_version', array( $this, 'update_rules') );
+		add_action( 'wp_loaded', array( $this, "dequeue_flush_rules"),100);
+	}
 
 	/**
 	 *
@@ -660,6 +660,11 @@ class CPTP_Flush_Rules {
 
 class CPTP_Admin {
 
+	public function add_hook() {
+		add_action( 'admin_init', array( $this,'settings_api_init'), 30 );
+		add_action( 'admin_enqueue_scripts', array( $this,'enqueue_css_js') );
+		add_action( 'admin_footer', array( $this,'pointer_js') );
+	}
 
 	/**
 	 *
@@ -826,6 +831,13 @@ class CPTP_Admin {
  * */
 
 class CPTP_Rewrite {
+
+	public function add_hook() {
+		add_action( 'parse_request', array( $this, "parse_request") );
+		add_action( 'wp_loaded', array( $this,'add_archive_rewrite_rules'), 99 );
+		add_action( 'wp_loaded', array( $this,'add_tax_rewrite_rules') );
+		add_action( 'registered_post_type', array( $this,'registered_post_type'), 10, 2 );
+	}
 
 	/**
 	 *
