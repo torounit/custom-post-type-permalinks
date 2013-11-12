@@ -24,8 +24,6 @@ Domain Path: /language/
 
 require_once dirname(__FILE__).'/CPTP.php';
 
-$cptp = new CPTP();
-$cptp  = apply_filters('custom_post_type_permalinks', $cptp );
-$cptp->add_hook();
+new CPTP();
 
 

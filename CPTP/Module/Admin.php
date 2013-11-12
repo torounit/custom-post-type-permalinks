@@ -11,7 +11,7 @@
  *
  * */
 
-class CPTP_Admin {
+class CPTP_Module_Admin extends CPTP_Module {
 
 	public function add_hook() {
 		add_action( 'admin_init', array( $this,'settings_api_init'), 30 );
@@ -41,7 +41,7 @@ class CPTP_Admin {
 
 					#default permalink structure
 					if( !$structure )
-						$structure = CPTP::$default_structure;
+						$structure = CPTP_DEFAULT_PERMALINK;
 
 					$structure = str_replace('//','/','/'.$structure);# first "/"
 
@@ -107,7 +107,7 @@ class CPTP_Admin {
 
 		$value = get_option($option);
 		if( !$value )
-			$value = CPTP::$default_structure;
+			$value = CPTP_DEFAULT_PERMALINK;
 
 		global $wp_rewrite;
 		$front = substr( $wp_rewrite->front, 1 );
@@ -172,3 +172,4 @@ class CPTP_Admin {
 	}
 }
 
+new CPTP_Module_Admin;

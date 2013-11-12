@@ -10,7 +10,7 @@
  *
  * */
 
-class CPTP_GetArchives {
+class CPTP_Module_GetArchives extends CPTP_Module {
 
 	public function add_hook() {
 		add_filter( 'getarchives_join', array( $this,'getarchives_join'), 10, 2 ); // [steve]
@@ -129,4 +129,8 @@ class CPTP_GetArchives {
 	}
 
 
+}
+
+if(get_option( "permalink_structure") != "") {
+	new CPTP_Module_GetArchives;
 }

@@ -11,7 +11,7 @@
  *
  * */
 
-class CPTP_Rewrite {
+class CPTP_Module_Rewrite extends CPTP_Module {
 
 	public function add_hook() {
 		add_action( 'parse_request', array( $this, "parse_request") );
@@ -90,7 +90,7 @@ class CPTP_Rewrite {
 		$permalink = get_option( $post_type.'_structure' );
 
 		if( !$permalink ) {
-			$permalink = CPTP::$default_structure;
+			$permalink = CPTP_DEFAULT_PERMALINK;
 		}
 
 		$permalink = '%'.$post_type.'_slug%'.$permalink;
@@ -202,6 +202,6 @@ class CPTP_Rewrite {
 			}
 		}
 	}
-
-
 }
+
+new CPTP_Module_Rewrite;

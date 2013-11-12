@@ -12,7 +12,7 @@
  * */
 
 
-class CPTP_Permalink {
+class CPTP_Module_Permalink extends CPTP_Module {
 
 
 	public function add_hook() {
@@ -242,4 +242,8 @@ class CPTP_Permalink {
 		return $termlink;
 	}
 
+}
+
+if(get_option( "permalink_structure") != "") {
+	new CPTP_Module_Permalink;
 }

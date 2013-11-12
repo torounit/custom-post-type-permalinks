@@ -9,7 +9,7 @@
  *
  * */
 
-class CPTP_FlushRules {
+class CPTP_Module_FlushRules extends CPTP_Module {
 
 
 	public function add_hook() {
@@ -65,3 +65,5 @@ class CPTP_FlushRules {
 	}
 
 }
+
+new CPTP_Module_FlushRules;

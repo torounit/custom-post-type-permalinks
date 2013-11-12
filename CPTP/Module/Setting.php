@@ -11,7 +11,7 @@
  * */
 
 
-class CPTP_Setting {
+class CPTP_Module_Setting extends CPTP_Module {
 
 	public function add_hook() {
 		add_action( 'init', array( $this,'load_textdomain') );
@@ -27,8 +27,8 @@ class CPTP_Setting {
 
 	public function check_version() {
 		$version = get_option('cptp_version', 0);
-		if($version != CPTP::$version) {
-			update_option('cptp_version', CPTP::$version);
+		if($version != CPTP_VERSION) {
+			update_option('cptp_version', CPTP_VERSION);
 		}
 	}
 
@@ -44,4 +44,6 @@ class CPTP_Setting {
 	}
 
 }
+
+new CPTP_Module_Setting;
 
