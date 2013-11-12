@@ -44,6 +44,3 @@ class CPTP_Module_Setting extends CPTP_Module {
 	}
 
 }
-
-new CPTP_Module_Setting;
-

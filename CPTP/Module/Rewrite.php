@@ -203,5 +203,3 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		}
 	}
 }
-
-new CPTP_Module_Rewrite;

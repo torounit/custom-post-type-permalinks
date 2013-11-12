@@ -13,9 +13,12 @@
 class CPTP_Module_GetArchives extends CPTP_Module {
 
 	public function add_hook() {
-		add_filter( 'getarchives_join', array( $this,'getarchives_join'), 10, 2 ); // [steve]
-		add_filter( 'getarchives_where', array( $this,'getarchives_where'), 10 , 2 );
-		add_filter( 'get_archives_link', array( $this,'get_archives_link'), 20, 1 );
+		if(get_option( "permalink_structure") != "") {
+			add_filter( 'getarchives_join', array( $this,'getarchives_join'), 10, 2 ); // [steve]
+			add_filter( 'getarchives_where', array( $this,'getarchives_where'), 10 , 2 );
+			add_filter( 'get_archives_link', array( $this,'get_archives_link'), 20, 1 );
+		}
+
 	}
 
 	/**
@@ -128,9 +131,4 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 		return $ret_link;
 	}
 
-
-}
-
-if(get_option( "permalink_structure") != "") {
-	new CPTP_Module_GetArchives;
 }

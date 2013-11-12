@@ -16,9 +16,11 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 
 	public function add_hook() {
-		add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
-		add_filter( 'term_link', array( $this,'term_link'), 10, 3 );
-		add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
+		if(get_option( "permalink_structure") != "") {
+			add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
+			add_filter( 'term_link', array( $this,'term_link'), 10, 3 );
+			add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
+		}
 	}
 
 	/**
@@ -242,8 +244,4 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		return $termlink;
 	}
 
-}
-
-if(get_option( "permalink_structure") != "") {
-	new CPTP_Module_Permalink;
 }

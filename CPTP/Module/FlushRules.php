@@ -65,5 +65,3 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 	}
 
 }
-
-new CPTP_Module_FlushRules;

@@ -172,4 +172,3 @@ class CPTP_Module_Admin extends CPTP_Module {
 	}
 }
 
-new CPTP_Module_Admin;

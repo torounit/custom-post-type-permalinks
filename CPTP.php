@@ -13,27 +13,29 @@
 
 define( "CPTP_VERSION", "0.9.3" );
 define( "CPTP_DEFAULT_PERMALINK", "/%postname%/" );
+define( "CPTP_DIR", dirname( __FILE__ ) );
 
-require_once dirname( __FILE__ ).'/CPTP/Util.php';
-require_once dirname( __FILE__ ).'/CPTP/Module.php';
 
-require_once dirname( __FILE__ ).'/CPTP/Module/Setting.php';
-require_once dirname( __FILE__ ).'/CPTP/Module/Rewrite.php';
-require_once dirname( __FILE__ ).'/CPTP/Module/Admin.php';
-require_once dirname( __FILE__ ).'/CPTP/Module/Permalink.php';
-require_once dirname( __FILE__ ).'/CPTP/Module/GetArchives.php';
-require_once dirname( __FILE__ ).'/CPTP/Module/FlushRules.php';
+require_once CPTP_DIR.'/CPTP/Util.php';
+require_once CPTP_DIR.'/CPTP/Loader.php';
 
 
 class CPTP {
 
-	public static $version = "0.9";
-	public static $default_structure = '/%postname%/';
-	/**
-	 * Add Action & filter hooks.
-	 *
-	 */
+
 	public function __construct() {
+
+		CPTP_Loader::load_module(
+			array(
+				"Setting",
+				"Rewrite",
+				"Admin",
+				"Permalink",
+				"GetArchives",
+				"FlushRules"
+			)
+		);
+
 		do_action( "CPTP_init" );
 	}
 
