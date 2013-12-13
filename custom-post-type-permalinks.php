@@ -119,7 +119,7 @@ class Custom_Post_Type_Permalinks {
 	 */
 	private function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
 		$chain = '';
-		$parent = &get_term( $id, $taxonomy, OBJECT, 'raw');
+		$parent = get_term( $id, $taxonomy, OBJECT, 'raw');
 		if ( is_wp_error( $parent ) ) {
 			return $parent;
 		}
@@ -593,7 +593,9 @@ class Custom_Post_Type_Permalinks {
 		//$termlink = str_replace( $term->slug.'/', $this->get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 
 		//拡張子を削除。
-		$str = array_shift(explode(".", get_option("permalink_structure")));
+		$permalink_structure = get_option("permalink_structure");
+		$permalink_structure = explode(".", $permalink_structure);
+		$str = array_shift($permalink_structure);
 		$str = rtrim( preg_replace( "/%[a-z_]*%/", "" ,$str) ,'/' );//remove with front
 		$termlink = str_replace($str."/", "/", $termlink );
 
