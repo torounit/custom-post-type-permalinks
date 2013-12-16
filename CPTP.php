@@ -17,6 +17,7 @@ define( "CPTP_DIR", dirname( __FILE__ ) );
 
 
 require_once CPTP_DIR.'/CPTP/Util.php';
+require_once CPTP_DIR.'/CPTP/Module.php';
 require_once CPTP_DIR.'/CPTP/Module/Setting.php';
 require_once CPTP_DIR.'/CPTP/Module/Rewrite.php';
 require_once CPTP_DIR.'/CPTP/Module/Admin.php';

@@ -18,18 +18,15 @@ class CPTP_Util {
 		return get_post_types( array('_builtin'=>false, 'publicly_queryable'=>true, 'show_ui' => true) );
 	}
 
-
 	public static function get_taxonomies( $objects = false ) {
 		if( $objects ){
 			$output = "objects";
 		}
 		else {
 			$output = "names";
-
 		}
 		return get_taxonomies( array("show_ui" => true, "_builtin" => false), $output );
 	}
-
 
 
 	/**

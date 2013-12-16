@@ -77,7 +77,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 		register_setting('permalink','no_taxonomy_structure');
 
-		if(isset($_POST['submit']) && isset($_POST['_wp_http_referer']) && strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
+		if(isset($_POST['submit']) && isset($_POST['_wp_http_referer']) && strpos($_POST['_wp_http_referer'],'options-permalink.php') !== false ) {
 
 			if(!isset($_POST['no_taxonomy_structure'])){
 				$set = true;
@@ -115,7 +115,11 @@ class CPTP_Module_Admin extends CPTP_Module {
 			$slug = $front.$slug;
 		}
 
-		echo '<code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" />';
+		echo '<p><code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" /></p>';
+		echo '<p>has_archive: <code>';
+		echo get_post_type_object($post_type)->has_archive ? "true" : "false";
+		echo '</code></p>';
+
 	}
 
 	public function setting_no_tax_structure_callback_function(){
