@@ -119,6 +119,9 @@ class CPTP_Module_Admin extends CPTP_Module {
 		echo '<p><code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" /></p>';
 		echo '<p>has_archive: <code>';
 		echo get_post_type_object($post_type)->has_archive ? "true" : "false";
+		echo '</code> / ';
+		echo 'with_front: <code>';
+		echo get_post_type_object($post_type)->with_front ? "true" : "false";
 		echo '</code></p>';
 
 	}

@@ -91,23 +91,21 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		$post_date = strtotime( $post->post_date );
-		$search = $search + array(
+		$permalink = str_replace(array(
 			"%year%",
 			"%monthnum%",
 			"%day%",
 			"%hour%",
 			"%minute%",
 			"%second%"
-		);
-
-		$replace = $replace + array(
+		), array(
 			date("Y",$post_date),
 			date("m",$post_date),
 			date("d",$post_date),
 			date("H",$post_date),
 			date("i",$post_date),
 			date("s",$post_date)
-		);
+		), $permalink );
 		$permalink = str_replace($search, $replace, $permalink);
 		$permalink = rtrim( home_url(),"/")."/".ltrim( $permalink ,"/" );
 
@@ -131,6 +129,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		//運用でケアすべきかも。
 
 		foreach ( $taxonomies as $taxonomy => $objects ) {
+			$term = null;
 			if ( strpos($permalink, "%$taxonomy%") !== false ) {
 				$terms = wp_get_post_terms( $post_id, $taxonomy, array('orderby' => 'term_id'));
 
