@@ -95,6 +95,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 			<?php _e("%\"custom_taxonomy_slug\"% is replaced the taxonomy's term.'.",'cptp');?></p>
 
 			<p><?php _e("Presence of the trailing '/' is unified into a standard permalink structure setting.",'cptp');?>
+			<p><?php _e("If <code>has_archive</code> is true, add permalinks for custom post type archive.",'cptp');?>
 			<?php _e("If you don't entered permalink structure, permalink is configured /%postname%/'.",'cptp');?>
 			</p>
 		<?php

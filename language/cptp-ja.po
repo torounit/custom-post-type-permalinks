@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Custom Post Type Permalinks\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-28 18:45+0900\n"
-"PO-Revision-Date: 2012-11-28 18:45+0900\n"
+"POT-Creation-Date: 2013-12-17 03:03+0900\n"
+"PO-Revision-Date: 2013-12-17 03:03+0900\n"
 "Last-Translator: Toro_Unit <mail@torounit.com>\n"
 "Language-Team: Toro_Unit <mail@torounit.com>\n"
 "Language: ja_JP\n"
@@ -11,29 +11,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;__\n"
-"X-Poedit-Basepath: C:\\Users\\Toro-Unit\\Documents\\Develop\\custom-post-"
-"type-permalinks\\wp-content\\plugins\\\n"
-"X-Generator: Poedit 1.5.4\n"
-"X-Poedit-SearchPath-0: custom-post-type-permalinks\n"
+"X-Poedit-Basepath: ../\n"
+"X-Generator: Poedit 1.6.2\n"
+"X-Poedit-SearchPath-0: CPTP/Module\n"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:108
-#, php-format
-msgid "View all posts in %s"
-msgstr "%s のすべての投稿を見る"
-
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:552
+#: CPTP/Module/Admin.php:30
 msgid "Permalink Setting for custom post type"
 msgstr "カスタム投稿タイプのパーマリンクの設定"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:594
+#: CPTP/Module/Admin.php:72
 msgid "Use custom permalink of custom taxonomy archive."
 msgstr "カスタム分類のアーカイブのパーマリンクを変更する。"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:615
+#: CPTP/Module/Admin.php:93
 msgid "Setting permalinks of custom post type."
 msgstr "カスタム投稿タイプごとのパーマリンク構造を設定できます。"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:616
+#: CPTP/Module/Admin.php:94
 msgid ""
 "The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug"
 "\"%'. (e.g. %actors%)"
@@ -41,23 +35,31 @@ msgstr ""
 "使用できるタグは、WordPress標準のタグと '%\"カスタム分類名\"%' です。 (例： "
 "%actors%)"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:617
+#: CPTP/Module/Admin.php:95
 msgid "%\"custom_taxonomy_slug\"% is replaced the taxonomy's term.'."
 msgstr "'%\"カスタム分類名\"%' は、そのカスタム分類のタームに置換されます。"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:619
+#: CPTP/Module/Admin.php:97
 msgid ""
 "Presence of the trailing '/' is unified into a standard permalink structure "
 "setting."
 msgstr "末尾の '/' の有無は、標準のパーマリンク構造の設定に統一されます。"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:620
+#: CPTP/Module/Admin.php:98
+msgid ""
+"If <code>has_archive</code> is true, add permalinks for custom post type "
+"archive."
+msgstr ""
+"<code>has_archive</code>がtrueの場合、カスタム投稿タイプのアーカイブのパーマ"
+"リンクを追加します。"
+
+#: CPTP/Module/Admin.php:99
 msgid ""
 "If you don't entered permalink structure, permalink is configured /%postname"
 "%/'."
 msgstr "未入力のときは、/%postname%/ に設定されます。"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:640
+#: CPTP/Module/Admin.php:128
 #, php-format
 msgid ""
 "If you check,The custom taxonomy's permalinks is <code>%s/post_type/taxonomy/"
@@ -66,13 +68,16 @@ msgstr ""
 "チェックした場合、カスタム分類のアーカイブのパーマリンクは <code>%s/"
 "post_type/taxonomy/term</code>. に変更されます。"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:668
+#: CPTP/Module/Admin.php:156
 msgid ""
 "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink."
 "php'>Permalinks</a>, set a custom permalink for each post type.</p>"
 msgstr ""
 "<h3>Custom Post Type Permalinks</h3><p><a href='options-permalink.php'>パーマ"
 "リンク設定</a>より、カスタム投稿タイプごとのパーマリンクを設定できます。</p>"
+
+#~ msgid "View all posts in %s"
+#~ msgstr "%s のすべての投稿を見る"
 
 #~ msgid "From Permalinks, set a custom permalink for each post type."
 #~ msgstr ""
