@@ -46,7 +46,7 @@ class CPTP {
 	 * Singleton
 	 * @static
 	 */
-	public static function init() {
+	public static function get_instance() {
 
 		if (!isset(self::$_instance)) {
 			self::$instance = new CPTP;

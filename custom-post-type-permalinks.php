@@ -24,6 +24,6 @@ Domain Path: /language/
 
 require_once dirname(__FILE__).'/CPTP.php';
 
-CPTP::init();
+CPTP::get_instance();
 
 
