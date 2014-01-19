@@ -1,9 +1,9 @@
 === Custom Post Type Permalinks ===
 Contributors: Toro_Unit
 Tags: permalink,permalinks,custom post type,custom taxonomy,cms
-Requires at least: 3.4
-Tested up to: 3.6
-Stable tag: 0.9.3.3
+Requires at least: 3.7
+Tested up to: 3.8
+Stable tag: 0.9.5
 
 Lets you edit the permalink of custom post type.
 
@@ -41,9 +41,12 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
-= 0.9.4 =
+= 0.9.5 =
 * Big change plugin architecture.
+* Show has_archive, with_front.
 
+= 0.9.4 =
+* Internal release.
 
 = 0.9.3.3 =
 * has_archive Bug Fix.
