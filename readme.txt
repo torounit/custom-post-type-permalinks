@@ -13,6 +13,8 @@ Custom Post Type Permalinks lets you edit the permalink structure of custom post
 
 Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_name/term_slug". Can disable this fix.
 
+And support wp_get_archives( "post_type=foo" ).
+
 [This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
 Donation: Please send amazon.co.jp Gift to donate[at]torounit.com.
@@ -38,6 +40,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+= 0.9.4 =
+* Big change plugin architecture.
+
 
 = 0.9.3.3 =
 * has_archive Bug Fix.
