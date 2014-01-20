@@ -103,8 +103,9 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 	public function setting_structure_callback_function(  $option  ) {
 		$post_type = str_replace('_structure',"" ,$option);
-		$slug = get_post_type_object($post_type)->rewrite['slug'];
-		$with_front = get_post_type_object($post_type)->rewrite['with_front'];
+		$pt_object = get_post_type_object($post_type);
+		$slug = $pt_object->rewrite['slug'];
+		$with_front = $pt_object->rewrite['with_front'];
 
 		$value = get_option($option);
 		if( !$value )
@@ -118,10 +119,10 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 		echo '<p><code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" /></p>';
 		echo '<p>has_archive: <code>';
-		echo get_post_type_object($post_type)->has_archive ? "true" : "false";
+		echo $pt_object->has_archive ? "true" : "false";
 		echo '</code> / ';
 		echo 'with_front: <code>';
-		echo get_post_type_object($post_type)->with_front ? "true" : "false";
+		echo $pt_object->rewrite['with_front'] ? "true" : "false";
 		echo '</code></p>';
 
 	}
