@@ -52,7 +52,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			$wp_rewrite->add_rewrite_tag( "%$taxonomy%", '(.+?)', "$taxonomy=" );
 		endforeach;
 
-		$permalink = trim($permalink, "/" );
 		$rewrite_args = $args->rewrite;
 		if( !is_array($rewrite_args) ) {
 			$rewrite_args  = array( 'with_front' => $args->rewrite );
