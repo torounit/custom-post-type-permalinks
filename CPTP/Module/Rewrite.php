@@ -90,7 +90,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 
 	public function registered_taxonomy( $taxonomy, $object_type, $args ) {
-		print_r($args);
 
 		if(get_option('no_taxonomy_structure')) {
 			return false;
