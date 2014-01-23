@@ -54,6 +54,10 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 		$permalink = trim($permalink, "/" );
 		$rewrite_args = $args->rewrite;
+		if( !is_array($rewrite_args) ) {
+			$rewrite_args  = array( 'with_front' => $args->rewrite );
+		}
+
 		$rewrite_args["walk_dirs"] = false;
 		add_permastruct( $post_type, $permalink, $rewrite_args);
 
