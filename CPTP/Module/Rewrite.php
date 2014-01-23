@@ -98,7 +98,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		if(get_option('no_taxonomy_structure')) {
 			return false;
 		}
-		if($args["_builtin"]) {
+		if($args["_builtin"] or !$args["publicly_queryable"]) {
 			return false;
 		}
 
