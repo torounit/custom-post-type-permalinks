@@ -41,6 +41,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
+= 0.9.5.3 =
+* “/”bug fix.
+* taxonomy tmplate bug fix.
+
 = 0.9.5.2 =
 * Archives Rewrite Fix.
 
