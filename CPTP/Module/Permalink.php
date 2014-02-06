@@ -218,7 +218,13 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		$wp_home = rtrim( home_url(), '/' );
 
-		$post_type = $taxonomy->object_type[0];
+		global $qobj;
+		if(in_array($qobj->rewrite['slug'], $taxonomy->object_type)){
+			$post_type = $qobj->rewrite['slug'];
+		}
+		else {
+			$post_type = $taxonomy->object_type[0];
+		}
 		$post_type_obj = get_post_type_object($post_type);
 		$slug = $post_type_obj->rewrite['slug'];
 		$with_front = $post_type_obj->rewrite['with_front'];
