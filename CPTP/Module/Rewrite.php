@@ -107,18 +107,18 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		$post_types = $args["object_type"];
 		foreach ($post_types as $post_type):
 			$post_type_obj = get_post_type_object($post_type);
-			$slug = $post_type_obj->rewrite['slug'];
-
-
-			if(!$slug) {
+			if(!empty($post_type_obj->rewrite['slug'])){
+				$slug = $post_type_obj->rewrite['slug'];
+			}
+			else {
 				$slug = $post_type;
 			}
 
-			if(is_string($post_type_obj->has_archive)) {
+			if(!empty($post_type_obj->has_archive) && is_string($post_type_obj->has_archive)) {
 				$slug = $post_type_obj->has_archive;
 			};
 
-			if($post_type_obj->rewrite['with_front']) {
+			if(!empty($post_type_obj->rewrite['with_front'])) {
 				$slug = substr( $wp_rewrite->front, 1 ).$slug;
 			}
 
