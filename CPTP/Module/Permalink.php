@@ -229,8 +229,9 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$with_front = $post_type_obj->rewrite['with_front'];
 
 
-		//拡張子を削除。
-		$str = array_shift(explode(".", get_option("permalink_structure")));
+		//拡張子を削除
+		$str = explode(".", get_option("permalink_structure"));
+		$str = array_shift($str);
 		$str = rtrim( preg_replace( "/%[a-z_]*%/", "" ,$str) ,'/' );//remove with front
 		$termlink = str_replace($str."/", "/", $termlink );
 
