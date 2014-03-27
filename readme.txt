@@ -3,7 +3,7 @@ Contributors: Toro_Unit
 Tags: permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 3.7
 Tested up to: 3.9
-Stable tag: 0.9.5.3
+Stable tag: 0.9.5.4
 
 Lets you edit the permalink of custom post type.
 
