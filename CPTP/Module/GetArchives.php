@@ -72,13 +72,18 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 	/**
 	 *
 	 * get_arcihves_link
-	 * @version 2.1
+	 * @version 2.2 03/27/14
 	 *
 	 */
 	public function get_archives_link( $link ) {
+		global $wp_rewrite;
+
+		var_dump($this->get_archives_where_r['post_type']);
+
 		if(!isset($this->get_archives_where_r['post_type'])) {
 			return $link;
 		}
+
 		$c = isset($this->get_archives_where_r['taxonomy']) && is_array($this->get_archives_where_r['taxonomy']) ? $this->get_archives_where_r['taxonomy'] : "";  //[steve]
 		$t =  $this->get_archives_where_r['post_type'];
 
@@ -88,15 +93,13 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 		if (isset($this->get_archives_where_r['post_type'])  and  $this->get_archives_where_r['type'] != 'postbypost'){
 			$blog_url = rtrim( get_bloginfo("url") ,'/');
 
-			//remove .ext
-			$str = preg_replace("/\.[a-z,_]*/","",get_option("permalink_structure"));
 
-			if($str = rtrim( preg_replace("/%[a-z,_]*%/","",$str) ,'/')) { // /archive/%post_id%
-				$ret_link = str_replace($str, '/'.'%link_dir%', $link);
-			}else{
-				$blog_url = preg_replace('/https?:\/\//', '', $blog_url);
-				$ret_link = str_replace($blog_url,$blog_url.'/'.'%link_dir%',$link);
-			}
+			//remove front
+			$front = substr( $wp_rewrite->front, 1 );
+			$link = str_replace($front,"",$link);
+
+			$blog_url = preg_replace('/https?:\/\//', '', $blog_url);
+			$ret_link = str_replace($blog_url,$blog_url.'/'.'%link_dir%',$link);
 
 			$post_type = get_post_type_object( $this->get_archives_where_r['post_type'] );
 			if(empty($c) ){    // [steve]
@@ -117,8 +120,8 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			}
 
 			if($post_type->rewrite['with_front']) {
-				global $wp_rewrite;
-				$link_dir = substr( $wp_rewrite->front, 1 ).$link_dir;
+				$link_dir = $front.$link_dir;
+			}else {
 			}
 
 
