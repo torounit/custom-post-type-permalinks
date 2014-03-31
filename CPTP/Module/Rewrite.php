@@ -167,7 +167,10 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		foreach ($taxes as $key => $tax) {
 			if(isset($obj->query_vars[$tax])) {
 				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
-					$obj->query_vars[$tax] = array_pop(explode("/", $obj->query_vars[$tax]));
+					$query_vars = explode("/", $obj->query_vars[$tax]);
+					if(is_array($query_vars)) {
+						$obj->query_vars[$tax] = array_pop($query_vars);
+					}
 				}
 			}
 		}
