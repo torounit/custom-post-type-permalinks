@@ -90,8 +90,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 		$this->get_archives_where_r['post_type'] = isset($this->get_archives_where_r['post_type_slug']) ? $this->get_archives_where_r['post_type_slug'] : $t; // [steve] [*** bug fixing]
 
 		if (isset($this->get_archives_where_r['post_type'])  and  $this->get_archives_where_r['type'] != 'postbypost'){
-			$blog_url = rtrim( get_bloginfo("url") ,'/');
-
+			$blog_url = rtrim( home_url() ,'/');
 
 			//remove front
 			$front = substr( $wp_rewrite->front, 1 );
