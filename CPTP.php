@@ -11,7 +11,7 @@
  * */
 
 
-define( "CPTP_VERSION", "0.9.3" );
+define( "CPTP_VERSION", "0.9.6" );
 define( "CPTP_DEFAULT_PERMALINK", "/%postname%/" );
 define( "CPTP_DIR", dirname( __FILE__ ) );
 
