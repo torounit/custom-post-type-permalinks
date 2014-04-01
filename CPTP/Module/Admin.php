@@ -142,7 +142,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 	public function fix_hierarchical_taxonomy_permalink_callback_function() {
 		echo '<input name="fix_hierarchical_taxonomy_permalink" id="fix_hierarchical_taxonomy_permalink" type="checkbox" value="1" class="code" ' . checked( true, get_option('fix_hierarchical_taxonomy_permalink'),false) . ' /> ';
-		_e("If you check, Fix hierarchical taxonomy permalink like built-in category.","cptp");
+		_e("Fix hierarchical taxonomy permalink like built-in category.","cptp");
 
 	}
 
