@@ -213,6 +213,8 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 *
 	 */
 	public function term_link( $termlink, $term, $taxonomy ) {
+		global $wp_rewrite;
+
 		if( get_option('no_taxonomy_structure') ) {
 			return  $termlink;
 		}
@@ -235,21 +237,15 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$post_type_obj = get_post_type_object($post_type);
 		$slug = $post_type_obj->rewrite['slug'];
 		$with_front = $post_type_obj->rewrite['with_front'];
+		$front = substr( $wp_rewrite->front, 1 );
+		$termlink = str_replace($front,"",$termlink);
 
-
-		//拡張子を削除
-		$str = explode(".", get_option("permalink_structure"));
-		$str = array_shift($str);
-		$str = rtrim( preg_replace( "/%[a-z_]*%/", "" ,$str) ,'/' );//remove with front
-		$termlink = str_replace($str."/", "/", $termlink );
-
-
-		if( $with_front === false ) {
-			$str = "";
+		if( $with_front ) {
+			$slug = $front.$slug;
 		}
-		$slug = $str."/".$slug;
 
-		$termlink = str_replace( $wp_home, $wp_home.$slug, $termlink );
+		$termlink = str_replace( $wp_home, $wp_home."/".$slug, $termlink );
+
 		if ( ! $taxonomy->rewrite['hierarchical'] ) {
 			$termlink = str_replace( $term->slug.'/', CPTP_Util::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
 		}
