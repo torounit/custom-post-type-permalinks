@@ -16,6 +16,7 @@ class CPTP_Module_Init extends CPTP_Module {
 	public function add_hook() {
 		add_action( 'init', array( $this,'load_textdomain') );
 		add_action( 'plugins_loaded', array( $this,'check_version') );
+		register_uninstall_hook( __FILE__, array(__CLASS__, "uninstall" ));
 	}
 
 	/**
@@ -42,6 +43,14 @@ class CPTP_Module_Init extends CPTP_Module {
 	 */
 	public function load_textdomain() {
 		load_plugin_textdomain('cptp',false,'custom-post-type-permalinks/language');
+	}
+
+
+	public static function uninstall() {
+		CPTP_Util::get_post_types();
+		foreach ($post_types as $post_type):
+			delete_option($post_type.'_structure');
+		endforeach;
 	}
 
 }
