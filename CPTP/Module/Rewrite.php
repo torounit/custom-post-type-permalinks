@@ -14,7 +14,9 @@
 class CPTP_Module_Rewrite extends CPTP_Module {
 
 	public function add_hook() {
-		add_action( 'parse_request', array( $this, "parse_request") );
+		if(get_option( "fix_hierarchical_taxonomy_permalink")) {
+			add_action( 'parse_request', array( $this, "parse_request") );
+		}
 		add_action( 'registered_post_type', array( $this,'registered_post_type'), 10, 2 );
 	}
 

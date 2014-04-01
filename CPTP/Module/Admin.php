@@ -74,17 +74,26 @@ class CPTP_Module_Admin extends CPTP_Module {
 			'permalink',
 			'cptp_setting_section'
 		);
+		add_settings_field(
+			"fix_hierarchical_taxonomy_permalink",
+			__("Fix hierarchical taxonomy permalink",'cptp'),
+			array( $this,'fix_hierarchical_taxonomy_permalink_callback_function'),
+			'permalink',
+			'cptp_setting_section'
+		);
 
 		register_setting('permalink','no_taxonomy_structure');
+		register_setting('permalink','fix_hierarchical_taxonomy_permalink');
+
 
 		if(isset($_POST['submit']) && isset($_POST['_wp_http_referer']) && strpos($_POST['_wp_http_referer'],'options-permalink.php') !== false ) {
 
-			if(!isset($_POST['no_taxonomy_structure'])){
+			if(isset($_POST['fix_hierarchical_taxonomy_permalink'])){
 				$set = true;
 			}else {
 				$set = false;
 			}
-			update_option('no_taxonomy_structure', $set);
+			update_option('fix_hierarchical_taxonomy_permalink', $set);
 		}
 	}
 
@@ -128,11 +137,14 @@ class CPTP_Module_Admin extends CPTP_Module {
 	}
 
 	public function setting_no_tax_structure_callback_function(){
-		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, get_option('no_taxonomy_structure'),false) . ' /> ';
-		$txt = __("If you check,The custom taxonomy's permalinks is <code>%s/post_type/taxonomy/term</code>.","cptp");
-		printf($txt , home_url());
+		_e("The feature to change the permalink of custom taxonomy is no longer available. Instead, please set rewrite['slug'] of the register_taxonomy.");
 	}
 
+	public function fix_hierarchical_taxonomy_permalink_callback_function() {
+		echo '<input name="fix_hierarchical_taxonomy_permalink" id="fix_hierarchical_taxonomy_permalink" type="checkbox" value="1" class="code" ' . checked( true, get_option('fix_hierarchical_taxonomy_permalink'),false) . ' /> ';
+		_e("If you check, Fix hierarchical taxonomy permalink like built-in category.","cptp");
+
+	}
 
 
 	/**
@@ -147,7 +159,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 	}
 
 
-
 	/**
 	 *
 	 * add js for pointer
@@ -156,8 +167,10 @@ class CPTP_Module_Admin extends CPTP_Module {
 	public function pointer_js() {
 		if(!is_network_admin()) {
 			$dismissed = explode(',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ));
-			if(array_search('cptp_pointer0871', $dismissed) === false){
+			if(array_search('cptp_pointer096', $dismissed) === false){
 				$content = __("<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>", "cptp");
+
+				$content .= "<p>".__("The feature to change the permalink of custom taxonomy is no longer available. Instead, please set rewrite['slug'] of the register_taxonomy.")."</p>";
 			?>
 				<script type="text/javascript">
 				jQuery(function($) {
@@ -168,7 +181,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 						close: function() {
 							$.post('admin-ajax.php', {
 								action:'dismiss-wp-pointer',
-								pointer: 'cptp_pointer0871'
+								pointer: 'cptp_pointer096'
 							})
 
 						}

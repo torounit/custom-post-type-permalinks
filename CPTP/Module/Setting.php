@@ -29,6 +29,7 @@ class CPTP_Module_Setting extends CPTP_Module {
 		$version = get_option('cptp_version', 0);
 		if($version != CPTP_VERSION) {
 			update_option('cptp_version', CPTP_VERSION);
+			delete_option("no_taxonomy_structure");
 		}
 	}
 
