@@ -48,6 +48,7 @@ class CPTP_Module_Init extends CPTP_Module {
 
 	public static function uninstall() {
 		CPTP_Util::get_post_types();
+		delete_option( "cptp_version" );
 		foreach ($post_types as $post_type):
 			delete_option($post_type.'_structure');
 		endforeach;
