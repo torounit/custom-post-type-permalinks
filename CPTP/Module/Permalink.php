@@ -90,10 +90,35 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$replace = $replace + $replace_tag["replace"];
 
 
-		$user = get_userdata( $post->post_author );
-		if(isset($user->user_nicename)) {
-			$permalink = str_replace( "%author%", $user->user_nicename, $permalink );
+		//from get_permalink.
+		$category = '';
+		if ( strpos($permalink, '%category%') !== false ) {
+			$cats = get_the_category($post->ID);
+			if ( $cats ) {
+				usort($cats, '_usort_terms_by_ID'); // order by ID
+				$category_object = apply_filters( 'post_link_category', $cats[0], $cats, $post );
+				$category_object = get_term( $category_object, 'category' );
+				$category = $category_object->slug;
+				if ( $parent = $category_object->parent )
+					$category = get_category_parents($parent, false, '/', true) . $category;
+			}
+			// show default category in permalinks, without
+			// having to assign it explicitly
+			if ( empty($category) ) {
+				$default_category = get_term( get_option( 'default_category' ), 'category' );
+				$category = is_wp_error( $default_category ) ? '' : $default_category->slug;
+			}
 		}
+
+		$author = '';
+		if ( strpos($permalink, '%author%') !== false ) {
+			$authordata = get_userdata($post->post_author);
+			$author = $authordata->user_nicename;
+		}
+		//end from get_permalink.
+
+
+
 
 		$post_date = strtotime( $post->post_date );
 		$permalink = str_replace(array(
@@ -102,14 +127,18 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			"%day%",
 			"%hour%",
 			"%minute%",
-			"%second%"
+			"%second%",
+			'%category%',
+			'%author%'
 		), array(
 			date("Y",$post_date),
 			date("m",$post_date),
 			date("d",$post_date),
 			date("H",$post_date),
 			date("i",$post_date),
-			date("s",$post_date)
+			date("s",$post_date),
+			$category,
+			$author
 		), $permalink );
 		$permalink = str_replace($search, $replace, $permalink);
 		$permalink = rtrim( home_url(),"/")."/".ltrim( $permalink ,"/" );
