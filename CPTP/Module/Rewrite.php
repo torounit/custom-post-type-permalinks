@@ -16,7 +16,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	public function add_hook() {
 		add_action( 'parse_request', array( $this, "parse_request") );
 		add_action( 'registered_post_type', array( $this,'registered_post_type'), 10, 2 );
-		add_action( 'registered_taxonomy', array( $this,'registered_taxonomy'), 10, 3 );
 	}
 
 
@@ -87,72 +86,9 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			add_rewrite_rule( $slug.'/author/([^/]+)/?$', 'index.php?author_name=$matches[1]&post_type='.$post_type, 'top' );
 		}
 
-
-
 	}
 
 
-	public function registered_taxonomy( $taxonomy, $object_type, $args ) {
-
-		if(get_option('no_taxonomy_structure')) {
-			return false;
-		}
-		if($args["_builtin"]) {
-			return false;
-		}
-
-		global $wp_rewrite;
-
-		$taxonomyObject = $args;
-		$post_types = $args["object_type"];
-		foreach ($post_types as $post_type):
-			$post_type_obj = get_post_type_object($post_type);
-			if(!empty($post_type_obj->rewrite['slug'])){
-				$slug = $post_type_obj->rewrite['slug'];
-			}
-			else {
-				$slug = $post_type;
-			}
-
-			if(!empty($post_type_obj->has_archive) && is_string($post_type_obj->has_archive)) {
-				$slug = $post_type_obj->has_archive;
-			};
-
-			if(!empty($post_type_obj->rewrite['with_front'])) {
-				$slug = substr( $wp_rewrite->front, 1 ).$slug;
-			}
-
-			if ( $taxonomy == 'category' ){
-				$taxonomypat = ($cb = get_option('category_base')) ? $cb : $taxonomy;
-				$tax = 'category_name';
-			} else {
-				// Edit by [Xiphe]
-				if (isset($args["rewrite"]['slug'])) {
-					$taxonomypat = $args["rewrite"]['slug'];
-				} else {
-					$taxonomypat = $taxonomy;
-				}
-				// [Xiphe] stop
-
-				$tax = $taxonomy;
-			}
-
-
-			//add taxonomy slug
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&paged=$matches[2]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/?$', 'index.php?'.$tax.'=$matches[1]', 'top' );  // modified by [steve] [*** bug fixing]
-
-			// below rules were added by [steve]
-			add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
-			add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
-
-		endforeach;
-
-	}
 
 
 

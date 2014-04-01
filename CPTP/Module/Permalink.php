@@ -215,10 +215,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	public function term_link( $termlink, $term, $taxonomy ) {
 		global $wp_rewrite;
 
-		if( get_option('no_taxonomy_structure') ) {
-			return  $termlink;
-		}
-
 		$taxonomy = get_taxonomy($taxonomy);
 		if( $taxonomy->_builtin )
 			return $termlink;
@@ -226,25 +222,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		if( empty($taxonomy) )
 			return $termlink;
 
-		$wp_home = rtrim( home_url(), '/' );
-
-		if(in_array(get_post_type(), $taxonomy->object_type)){
-			$post_type = get_post_type();
-		}
-		else {
-			$post_type = $taxonomy->object_type[0];
-		}
-		$post_type_obj = get_post_type_object($post_type);
-		$slug = $post_type_obj->rewrite['slug'];
-		$with_front = $post_type_obj->rewrite['with_front'];
-		$front = substr( $wp_rewrite->front, 1 );
-		$termlink = str_replace($front,"",$termlink);
-
-		if( $with_front ) {
-			$slug = $front.$slug;
-		}
-
-		$termlink = str_replace( $wp_home, $wp_home."/".$slug, $termlink );
 
 		if ( ! $taxonomy->rewrite['hierarchical'] ) {
 			$termlink = str_replace( $term->slug.'/', CPTP_Util::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
