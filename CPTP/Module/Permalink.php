@@ -40,13 +40,8 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $post_link;
 
 
-
 		$post_type = $post->post_type;
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
-
-		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
-		$permalink = str_replace( '%'.$post_type.'_slug%', get_post_type_object( $post_type )->rewrite['slug'], $permalink );
-
 
 
 		//親ページが有るとき。
@@ -122,6 +117,8 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		$post_date = strtotime( $post->post_date );
 		$permalink = str_replace(array(
+			'%post_id%',
+			'%'.$post_type.'_slug%',
 			"%year%",
 			"%monthnum%",
 			"%day%",
@@ -131,6 +128,8 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			'%category%',
 			'%author%'
 		), array(
+			$post->ID,
+			get_post_type_object( $post_type )->rewrite['slug'],
 			date("Y",$post_date),
 			date("m",$post_date),
 			date("d",$post_date),
