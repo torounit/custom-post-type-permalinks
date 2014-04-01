@@ -16,15 +16,8 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 
 	public function add_hook() {
-		if(get_option( "permalink_structure") != "") {
-			add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
-
-			if(get_option( "fix_hierarchical_taxonomy_permalink")) {
-				add_filter( 'term_link', array( $this,'term_link'), 10, 3 );
-			}
-
-			add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
-		}
+		add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
+		add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
 	}
 
 	/**
@@ -209,29 +202,5 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		return $link;
 	}
 
-	/**
-	 *
-	 * Fix taxonomy link outputs.
-	 * @since 0.6
-	 * @version 1.0
-	 *
-	 */
-	public function term_link( $termlink, $term, $taxonomy ) {
-		global $wp_rewrite;
-
-		$taxonomy = get_taxonomy($taxonomy);
-		if( $taxonomy->_builtin )
-			return $termlink;
-
-		if( empty($taxonomy) )
-			return $termlink;
-
-
-		if ( ! $taxonomy->rewrite['hierarchical'] ) {
-			$termlink = str_replace( $term->slug.'/', CPTP_Util::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
-		}
-
-		return $termlink;
-	}
 
 }

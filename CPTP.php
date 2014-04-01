@@ -24,7 +24,7 @@ require_once CPTP_DIR.'/CPTP/Module/Admin.php';
 require_once CPTP_DIR.'/CPTP/Module/Permalink.php';
 require_once CPTP_DIR.'/CPTP/Module/GetArchives.php';
 require_once CPTP_DIR.'/CPTP/Module/FlushRules.php';
-
+require_once CPTP_DIR.'/CPTP/Module/HierarchicalTaxonomy.php';
 
 class CPTP {
 
@@ -46,13 +46,17 @@ class CPTP {
 
 	private function load_modules() {
 		new CPTP_Module_Setting();
-		new CPTP_Module_Rewrite();
 		new CPTP_Module_Admin();
-		new CPTP_Module_Permalink();
 		new CPTP_Module_GetArchives();
-		new CPTP_Module_FlushRules();
-		do_action( "CPTP_load_modules" );
 
+		if(get_option( "permalink_structure") != "") {
+			new CPTP_Module_Rewrite();
+			new CPTP_Module_Permalink();
+			new CPTP_Module_FlushRules();
+			new CPTP_Module_HierarchicalTaxonomy();
+		}
+
+		do_action( "CPTP_load_modules" );
 	}
 
 	/**

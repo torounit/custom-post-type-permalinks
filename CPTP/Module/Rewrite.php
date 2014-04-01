@@ -14,9 +14,6 @@
 class CPTP_Module_Rewrite extends CPTP_Module {
 
 	public function add_hook() {
-		if(get_option( "fix_hierarchical_taxonomy_permalink")) {
-			add_action( 'parse_request', array( $this, "parse_request") );
-		}
 		add_action( 'registered_post_type', array( $this,'registered_post_type'), 10, 2 );
 	}
 
@@ -90,27 +87,4 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 	}
 
-
-
-
-
-	/**
-	 *
-	 * Fix taxonomy = parent/child => taxonomy => child
-	 * @since 0.9.3
-	 *
-	 */
-	public function parse_request($obj) {
-		$taxes = CPTP_Util::get_taxonomies();
-		foreach ($taxes as $key => $tax) {
-			if(isset($obj->query_vars[$tax])) {
-				if(strpos( $obj->query_vars[$tax] ,"/") !== false ) {
-					$query_vars = explode("/", $obj->query_vars[$tax]);
-					if(is_array($query_vars)) {
-						$obj->query_vars[$tax] = array_pop($query_vars);
-					}
-				}
-			}
-		}
-	}
 }
