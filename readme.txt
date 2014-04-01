@@ -41,6 +41,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
+= 0.9.6 =
+* The feature to change the permalink of custom taxonomy is no longer available. Instead, please set rewrite['slug'] of the register_taxonomy.
+* Can use the %category%.
+
 = 0.9.5.4 =
 * archive link bug fix.
 * Tested Up 3.9
