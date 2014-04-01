@@ -167,6 +167,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 				$terms = wp_get_post_terms( $post_id, $taxonomy, array('orderby' => 'term_id'));
 
 				if ( $terms and count($terms) > 1 ) {
+					//親子カテゴリー両方にチェックが入っているとき。
 					if(reset($terms)->parent == 0){
 
 						$keys = array_keys($terms);
