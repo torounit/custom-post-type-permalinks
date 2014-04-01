@@ -11,7 +11,7 @@
  * */
 
 
-class CPTP_Module_Setting extends CPTP_Module {
+class CPTP_Module_Init extends CPTP_Module {
 
 	public function add_hook() {
 		add_action( 'init', array( $this,'load_textdomain') );

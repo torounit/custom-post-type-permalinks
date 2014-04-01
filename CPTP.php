@@ -18,7 +18,7 @@ define( "CPTP_DIR", dirname( __FILE__ ) );
 
 require_once CPTP_DIR.'/CPTP/Util.php';
 require_once CPTP_DIR.'/CPTP/Module.php';
-require_once CPTP_DIR.'/CPTP/Module/Setting.php';
+require_once CPTP_DIR.'/CPTP/Module/Init.php';
 require_once CPTP_DIR.'/CPTP/Module/Rewrite.php';
 require_once CPTP_DIR.'/CPTP/Module/Admin.php';
 require_once CPTP_DIR.'/CPTP/Module/Permalink.php';
@@ -45,7 +45,7 @@ class CPTP {
 	 * */
 
 	private function load_modules() {
-		new CPTP_Module_Setting();
+		new CPTP_Module_Init();
 		new CPTP_Module_Admin();
 		new CPTP_Module_GetArchives();
 
