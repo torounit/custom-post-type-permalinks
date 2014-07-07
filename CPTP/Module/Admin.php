@@ -14,7 +14,8 @@
 class CPTP_Module_Admin extends CPTP_Module {
 
 	public function add_hook() {
-		add_action( 'admin_init', array( $this,'settings_api_init'), 30 );
+		add_action( 'admin_init', array( $this,'settings_cpt_init'), 30 );
+		add_action( 'admin_init', array( $this,'settings_ctax_init'), 31 );
 		add_action( 'admin_enqueue_scripts', array( $this,'enqueue_css_js') );
 		add_action( 'admin_footer', array( $this,'pointer_js') );
 		add_action( "admin_init", array( $this,'submit'), 30 );
@@ -62,10 +63,10 @@ class CPTP_Module_Admin extends CPTP_Module {
 	 * @since 0.7
 	 *
 	 */
-	public function settings_api_init() {
+	public function settings_cpt_init() {
 		add_settings_section('cptp_setting_section',
 			__("Permalink Setting for custom post type",'cptp'),
-			array( $this,'setting_section_callback_function'),
+			array( $this,'setting_cpt_section_callback_function'),
 			'permalink'
 		);
 
@@ -74,7 +75,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 			add_settings_field($post_type.'_structure',
 				$post_type,
-				array( $this,'setting_structure_callback_function'),
+				array( $this,'setting_cpt_structure_callback_function'),
 				'permalink',
 				'cptp_setting_section',
 				$post_type.'_structure'
@@ -83,13 +84,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 			register_setting('permalink',$post_type.'_structure');
 		endforeach;
 
-		add_settings_field(
-			'no_taxonomy_structure',
-			__("Use custom permalink of custom taxonomy archive.",'cptp'),
-			array( $this,'setting_no_tax_structure_callback_function'),
-			'permalink',
-			'cptp_setting_section'
-		);
+
 		add_settings_field(
 			"fix_hierarchical_taxonomy_permalink",
 			__("Fix hierarchical taxonomy permalink",'cptp'),
@@ -97,13 +92,24 @@ class CPTP_Module_Admin extends CPTP_Module {
 			'permalink',
 			'cptp_setting_section'
 		);
+		register_setting('permalink','fix_hierarchical_taxonomy_permalink');
+
+
+		add_settings_field(
+			'no_taxonomy_structure',
+			__("Use custom permalink of custom taxonomy archive.",'cptp'),
+			array( $this,'setting_no_tax_structure_callback_function'),
+			'permalink',
+			'cptp_setting_section'
+		);
+
 
 		register_setting('permalink','no_taxonomy_structure');
-		register_setting('permalink','fix_hierarchical_taxonomy_permalink');
+
 
 	}
 
-	public function setting_section_callback_function() {
+	public function setting_cpt_section_callback_function() {
 		?>
 			<p><?php _e("Setting permalinks of custom post type.",'cptp');?><br />
 			<?php _e("The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug\"%'. (e.g. %actors%)",'cptp');?><br />
@@ -116,8 +122,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 		<?php
 	}
 
-	public function setting_structure_callback_function(  $option  ) {
-		$post_type = str_replace('_structure',"" ,$option);
+	private function get_post_type_slug($post_type) {
 		$pt_object = get_post_type_object($post_type);
 		$slug = $pt_object->rewrite['slug'];
 		$with_front = $pt_object->rewrite['with_front'];
@@ -127,10 +132,18 @@ class CPTP_Module_Admin extends CPTP_Module {
 			$value = CPTP_DEFAULT_PERMALINK;
 
 		global $wp_rewrite;
+
 		$front = substr( $wp_rewrite->front, 1 );
 		if( $front and $with_front ) {
 			$slug = $front.$slug;
 		}
+
+		return $slug;
+	}
+
+	public function setting_cpt_structure_callback_function(  $option  ) {
+		$post_type = str_replace('_structure',"" ,$option);
+		$slug = $this->get_post_type_slug($post_type);
 
 		echo '<p><code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" /></p>';
 		echo '<p>has_archive: <code>';
@@ -142,6 +155,8 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 	}
 
+
+
 	public function setting_no_tax_structure_callback_function(){
 		_e("The feature to change the permalink of custom taxonomy is no longer available. Instead, please set rewrite['slug'] of the register_taxonomy.");
 	}
@@ -151,6 +166,53 @@ class CPTP_Module_Admin extends CPTP_Module {
 		_e("Fix hierarchical taxonomy permalink like built-in category.","cptp");
 
 	}
+
+
+	public function settings_ctax_init() {
+		add_settings_section('cptp_tax_setting_section',
+			__("Permalink Setting for custom taxonomy",'cptp'),
+			array( $this,'setting_ctax_section_callback_function'),
+			'permalink'
+		);
+	}
+
+	public function setting_ctax_section_callback_function() {
+		$taxonomies = CPTP_Util::get_taxonomies();
+		foreach ($taxonomies as $taxonomy):
+
+			add_settings_field($taxonomy.'_slug',
+				$taxonomy,
+				array( $this,'setting_ctax_slug_callback_function'),
+				'permalink',
+				'cptp_tax_setting_section',
+				$taxonomy.'_slug'
+			);
+
+			register_setting('permalink',$taxonomy.'_slug');
+		endforeach;
+	}
+
+
+	public function setting_ctax_slug_callback_function( $option ) {
+		$taxonomy = get_taxonomy(str_replace('_slug',"" ,$option));
+		$object_types = $taxonomy->object_type;
+		$slug = $taxonomy->rewrite["slug"];
+		?>
+		<select name="" id="">
+			<?php
+			foreach ($object_types  as $key => $post_type):
+			$pt_slug = $this->get_post_type_slug($post_type);
+			?>
+				<option value=""><?php echo $slug;?></option>
+				<option value=""><?php echo $pt_slug."/".$slug;?></option>
+			<?php endforeach;?>
+		</select>
+		<?php
+	}
+
+
+
+
 
 
 	/**
