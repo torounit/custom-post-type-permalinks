@@ -3,7 +3,7 @@ Contributors: Toro_Unit
 Tags: permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 3.7
 Tested up to: 3.9
-Stable tag: 0.9.5.5
+Stable tag: 0.9.5.6
 
 Lets you edit the permalink of custom post type.
 
@@ -41,7 +41,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
-= 0.9.5.5 =
+= 0.9.5.6 =
 * Strict Standard Error Fix.
 
 = 0.9.5.4 =
