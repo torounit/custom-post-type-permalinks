@@ -23,7 +23,8 @@ Domain Path: /language/
 
 
 require_once dirname(__FILE__).'/CPTP.php';
-
-CPTP::get_instance();
-
+add_action( 'setup_theme', 'cptp_init_instance' );
+function cptp_init_instance() {
+	CPTP::get_instance();
+}
 
