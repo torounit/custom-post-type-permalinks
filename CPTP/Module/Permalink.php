@@ -16,8 +16,11 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 
 	public function add_hook() {
-		add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
-		add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
+		if(get_option( "permalink_structure") != "") {
+			add_filter( 'post_type_link', array( $this,'post_type_link'), 10, 4 );
+			add_filter( 'term_link', array( $this,'term_link'), 10, 3 );
+			add_filter( 'attachment_link', array( $this, 'attachment_link'), 20 , 2);
+		}
 	}
 
 	/**
@@ -40,8 +43,13 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $post_link;
 
 
+
 		$post_type = $post->post_type;
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
+
+		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
+		$permalink = str_replace( '%'.$post_type.'_slug%', get_post_type_object( $post_type )->rewrite['slug'], $permalink );
+
 
 
 		//親ページが有るとき。
@@ -85,59 +93,26 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$replace = $replace + $replace_tag["replace"];
 
 
-		//from get_permalink.
-		$category = '';
-		if ( strpos($permalink, '%category%') !== false ) {
-			$cats = get_the_category($post->ID);
-			if ( $cats ) {
-				usort($cats, '_usort_terms_by_ID'); // order by ID
-				$category_object = apply_filters( 'post_link_category', $cats[0], $cats, $post );
-				$category_object = get_term( $category_object, 'category' );
-				$category = $category_object->slug;
-				if ( $parent = $category_object->parent )
-					$category = get_category_parents($parent, false, '/', true) . $category;
-			}
-			// show default category in permalinks, without
-			// having to assign it explicitly
-			if ( empty($category) ) {
-				$default_category = get_term( get_option( 'default_category' ), 'category' );
-				$category = is_wp_error( $default_category ) ? '' : $default_category->slug;
-			}
+		$user = get_userdata( $post->post_author );
+		if(isset($user->user_nicename)) {
+			$permalink = str_replace( "%author%", $user->user_nicename, $permalink );
 		}
-
-		$author = '';
-		if ( strpos($permalink, '%author%') !== false ) {
-			$authordata = get_userdata($post->post_author);
-			$author = $authordata->user_nicename;
-		}
-		//end from get_permalink.
-
-
-
 
 		$post_date = strtotime( $post->post_date );
 		$permalink = str_replace(array(
-			'%post_id%',
-			'%'.$post_type.'_slug%',
 			"%year%",
 			"%monthnum%",
 			"%day%",
 			"%hour%",
 			"%minute%",
-			"%second%",
-			'%category%',
-			'%author%'
+			"%second%"
 		), array(
-			$post->ID,
-			get_post_type_object( $post_type )->rewrite['slug'],
 			date("Y",$post_date),
 			date("m",$post_date),
 			date("d",$post_date),
 			date("H",$post_date),
 			date("i",$post_date),
-			date("s",$post_date),
-			$category,
-			$author
+			date("s",$post_date)
 		), $permalink );
 		$permalink = str_replace($search, $replace, $permalink);
 		$permalink = rtrim( home_url(),"/")."/".ltrim( $permalink ,"/" );
@@ -167,7 +142,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 				$terms = wp_get_post_terms( $post_id, $taxonomy, array('orderby' => 'term_id'));
 
 				if ( $terms and count($terms) > 1 ) {
-					//親子カテゴリー両方にチェックが入っているとき。
 					if(reset($terms)->parent == 0){
 
 						$keys = array_keys($terms);
@@ -231,5 +205,52 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		return $link;
 	}
 
+	/**
+	 *
+	 * Fix taxonomy link outputs.
+	 * @since 0.6
+	 * @version 1.0
+	 *
+	 */
+	public function term_link( $termlink, $term, $taxonomy ) {
+		global $wp_rewrite;
+
+		if( get_option('no_taxonomy_structure') ) {
+			return  $termlink;
+		}
+
+		$taxonomy = get_taxonomy($taxonomy);
+		if( $taxonomy->_builtin )
+			return $termlink;
+
+		if( empty($taxonomy) )
+			return $termlink;
+
+		$wp_home = rtrim( home_url(), '/' );
+
+		if(in_array(get_post_type(), $taxonomy->object_type)){
+			$post_type = get_post_type();
+		}
+		else {
+			$post_type = $taxonomy->object_type[0];
+		}
+		$post_type_obj = get_post_type_object($post_type);
+		$slug = $post_type_obj->rewrite['slug'];
+		$with_front = $post_type_obj->rewrite['with_front'];
+		$front = substr( $wp_rewrite->front, 1 );
+		$termlink = str_replace($front,"",$termlink);
+
+		if( $with_front ) {
+			$slug = $front.$slug;
+		}
+
+		$termlink = str_replace( $wp_home, $wp_home."/".$slug, $termlink );
+
+		if ( ! $taxonomy->rewrite['hierarchical'] ) {
+			$termlink = str_replace( $term->slug.'/', CPTP_Util::get_taxonomy_parents( $term->term_id,$taxonomy->name, false, '/', true ), $termlink );
+		}
+
+		return $termlink;
+	}
 
 }

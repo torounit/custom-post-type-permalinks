@@ -11,20 +11,20 @@
  * */
 
 
-define( "CPTP_VERSION", "0.9.6" );
+define( "CPTP_VERSION", "0.9.5.6" );
 define( "CPTP_DEFAULT_PERMALINK", "/%postname%/" );
 define( "CPTP_DIR", dirname( __FILE__ ) );
 
 
 require_once CPTP_DIR.'/CPTP/Util.php';
 require_once CPTP_DIR.'/CPTP/Module.php';
-require_once CPTP_DIR.'/CPTP/Module/Init.php';
+require_once CPTP_DIR.'/CPTP/Module/Setting.php';
 require_once CPTP_DIR.'/CPTP/Module/Rewrite.php';
 require_once CPTP_DIR.'/CPTP/Module/Admin.php';
 require_once CPTP_DIR.'/CPTP/Module/Permalink.php';
 require_once CPTP_DIR.'/CPTP/Module/GetArchives.php';
 require_once CPTP_DIR.'/CPTP/Module/FlushRules.php';
-require_once CPTP_DIR.'/CPTP/Module/HierarchicalTaxonomy.php';
+
 
 class CPTP {
 
@@ -45,18 +45,14 @@ class CPTP {
 	 * */
 
 	private function load_modules() {
-		new CPTP_Module_Init();
+		new CPTP_Module_Setting();
+		new CPTP_Module_Rewrite();
 		new CPTP_Module_Admin();
+		new CPTP_Module_Permalink();
 		new CPTP_Module_GetArchives();
-
-		if(get_option( "permalink_structure") != "") {
-			new CPTP_Module_Rewrite();
-			new CPTP_Module_Permalink();
-			new CPTP_Module_FlushRules();
-			new CPTP_Module_HierarchicalTaxonomy();
-		}
-
+		new CPTP_Module_FlushRules();
 		do_action( "CPTP_load_modules" );
+
 	}
 
 	/**
