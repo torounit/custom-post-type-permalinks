@@ -126,24 +126,27 @@ class CPTP_Module_Admin extends CPTP_Module {
 		$pt_object = get_post_type_object($post_type);
 		$slug = $pt_object->rewrite['slug'];
 		$with_front = $pt_object->rewrite['with_front'];
+		global $wp_rewrite;
+		$front = substr( $wp_rewrite->front, 1 );
+		if( $front and $with_front ) {
+			$slug = $front.$slug;
+		}
+		return $slug;
+	}
+	/**
+	 *
+	 * @param $option string Option Name.
+	 *
+	 * */
+	public function setting_cpt_structure_callback_function(  $option  ) {
 
 		$value = get_option($option);
 		if( !$value )
 			$value = CPTP_DEFAULT_PERMALINK;
 
-		global $wp_rewrite;
-
-		$front = substr( $wp_rewrite->front, 1 );
-		if( $front and $with_front ) {
-			$slug = $front.$slug;
-		}
-
-		return $slug;
-	}
-
-	public function setting_cpt_structure_callback_function(  $option  ) {
 		$post_type = str_replace('_structure',"" ,$option);
-		$slug = $this->get_post_type_slug($post_type);
+		$pt_object = get_post_type_object($post_type);
+		$slug = $pt_object->rewrite['slug'];
 
 		echo '<p><code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" /></p>';
 		echo '<p>has_archive: <code>';
@@ -203,8 +206,8 @@ class CPTP_Module_Admin extends CPTP_Module {
 			foreach ($object_types  as $key => $post_type):
 			$pt_slug = $this->get_post_type_slug($post_type);
 			?>
-				<option value=""><?php echo $slug;?></option>
-				<option value=""><?php echo $pt_slug."/".$slug;?></option>
+				<option value="<?php echo $slug;?>"><?php echo $slug;?></option>
+				<option value="<?php echo $pt_slug."/".$slug;?>"><?php echo $pt_slug."/".$slug;?></option>
 			<?php endforeach;?>
 		</select>
 		<?php
