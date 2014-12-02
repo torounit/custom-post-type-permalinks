@@ -47,6 +47,13 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 			endforeach;
 
+
+			$taxonomies = CPTP_Util::get_taxonomies();
+			foreach ($taxonomies as $taxonomy):
+				$slug = trim(esc_attr($_POST[$taxonomy.'_slug']));
+				update_option($taxonomy.'_slug', $slug );
+			endforeach;
+
 			if(isset($_POST['fix_hierarchical_taxonomy_permalink'])){
 				$set = true;
 			}else {
@@ -122,15 +129,15 @@ class CPTP_Module_Admin extends CPTP_Module {
 		<?php
 	}
 
-	private function get_post_type_slug($post_type) {
+	private function get_post_type_slug( $post_type ) {
 		$pt_object = get_post_type_object($post_type);
 		$slug = $pt_object->rewrite['slug'];
-		$with_front = $pt_object->rewrite['with_front'];
-		global $wp_rewrite;
-		$front = substr( $wp_rewrite->front, 1 );
-		if( $front and $with_front ) {
-			$slug = $front.$slug;
-		}
+		// $with_front = $pt_object->rewrite['with_front'];
+		// global $wp_rewrite;
+		// $front = substr( $wp_rewrite->front, 1 );
+		// if( $front and $with_front ) {
+		// 	$slug = $front.$slug;
+		// }
 		return $slug;
 	}
 	/**
@@ -147,6 +154,12 @@ class CPTP_Module_Admin extends CPTP_Module {
 		$post_type = str_replace('_structure',"" ,$option);
 		$pt_object = get_post_type_object($post_type);
 		$slug = $pt_object->rewrite['slug'];
+		$with_front = $pt_object->rewrite['with_front'];
+		global $wp_rewrite;
+		$front = substr( $wp_rewrite->front, 1 );
+		if( $front and $with_front ) {
+			$slug = $front.$slug;
+		}
 
 		echo '<p><code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" /></p>';
 		echo '<p>has_archive: <code>';
@@ -200,23 +213,21 @@ class CPTP_Module_Admin extends CPTP_Module {
 		$taxonomy = get_taxonomy(str_replace('_slug',"" ,$option));
 		$object_types = $taxonomy->object_type;
 		$slug = $taxonomy->rewrite["slug"];
+		$current_option = get_option($option);
+
 		?>
-		<select name="" id="">
+		<select name="<?= $option;?>" id="<?= $option;?>">
+			<option value="<?php echo $slug;?>" <?=($current_option == $slug) ? "selected": "";?> ><?php echo $slug;?></option>
 			<?php
 			foreach ($object_types  as $key => $post_type):
-			$pt_slug = $this->get_post_type_slug($post_type);
+				$pt_object = get_post_type_object($post_type);
+				$pt_slug = $pt_object->rewrite['cptp_default_slug'];
 			?>
-				<option value="<?php echo $slug;?>"><?php echo $slug;?></option>
-				<option value="<?php echo $pt_slug."/".$slug;?>"><?php echo $pt_slug."/".$slug;?></option>
+				<option value="<?php echo $pt_slug."/".$slug;?>" <?=($current_option == $pt_slug."/".$slug) ? "selected": "";?>><?php echo $pt_slug."/".$slug;?></option>
 			<?php endforeach;?>
 		</select>
 		<?php
 	}
-
-
-
-
-
 
 	/**
 	 *

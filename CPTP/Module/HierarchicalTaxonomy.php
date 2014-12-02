@@ -23,15 +23,18 @@ class CPTP_Module_HierarchicalTaxonomy extends CPTP_Module {
 
 	public function registered_taxonomy( $taxonomy, $object_type, $args ) {
 		if( !isset($this->fixed_taxonomies[$taxonomy]) ) {
-
 			$this->fixed_taxonomies[$taxonomy] = true;
 
 			if( get_option( "fix_hierarchical_taxonomy_permalink") and $args["hierarchical"] ) {
 				$args["rewrite"]["hierarchical"] = true;
 			}
 
-			register_taxonomy( $taxonomy, $object_type, $args );
+			if( get_option( $taxonomy.'_slug') ) {
+				$args["rewrite"]["cptp_default_slug"] = $args["rewrite"]["slug"];
+				$args["rewrite"]["slug"] = get_option( $taxonomy.'_slug');
+			}
 
+			register_taxonomy( $taxonomy, $object_type, $args );
 		}
 	}
 
