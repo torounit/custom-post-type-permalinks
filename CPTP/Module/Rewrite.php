@@ -36,7 +36,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		if( $args->_builtin or !$args->publicly_queryable or !$args->show_ui ){
 			return false;
 		}
-		$permalink = get_option( $post_type.'_structure' );
+		$permalink = CPTP_Util::get_permalink_structure($post_type);
 
 		if( !$permalink ) {
 			$permalink = CPTP_DEFAULT_PERMALINK;

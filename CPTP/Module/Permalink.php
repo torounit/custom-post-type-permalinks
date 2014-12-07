@@ -35,9 +35,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 *
 	 */
 	public function post_type_link( $post_link, $post, $leavename ) {
-
 		global $wp_rewrite;
-
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if( $draft_or_pending and !$leavename )
 			return $post_link;
@@ -71,7 +69,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		//%post_id%/attachment/%attachement_name%;
 		//画像の編集ページでのリンク
 		if( isset($_GET["post"]) && $_GET["post"] != $post->ID ) {
-			$parent_structure = trim(get_option( $post->post_type.'_structure' ), "/");
+			$parent_structure = trim( CPTP_Util::get_permalink_structure( $this->post_type ), "/");
 			$parent_dirs = explode( "/", $parent_structure );
 			if(is_array($parent_dirs)) {
 				$last_dir = array_pop( $parent_dirs );
@@ -193,7 +191,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $link;
 		}
 		$post_parent = get_post( $post->post_parent );
-		$permalink = get_option( $post_parent->post_type.'_structure' );
+		$permalink = CPTP_Util::get_permalink_structure( $post_parent->post_type );
 		$post_type = get_post_type_object( $post_parent->post_type );
 
 		if( $post_type->_builtin == false ) {
