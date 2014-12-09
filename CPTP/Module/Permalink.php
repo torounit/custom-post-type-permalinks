@@ -139,30 +139,37 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			if ( strpos($permalink, "%$taxonomy%") !== false ) {
 				$terms = wp_get_post_terms( $post_id, $taxonomy, array('orderby' => 'term_id'));
 
-				if ( $terms and count($terms) > 1 ) {
-					if(reset($terms)->parent == 0){
+				if( $terms and !is_wp_error($terms) ) {
 
-						$keys = array_keys($terms);
-						$term = $terms[$keys[1]]->slug;
-						if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
-							$term = CPTP_Util::get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
+					if ( count($terms) > 1 ) {
+						//親子カテゴリー両方にチェックが入っているとき。
+						if(reset($terms)->parent == 0){
+
+							$keys = array_keys($terms);
+							$term = $terms[$keys[1]]->slug;
+							if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
+								$term = CPTP_Util::get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
+							}
+						}else{
+							$keys = array_keys($terms);
+							$term = $terms[$keys[0]]->slug;
+							if ( $terms[$keys[1]]->term_id == $terms[$keys[0]]->parent ) {
+								$term = CPTP_Util::get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
+							}
 						}
-					}else{
-						$keys = array_keys($terms);
-						$term = $terms[$keys[0]]->slug;
-						if ( $terms[$keys[1]]->term_id == $terms[$keys[0]]->parent ) {
-							$term = CPTP_Util::get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
+					}else {
+						//このブロックだけで良いはず。
+						$term_obj = reset($terms); //最初のOBjectのみを対象。
+						$term = $term_obj->slug;
+
+						if(isset($term_obj->parent) and $term_obj->parent != 0) {
+							$term = CPTP_Util::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
 						}
 					}
-				}else if( $terms ){
 
-					$term_obj = array_shift($terms);
-					$term = $term_obj->slug;
 
-					if(isset($term_obj->parent) and $term_obj->parent != 0) {
-						$term = CPTP_Util::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
-					}
 				}
+
 
 				if( isset($term) ) {
 					$search[] = "%$taxonomy%";
