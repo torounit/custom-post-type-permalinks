@@ -56,5 +56,28 @@ class CPTPTest extends WP_UnitTestCase {
         _unregister_taxonomy( $taxonomy, $post_type );
     }
 
+    public function test_url_to_postid_cpt_hierarchial_term_post_id() {
+        delete_option( 'rewrite_rules' );
+        $post_type = rand_str( 12 );
+        $taxonomy = rand_str( 12 );
+        update_option($post_type."_structure", "/%".$taxonomy."%/%post_id%/" );
+        register_taxonomy( $taxonomy, $post_type,  array( "public" => true ,"hierarchial" => true) );
+        register_post_type( $post_type, array( "public" => true ) );
+        $id = $this->factory->post->create( array( 'post_type' => $post_type ) );
+
+        $term_id = 0;
+        for ($i=0; $i < 10; $i++) {
+            $slug = rand_str( 12 );
+            $term = wp_insert_term( $slug, $taxonomy, array("parent" => $term_id, "slug" => $slug) );
+            $term_id = $term["term_id"];
+        }
+
+        wp_set_post_terms( $id, get_term( $term_id, $taxonomy )->slug, $taxonomy );
+        $this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
+        _unregister_post_type( $post_type );
+        _unregister_taxonomy( $taxonomy, $post_type );
+    }
+
+
 }
 
