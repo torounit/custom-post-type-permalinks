@@ -3,7 +3,6 @@
 class CPTPTest extends WP_UnitTestCase {
 
 
-
     public function setUp() {
         global $wp_rewrite;
         parent::setUp();
@@ -108,6 +107,35 @@ class CPTPTest extends WP_UnitTestCase {
 
         _unregister_post_type( $post_type );
         _unregister_taxonomy( $taxonomy, $post_type );
+    }
+
+
+    public function test_url_to_postid_category_post_id () {
+        delete_option( 'rewrite_rules' );
+        $post_type = rand_str( 12 );
+        $taxonomy = rand_str( 12 );
+        update_option($post_type."_structure", "/%category%/%post_id%/" );
+        register_post_type( $post_type, array( "public" => true , 'taxonomies' => array('category')) );
+        $id = $this->factory->post->create( array( 'post_type' => $post_type ) );
+        $term = wp_insert_term( rand_str( 12 ), "category" );
+        wp_set_post_categories( $id, array($term["term_id"]) );
+
+        $this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
+
+        _unregister_post_type( $post_type );
+        _unregister_taxonomy( $taxonomy, $post_type );
+    }
+
+
+    public function test_url_to_postid_cpt_author_postname () {
+        delete_option( 'rewrite_rules' );
+        $post_type = rand_str( 12 );
+        update_option($post_type."_structure", "/%author%/%postname%/" );
+        register_post_type( $post_type, array( "public" => true ) );
+        $user_id = $this->factory->user->create();
+        $id = $this->factory->post->create( array( 'post_type' => $post_type ,"post_author" => $user_id ) );
+        $this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
+        _unregister_post_type( $post_type );
     }
 
 
