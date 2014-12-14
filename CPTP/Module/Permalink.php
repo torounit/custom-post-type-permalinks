@@ -141,44 +141,40 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 				if( $terms and !is_wp_error($terms) ) {
 
-					if ( count($terms) > 1 ) {
-						//親子カテゴリー両方にチェックが入っているとき。
-						if(reset($terms)->parent == 0){
-
-							$keys = array_keys($terms);
-							$term = $terms[$keys[1]]->slug;
-							if ( $terms[$keys[0]]->term_id == $terms[$keys[1]]->parent ) {
-								$term = CPTP_Util::get_taxonomy_parents( $terms[$keys[1]]->parent,$taxonomy, false, '/', true ) . $term;
-							}
-						}else{
-							$keys = array_keys($terms);
-							$term = $terms[$keys[0]]->slug;
-							if ( $terms[$keys[1]]->term_id == $terms[$keys[0]]->parent ) {
-								$term = CPTP_Util::get_taxonomy_parents( $terms[$keys[0]]->parent,$taxonomy, false, '/', true ) . $term;
-							}
-						}
-					}else {
-						//このブロックだけで良いはず。
-						$term_obj = reset($terms); //最初のOBjectのみを対象。
-						$term = $term_obj->slug;
-
-						if(isset($term_obj->parent) and $term_obj->parent != 0) {
-							$term = CPTP_Util::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term;
+					$parents = array_map( array(__CLASS__, 'get_term_parent'), $terms); //親の一覧
+					$newTerms = array();
+					foreach ($terms as $key => $term) {
+						if( !in_array($term->term_id, $parents )) {
+							$newTerms[] = $term;
 						}
 					}
 
 
+					//このブロックだけで良いはず。
+					$term_obj = reset($newTerms); //最初のOBjectのみを対象。
+					$term_slug = $term_obj->slug;
+
+					if(isset($term_obj->parent) and $term_obj->parent != 0) {
+						$term_slug = CPTP_Util::get_taxonomy_parents( $term_obj->parent,$taxonomy, false, '/', true ) . $term_slug;
+					}
+
 				}
 
 
-				if( isset($term) ) {
+				if( isset($term_slug) ) {
 					$search[] = "%$taxonomy%";
-					$replace[] = $term;
+					$replace[] = $term_slug;
 				}
 
 			}
 		}
 		return array("search" => $search, "replace" => $replace );
+	}
+
+	private static function get_term_parent($term) {
+		if(isset($term->parent) and $term->parent > 0) {
+			return $term->parent;
+		}
 	}
 
 
