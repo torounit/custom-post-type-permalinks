@@ -104,9 +104,6 @@ class CPTPTest extends WP_UnitTestCase {
         wp_set_post_terms( $id, get_term( $term_id, $taxonomy )->slug, $taxonomy );
         wp_set_post_terms( $id_all_term, $slug_list, $taxonomy );
 
-
-        var_dump(get_the_terms( get_post( $id_all_term ), $taxonomy ));
-
         $this->assertEquals( get_permalink( $id ), str_replace("foo_all_term", "foo", get_permalink( $id_all_term ))  );
 
         _unregister_post_type( $post_type );
