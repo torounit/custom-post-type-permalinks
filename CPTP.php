@@ -11,21 +11,6 @@
  * */
 
 
-define( "CPTP_VERSION", "0.9.6" );
-define( "CPTP_DEFAULT_PERMALINK", "/%postname%/" );
-define( "CPTP_DIR", dirname( __FILE__ ) );
-
-
-require_once CPTP_DIR.'/CPTP/Util.php';
-require_once CPTP_DIR.'/CPTP/Module.php';
-require_once CPTP_DIR.'/CPTP/Module/Setting.php';
-require_once CPTP_DIR.'/CPTP/Module/Rewrite.php';
-require_once CPTP_DIR.'/CPTP/Module/Admin.php';
-require_once CPTP_DIR.'/CPTP/Module/Permalink.php';
-require_once CPTP_DIR.'/CPTP/Module/GetArchives.php';
-require_once CPTP_DIR.'/CPTP/Module/FlushRules.php';
-
-
 class CPTP {
 
 	private static $instance;

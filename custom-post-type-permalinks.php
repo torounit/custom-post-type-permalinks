@@ -17,16 +17,42 @@ Domain Path: /language/
  * Custom Post Type Permalinks
  *
  * @package Custom_Post_Type_Permalinks
- * @version 0.9.4
+ * @version 0.9.6
  *
  */
 
+define( "CPTP_VERSION", "0.9.6" );
+define( "CPTP_DEFAULT_PERMALINK", "/%postname%/" );
 
-require_once dirname(__FILE__).'/CPTP.php';
+
+
+/**
+ *
+ * Autoloader for CPTP.
+ * @since 0.9.7
+ *
+ */
+
+function cptp_class_loader( $class_name ) {
+	$dir = dirname(__FILE__);
+	$file_name = $dir . "/". str_replace("_", "/", $class_name).".php";
+	if( is_readable($file_name) ) {
+		include $file_name;
+	}
+}
+spl_autoload_register("cptp_class_loader");
+
+
+/**
+ *
+ * Entry Point
+ * @since 0.9.4
+ *
+ */
 
 add_action( 'plugins_loaded', 'cptp_init_instance' );
 function cptp_init_instance() {
-    CPTP::get_instance();
+	CPTP::get_instance();
 }
 
 
