@@ -61,8 +61,17 @@ class CPTP_Util {
 		return $chain;
 	}
 
-	public static function get_permalink_structure($post_type) {
-		return apply_filters( "CPTP_".$post_type."_structure", get_option($post_type."_structure") );
+	public static function get_permalink_structure( $post_type ) {
+		$pt_object = get_post_type_object( $post_type );
+
+		if( isset( $pt_object->cptp_permalink_structure ) and $pt_object->cptp_permalink_structure ) {
+			$structure = $pt_object->cptp_permalink_structure;
+		}
+		else {
+			$structure = get_option( $post_type."_structure" );
+		}
+
+		return apply_filters( "CPTP_".$post_type."_structure", $structure );
 	}
 
 
