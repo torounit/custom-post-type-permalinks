@@ -102,14 +102,22 @@ class CPTP_Module_Admin extends CPTP_Module {
 	}
 
 	public function setting_structure_callback_function(  $option  ) {
-		$post_type = str_replace('_structure',"" ,$option);
-		$pt_object = get_post_type_object($post_type);
+
+		$post_type = str_replace( '_structure', "" ,$option );
+		$pt_object = get_post_type_object( $post_type );
 		$slug = $pt_object->rewrite['slug'];
 		$with_front = $pt_object->rewrite['with_front'];
 
-		$value = get_option($option);
-		if( !$value )
+		$value = CPTP_Util::get_permalink_structure( $post_type );
+
+		$disabled = false;
+		if( isset( $pt_object->cptp_permalink_structure ) and $pt_object->cptp_permalink_structure ) {
+			$disabled = true;
+		}
+
+		if( !$value ) {
 			$value = CPTP_DEFAULT_PERMALINK;
+		}
 
 		global $wp_rewrite;
 		$front = substr( $wp_rewrite->front, 1 );
@@ -117,7 +125,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 			$slug = $front.$slug;
 		}
 
-		echo '<p><code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code" value="' . $value .'" /></p>';
+		echo '<p><code>'.home_url().'/'.$slug.'</code> <input name="'.$option.'" id="'.$option.'" type="text" class="regular-text code '.$this->disabled_string($disabled).'" value="' . $value .'" '.$this->disabled_string($disabled).' /></p>';
 		echo '<p>has_archive: <code>';
 		echo $pt_object->has_archive ? "true" : "false";
 		echo '</code> / ';
@@ -125,6 +133,13 @@ class CPTP_Module_Admin extends CPTP_Module {
 		echo $pt_object->rewrite['with_front'] ? "true" : "false";
 		echo '</code></p>';
 
+	}
+
+	private function disabled_string( $bool ) {
+		if( $bool ) {
+			return "disabled";
+		}
+		return "";
 	}
 
 	public function setting_no_tax_structure_callback_function(){
