@@ -69,6 +69,12 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$user_id = $this->factory->user->create();
 		$id = $this->factory->post->create( array( 'post_type' => $this->post_type ,"post_author" => $user_id ) );
 
+
+		$id = 0;
+		for ($i=0; $i < 10; $i++) {
+			$id = $this->factory->post->create( array( 'post_type' => $this->post_type ,"post_author" => $user_id ,"post_parent" => $id ) );
+		}
+
 		wp_set_post_terms( $id, rand_str( 12 ) , $this->taxonomy );
 
 		$cat = wp_insert_term( rand_str( 12 ), "category" );

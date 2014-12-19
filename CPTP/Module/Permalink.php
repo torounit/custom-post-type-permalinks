@@ -44,21 +44,23 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		$post_type = $post->post_type;
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
+		$pt_object = get_post_type_object( $post_type );
 
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
-		$permalink = str_replace( '%'.$post_type.'_slug%', get_post_type_object( $post_type )->rewrite['slug'], $permalink );
-
-
+		$permalink = str_replace( '%'.$post_type.'_slug%', $pt_object->rewrite['slug'], $permalink );
 
 		//親ページが有るとき。
 		$parentsDirs = "";
-		if( !$leavename ){
-			$postId = $post->ID;
-			while ($parent = get_post($postId)->post_parent) {
-				$parentsDirs = get_post($parent)->post_name."/".$parentsDirs;
-				$postId = $parent;
+		if( $pt_object->hierarchical ) {
+			if( !$leavename ){
+				$postId = $post->ID;
+				while ($parent = get_post($postId)->post_parent) {
+					$parentsDirs = get_post($parent)->post_name."/".$parentsDirs;
+					$postId = $parent;
+				}
 			}
 		}
+
 
 		$permalink = str_replace( '%'.$post_type.'%', $parentsDirs.'%'.$post_type.'%', $permalink );
 
