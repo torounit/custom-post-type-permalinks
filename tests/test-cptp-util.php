@@ -1,6 +1,6 @@
 <?php
 
-class CPTP_UtilTest extends WP_UnitTestCase {
+class CPTP_Util_Test extends WP_UnitTestCase {
 
 	public function setUp() {
 		global $wp_rewrite;
