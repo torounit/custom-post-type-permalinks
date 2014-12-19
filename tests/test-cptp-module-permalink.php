@@ -33,10 +33,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		return array(
 			array("/%post_id%/"),
 			array("/%postname%/"),
-			array("/%year%/%post_id%/"),
-			array("/%year%/%postname%/"),
-			array("/%year%/%monthnum%/%post_id%/"),
-			array("/%year%/%monthnum%/%postname%/"),
 			array("/%year%/%monthnum%/%day%/%post_id%/"),
 			array("/%year%/%monthnum%/%day%/%postname%/"),
 			array("/%ctax%/%post_id%/"),
