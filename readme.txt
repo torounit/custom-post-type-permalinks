@@ -1,9 +1,9 @@
 ﻿=== Custom Post Type Permalinks ===
 Contributors: Toro_Unit
 Tags: permalink,permalinks,custom post type,custom taxonomy,cms
-Requires at least: 3.7
-Tested up to: 4.0
-Stable tag: 0.9.6
+Requires at least: 3.8
+Tested up to: 4.1
+Stable tag: 0.9.7
 
 Lets you edit the permalink of custom post type.
 
