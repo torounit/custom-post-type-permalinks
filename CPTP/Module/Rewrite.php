@@ -85,6 +85,8 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			add_rewrite_rule( $slug.'/date/([0-9]{4})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&paged=$matches[2]&post_type='.$post_type, 'top' );
 			add_rewrite_rule( $slug.'/date/([0-9]{4})/?$', 'index.php?year=$matches[1]&post_type='.$post_type, 'top' );
 			add_rewrite_rule( $slug.'/author/([^/]+)/?$', 'index.php?author_name=$matches[1]&post_type='.$post_type, 'top' );
+			add_rewrite_rule( $slug.'/category/([^/]+)/?$', 'index.php?category_name=$matches[1]&post_type='.$post_type, 'top' );
+
 		}
 
 
