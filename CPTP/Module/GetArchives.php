@@ -76,6 +76,9 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 	 *
 	 */
 	public function get_archives_link( $link ) {
+		
+		return $link;
+		
 		global $wp_rewrite;
 
 
