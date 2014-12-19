@@ -71,7 +71,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 
 
 		$id = 0;
-		for ($i=0; $i < 10; $i++) {
+		for ($i=0; $i < 4; $i++) {
 			$id = $this->factory->post->create( array( 'post_type' => $this->post_type ,"post_author" => $user_id ,"post_parent" => $id ) );
 		}
 
@@ -85,9 +85,9 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->assertTrue( is_single() );
 		$this->assertEquals( $this->post_type, get_post_type() );
 
-		$this->factory->comment->create_post_comments( $id, 50 );
-		$this->go_to(get_permalink( $id )."comment-page-5" );
-		$this->assertEquals( get_query_var( "cpage"), 5 );
+		$this->factory->comment->create_post_comments( $id, 15 );
+		$this->go_to(get_permalink( $id )."comment-page-2" );
+		$this->assertEquals( get_query_var( "cpage"), 2 );
 
 	}
 
@@ -109,7 +109,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$user_id = $this->factory->user->create();
 
 		$id = 0;
-		for ($i=0; $i < 10; $i++) {
+		for ($i=0; $i < 4; $i++) {
 			$id = $this->factory->post->create( array( 'post_type' => $this->post_type ,"post_author" => $user_id ,"post_parent" => $id ) );
 		}
 		wp_set_post_terms( $id, rand_str( 12 ) , $this->taxonomy );
@@ -122,7 +122,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->assertTrue( is_single() );
 		$this->assertEquals( $this->post_type, get_post_type() );
 
-		$this->factory->comment->create_post_comments( $id, 50 );
+		$this->factory->comment->create_post_comments( $id, 25 );
 		$this->go_to(get_permalink( $id )."comment-page-5" );
 		$this->assertEquals( get_query_var( "cpage"), 5 );
 
@@ -148,7 +148,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 
 		$term_id = 0;
 		$slug_list = array();
-		for ($i=0; $i < 10; $i++) {
+		for ($i=0; $i < 4; $i++) {
 			$slug = rand_str( 12 );
 			$term = wp_insert_term( $slug, $this->taxonomy, array("parent" => $term_id, "slug" => $slug) );
 			$term_id = $term["term_id"];
