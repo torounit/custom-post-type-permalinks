@@ -74,10 +74,12 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 			$id = $this->factory->post->create( array( 'post_type' => $this->post_type ,"post_author" => $user_id ,"post_parent" => $id ) );
 		}
 
-		wp_set_post_terms( $id, rand_str( 12 ) , $this->taxonomy );
+		$term_id = $this->factory->term->create( array( "taxonomy" => $this->taxonomy ) );
+		wp_set_post_terms( $id, array( $term_id ) , $this->taxonomy );
 
-		$cat = wp_insert_term( rand_str( 12 ), "category" );
-		wp_set_post_categories( $id, array($cat["term_id"]) );
+		$cat_id = $this->factory->category->create();
+		wp_set_post_categories( $id, array( $cat_id ) );
+
 		$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
 
 		$this->go_to( get_permalink( $id ) );
@@ -111,10 +113,13 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		for ($i=0; $i < 4; $i++) {
 			$id = $this->factory->post->create( array( 'post_type' => $this->post_type ,"post_author" => $user_id ,"post_parent" => $id ) );
 		}
-		wp_set_post_terms( $id, rand_str( 12 ) , $this->taxonomy );
 
-		$cat = wp_insert_term( rand_str( 12 ), "category" );
-		wp_set_post_categories( $id, array($cat["term_id"]) );
+		$term_id = $this->factory->term->create( array( "taxonomy" => $this->taxonomy ) );
+		wp_set_post_terms( $id, array( $term_id ) , $this->taxonomy );
+
+		$cat_id = $this->factory->category->create();
+		wp_set_post_categories( $id, array( $cat_id ) );
+
 		$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
 
 		$this->go_to( get_permalink( $id ) );
@@ -145,12 +150,13 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$user_id = $this->factory->user->create();
 		$id = $this->factory->post->create( array( 'post_type' => $this->post_type ,"post_name" => rand_str( 12 ) ,"post_author" => $user_id ) );
 
+		$cat_id = $this->factory->category->create();
+		wp_set_post_categories( $id, array( $cat_id ) );
+
 		$term_id = 0;
 		$slug_list = array();
 		for ($i=0; $i < 4; $i++) {
-			$slug = rand_str( 12 );
-			$term = wp_insert_term( $slug, $this->taxonomy, array("parent" => $term_id, "slug" => $slug) );
-			$term_id = $term["term_id"];
+			$term_id = $this->factory->term->create( array( "taxonomy" => $this->taxonomy, "parent" => $term_id ) );
 			$slug_list[] = get_term( $term_id, $this->taxonomy )->slug;
 
 		}
