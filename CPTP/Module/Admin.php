@@ -19,6 +19,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 		add_action( 'admin_footer', array( $this,'pointer_js') );
 	}
 
+
 	/**
 	 *
 	 * Setting Init
@@ -34,27 +35,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 		$post_types = CPTP_Util::get_post_types();
 		foreach ($post_types as $post_type):
-			if(isset($_POST['submit']) and isset($_POST['_wp_http_referer'])){
-				if( strpos($_POST['_wp_http_referer'],'options-permalink.php') !== FALSE ) {
-
-					$structure = trim(esc_attr($_POST[$post_type.'_structure']));#get setting
-
-					#default permalink structure
-					if( !$structure )
-						$structure = CPTP_DEFAULT_PERMALINK;
-
-					$structure = str_replace('//','/','/'.$structure);# first "/"
-
-					#last "/"
-					$lastString = substr(trim(esc_attr($_POST['permalink_structure'])),-1);
-					$structure = rtrim($structure,'/');
-
-					if ( $lastString == '/')
-						$structure = $structure.'/';
-
-					update_option($post_type.'_structure', $structure );
-				}
-			}
 
 			add_settings_field($post_type.'_structure',
 				$post_type,
@@ -77,15 +57,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 		register_setting('permalink','no_taxonomy_structure');
 
-		if(isset($_POST['submit']) && isset($_POST['_wp_http_referer']) && strpos($_POST['_wp_http_referer'],'options-permalink.php') !== false ) {
 
-			if(!isset($_POST['no_taxonomy_structure'])){
-				$set = true;
-			}else {
-				$set = false;
-			}
-			update_option('no_taxonomy_structure', $set);
-		}
 	}
 
 	public function setting_section_callback_function() {

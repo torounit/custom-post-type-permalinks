@@ -33,6 +33,7 @@ class CPTP {
 		new CPTP_Module_Setting();
 		new CPTP_Module_Rewrite();
 		new CPTP_Module_Admin();
+		new CPTP_Module_Option();
 		new CPTP_Module_Permalink();
 		new CPTP_Module_GetArchives();
 		new CPTP_Module_FlushRules();
