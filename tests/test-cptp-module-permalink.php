@@ -35,15 +35,18 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 			array("/%postname%/"),
 			array("/%year%/%monthnum%/%day%/%post_id%/"),
 			array("/%year%/%monthnum%/%day%/%postname%/"),
-			array("/%ctax%/%post_id%/"),
-			array("/%ctax%/%postname%/"),
 			array("/%author%/%post_id%/"),
 			array("/%author%/%postname%/"),
+			array("/%ctax%/%post_id%/"),
+			array("/%ctax%/%postname%/"),
 			array("/%category%/%post_id%/"),
+			array("/%category%/%postname%/"),
 			array("/%category%/%ctax%/%post_id%/"),
 			array("/%category%/%ctax%/%postname%/"),
 			array("/%ctax%/%category%/%post_id%/"),
 			array("/%ctax%/%category%/%postname%/"),
+			array("/%ctax%/%author%/%year%/%monthnum%/%day%/%category%/%post_id%/"),
+			array("/%ctax%/%author%/%year%/%monthnum%/%day%/%category%/%postname%/"),
 		);
 	}
 
