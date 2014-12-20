@@ -7,7 +7,7 @@
  * Options.
  *
  * @package Custom_Post_Type_Permalinks
- * @since 0.9.4
+ * @since 0.9.7
  *
  * */
 
@@ -15,6 +15,8 @@ class CPTP_Module_Option extends CPTP_Module {
 
 	public function add_hook() {
 		add_action( 'admin_init', array( $this,'save_options'), 30 );
+		register_uninstall_hook( CPTP_PLUGIN_FILE, array( __CLASS__, 'uninstall_hook') );
+
 	}
 
 	public function save_options() {
@@ -50,6 +52,14 @@ class CPTP_Module_Option extends CPTP_Module {
 			update_option('no_taxonomy_structure', $set);
 
 		}
+	}
+
+	public static function uninstall_hook() {
+		foreach (CPTP_Util::get_post_types() as $post_type) {
+			delete_option( $post_type.'_structure' );
+		}
+
+		delete_option( 'no_taxonomy_structure' );
 	}
 
 

@@ -21,6 +21,7 @@ Domain Path: /language/
  *
  */
 
+define( "CPTP_PLUGIN_FILE", __FILE__ );
 define( "CPTP_VERSION", "0.9.7" );
 define( "CPTP_DEFAULT_PERMALINK", "/%postname%/" );
 
