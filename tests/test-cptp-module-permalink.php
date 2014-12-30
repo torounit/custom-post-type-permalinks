@@ -54,6 +54,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	/**
 	 *
 	 * @test
+	 * @group permalink
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 * @dataProvider structure_provider
@@ -96,6 +97,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	/**
 	 *
 	 * @test
+	 * @group permalink
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 * @dataProvider structure_provider
@@ -137,6 +139,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	/**
 	 *
 	 * @test
+	 * @group permalink
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 * @dataProvider structure_provider
@@ -158,8 +161,8 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		for ($i=0; $i < 4; $i++) {
 			$term_id = $this->factory->term->create( array( "taxonomy" => $this->taxonomy, "parent" => $term_id ) );
 			$slug_list[] = get_term( $term_id, $this->taxonomy )->slug;
-
 		}
+
 		wp_set_post_terms( $id, get_term( $term_id, $this->taxonomy )->slug, $this->taxonomy );
 		$single_term_link = get_permalink( $id );
 		$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
