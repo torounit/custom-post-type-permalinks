@@ -98,4 +98,34 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 	}
 
+
+	/**
+	 *
+	 * @test
+	 * @group rewrite
+	 */
+	public function test_cpt_category_archive() {
+		register_taxonomy( $this->taxonomy, $this->post_type,  array( "public" => true , "rewrite" => array("slug" => rand_str( 12 ) )));
+		register_post_type( $this->post_type, array( "public" => true , 'taxonomies' => array('category'), "has_archive" => true ) );
+		$post_type_object = get_post_type_object( $this->post_type );
+
+		$user_id = $this->factory->user->create();
+
+		$post_ids = $this->factory->post->create_many( 10 , array( 'post_type' => $this->post_type, "post_date" => "2012-12-12", "post_author" => $user_id ) );
+
+		$cat_id = $this->factory->category->create();
+		foreach ($post_ids as$post_id) {
+			wp_set_post_categories( $post_id, array($cat_id) );
+		}
+
+		$category_obj = get_category( $cat_id );
+
+		$this->go_to( home_url( "/".$post_type_object->rewrite["slug"]."/".get_option('category_base')."/".$category_obj->slug ));
+		$this->assertQueryTrue( "is_archive", "is_post_type_archive", "is_category" );
+
+		$this->go_to(next_posts(0,false));
+		$this->assertQueryTrue( "is_archive", "is_post_type_archive", "is_category", "is_paged" );
+
+	}
+
 }
