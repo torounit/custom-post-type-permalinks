@@ -114,7 +114,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			}
 
 			if(!strstr($link,'/date/')){
-				$link_dir = $link_dir .'/date';
+				$link_dir = $link_dir . CPTP_Util::get_date_front( $post_type );;
 			}
 
 			if($post_type->rewrite['with_front']) {

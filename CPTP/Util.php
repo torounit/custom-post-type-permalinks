@@ -75,5 +75,25 @@ class CPTP_Util {
 	}
 
 
+	public static function get_date_front( $post_type ) {
+		$structure = CPTP_Util::get_permalink_structure( $post_type );
+
+		$front = '';
+
+		preg_match_all('/%.+?%/', $structure, $tokens);
+		$tok_index = 1;
+		foreach ( (array) $tokens[0] as $token) {
+			if ( '%post_id%' == $token && ($tok_index <= 3) ) {
+				$front = '/date';
+				break;
+			}
+			$tok_index++;
+		}
+
+		return $front;
+
+	}
+
+
 
 }

@@ -29,4 +29,14 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 		$this->assertEquals( CPTP_Util::get_permalink_structure( $post_type ), "/%year%/%monthnum%/%day%/%post_id%/" );
 	}
 
+	public function test_get_date_front() {
+		$post_type = rand_str( 12 );
+		register_post_type( $post_type, array( "public" => true ) );
+		update_option($post_type."_structure", "/%year%/%monthnum%/%day%/%post_id%/" );
+		$this->assertEquals( CPTP_Util::get_date_front( $post_type ), "" );
+
+		update_option($post_type."_structure", "/%post_id%/" );
+		$this->assertEquals( CPTP_Util::get_date_front( $post_type ), "/date" );
+	}
+
 }
