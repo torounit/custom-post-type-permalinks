@@ -21,14 +21,12 @@ class CPTP {
 	}
 
 	/**
-	 *
 	 * load_modules
 	 *
 	 * Load CPTP_Modules.
 	 * @since 0.9.5
 	 *
-	 * */
-
+	 */
 	private function load_modules() {
 		new CPTP_Module_Setting();
 		new CPTP_Module_Rewrite();
@@ -37,22 +35,20 @@ class CPTP {
 		new CPTP_Module_Permalink();
 		new CPTP_Module_GetArchives();
 		new CPTP_Module_FlushRules();
-		do_action( "CPTP_load_modules" );
+		do_action( 'CPTP_load_modules' );
 
 	}
 
 	/**
-	 *
 	 * init
 	 *
 	 * Fire Module::add_hook
 	 *
 	 * @since 0.9.5
 	 *
-	 * */
-
+	 */
 	private function init() {
-		do_action( "CPTP_init" );
+		do_action( 'CPTP_init' );
 	}
 
 	/**
@@ -61,7 +57,7 @@ class CPTP {
 	 */
 	public static function get_instance() {
 
-		if (!isset(self::$_instance)) {
+		if ( ! isset(self::$_instance) ) {
 			self::$instance = new CPTP;
 		}
 
