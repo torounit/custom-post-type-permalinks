@@ -61,6 +61,13 @@ class CPTP_Util {
 		return $chain;
 	}
 
+	/**
+	 * Get permalink structure.
+	 *
+ 	 * @since 0.9.6
+ 	 * @param string $post_type post type name.
+ 	 * @return string post type structure.
+	 */
 	public static function get_permalink_structure( $post_type ) {
 		$pt_object = get_post_type_object( $post_type );
 
@@ -75,6 +82,13 @@ class CPTP_Util {
 	}
 
 
+	/**
+	 * Get permalink structure front for date archive.
+	 *
+ 	 * @since 0.9.7
+ 	 * @param string $post_type post type name.
+ 	 * @return string
+	 */
 	public static function get_date_front( $post_type ) {
 		$structure = CPTP_Util::get_permalink_structure( $post_type );
 
