@@ -21,9 +21,9 @@ Domain Path: /language/
  *
  */
 
-define( "CPTP_PLUGIN_FILE", __FILE__ );
-define( "CPTP_VERSION", "0.9.7" );
-define( "CPTP_DEFAULT_PERMALINK", "/%postname%/" );
+define( 'CPTP_PLUGIN_FILE', __FILE__ );
+define( 'CPTP_VERSION', '0.9.7' );
+define( 'CPTP_DEFAULT_PERMALINK', '/%postname%/' );
 
 
 
@@ -33,15 +33,14 @@ define( "CPTP_DEFAULT_PERMALINK", "/%postname%/" );
  * @since 0.9.7
  *
  */
-
 function cptp_class_loader( $class_name ) {
-	$dir = dirname(__FILE__);
-	$file_name = $dir . "/". str_replace("_", "/", $class_name).".php";
-	if( is_readable($file_name) ) {
+	$dir = dirname( __FILE__ );
+	$file_name = $dir . '/'. str_replace( '_', '/', $class_name ).'.php';
+	if ( is_readable( $file_name ) ) {
 		include $file_name;
 	}
 }
-spl_autoload_register("cptp_class_loader");
+spl_autoload_register( 'cptp_class_loader' );
 
 
 /**
@@ -50,7 +49,6 @@ spl_autoload_register("cptp_class_loader");
  * @since 0.9.4
  *
  */
-
 add_action( 'plugins_loaded', 'cptp_init_instance' );
 function cptp_init_instance() {
 	CPTP::get_instance();
