@@ -42,6 +42,11 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
+= 0.9.7 =
+* Adding date slug only conflicting %post_id%.
+* Change taxonomy link rewrite rule. Use post_type.
+* Can change template include custom taxonomy.
+
 = 0.9.6 =
 * Category and author.
 * French Transration. Thanks Geoffrey!
