@@ -45,20 +45,8 @@ class CPTP_Module_Option extends CPTP_Module {
 				endforeach;
 			}
 
-			if ( ! isset( $_POST['no_taxonomy_structure'] ) ) {
-				$set = true;
-			}else {
-				$set = false;
-			}
-			update_option( 'no_taxonomy_structure', $set );
-
-
-			if ( ! isset( $_POST['cptp_change_template_loader'] ) ) {
-				$set = true;
-			}else {
-				$set = false;
-			}
-			update_option( 'cptp_change_template_loader', $set );
+			update_option( 'no_taxonomy_structure', ! isset( $_POST['no_taxonomy_structure'] ) );
+			update_option( 'cptp_change_template_loader', !! isset( $_POST['cptp_change_template_loader'] ) );
 
 		}
 	}
