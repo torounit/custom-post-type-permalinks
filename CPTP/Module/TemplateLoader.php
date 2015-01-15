@@ -12,7 +12,7 @@
 class CPTP_Module_TemplateLoader extends CPTP_Module {
 
 	public function add_hook() {
-		add_action( 'template_include', array( $this, 'template_include'), 10 );
+		add_action( 'template_include', array( $this, 'template_include' ), 10 );
 	}
 
 	public function template_include( $template ) {
