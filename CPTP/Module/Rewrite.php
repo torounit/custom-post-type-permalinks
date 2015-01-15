@@ -89,6 +89,9 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			add_rewrite_rule( $slug.'/'.get_option('category_base').'/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?category_name=$matches[1]&paged=$matches[2]&post_type='.$post_type, 'top' );
 			add_rewrite_rule( $slug.'/'.get_option('category_base').'/([^/]+)/?$', 'index.php?category_name=$matches[1]&post_type='.$post_type, 'top' );
 
+			do_action( 'CPTP_registered_'.$post_type.'_rules', $args, $slug );
+
+
 		}
 
 
@@ -154,7 +157,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			add_rewrite_rule( $slug.'/'.$taxonomy_slug.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$taxonomy_key.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
 			add_rewrite_rule( $slug.'/'.$taxonomy_slug.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy_key.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
 
-			do_action( 'CPTP_registered_'.$taxonomy.'_rules', $object_type, $args, $taxonomy_key, $taxonomy_slug );
+			do_action( 'CPTP_registered_'.$taxonomy.'_rules', $object_type, $args, $taxonomy_slug );
 
 		endforeach;
 	}
