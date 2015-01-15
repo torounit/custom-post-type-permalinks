@@ -127,35 +127,36 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			}
 
 			if ( $taxonomy == 'category' ){
-				$taxonomypat = ($cb = get_option('category_base')) ? $cb : $taxonomy;
-				$tax = 'category_name';
+				$taxonomy_slug = ($cb = get_option('category_base')) ? $cb : $taxonomy;
+				$taxonomy_key = 'category_name';
 			} else {
 				// Edit by [Xiphe]
 				if (isset($args["rewrite"]['slug'])) {
-					$taxonomypat = $args["rewrite"]['slug'];
+					$taxonomy_slug = $args["rewrite"]['slug'];
 				} else {
-					$taxonomypat = $taxonomy;
+					$taxonomy_slug = $taxonomy;
 				}
 				// [Xiphe] stop
 
-				$tax = $taxonomy;
+				$taxonomy_key = $taxonomy;
 			}
 
 
 			//add taxonomy slug
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&paged=$matches[2]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$tax.'=$matches[1]&feed=$matches[2]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/?$', 'index.php?'.$tax.'=$matches[1]', 'top' );  // modified by [steve] [*** bug fixing]
+			add_rewrite_rule( $slug.'/'.$taxonomy_slug.'/(.+?)/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy_key.'=$matches[1]&paged=$matches[2]', 'top' );
+			add_rewrite_rule( $slug.'/'.$taxonomy_slug.'/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy_key.'=$matches[1]&feed=$matches[2]', 'top' );
+			add_rewrite_rule( $slug.'/'.$taxonomy_slug.'/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?'.$taxonomy_key.'=$matches[1]&feed=$matches[2]', 'top' );
+			add_rewrite_rule( $slug.'/'.$taxonomy_slug.'/(.+?)/?$', 'index.php?'.$taxonomy_key.'=$matches[1]', 'top' );  // modified by [steve] [*** bug fixing]
 
 			// below rules were added by [steve]
-			add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
-			add_rewrite_rule( $taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
-			add_rewrite_rule( $slug.'/'.$taxonomypat.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$tax.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
+			add_rewrite_rule( $taxonomy_slug.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$taxonomy_key.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
+			add_rewrite_rule( $taxonomy_slug.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy_key.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
+			add_rewrite_rule( $slug.'/'.$taxonomy_slug.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?'.$taxonomy_key.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
+			add_rewrite_rule( $slug.'/'.$taxonomy_slug.'/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?'.$taxonomy_key.'=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
+
+			do_action( 'CPTP_registered_'.$taxonomy.'_rules', $object_type, $args, $taxonomy_key, $taxonomy_slug );
 
 		endforeach;
-
 	}
 
 
