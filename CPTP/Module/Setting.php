@@ -26,8 +26,11 @@ class CPTP_Module_Setting extends CPTP_Module {
 	 */
 
 	public function check_version() {
-		$version = get_option('cptp_version', 0);
-		if($version != CPTP_VERSION) {
+		$version = get_option( 'cptp_version', 0 );
+		if( false === $version ){
+			add_option('cptp_version', CPTP_VERSION);
+		}
+		else if( $version != CPTP_VERSION ) {
 			update_option('cptp_version', CPTP_VERSION);
 		}
 	}

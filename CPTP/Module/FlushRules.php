@@ -14,6 +14,7 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 
 	public function add_hook() {
 		add_action( 'init', array( $this, 'update_rules') );
+		add_action( 'add_option_cptp_version', array( $this, 'update_rules') );
 		add_action( 'update_option_cptp_version', array( $this, 'update_rules') );
 		add_action( 'wp_loaded', array( __CLASS__, "dequeue_flush_rules"),100);
 
