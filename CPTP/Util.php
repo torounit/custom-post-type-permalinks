@@ -80,10 +80,10 @@ class CPTP_Util {
 			$structure = $pt_object->cptp_permalink_structure;
 		}
 		else {
-			$structure = get_option( $post_type.'_structure' );
+			$structure = get_option( $pt_object->name.'_structure' );
 		}
 
-		return apply_filters( 'CPTP_'.$post_type.'_structure', $structure );
+		return apply_filters( 'CPTP_'.$pt_object->name.'_structure', $structure );
 	}
 
 
