@@ -18,8 +18,6 @@ class CPTP_Module_Migration_Test extends WP_UnitTestCase {
      *
      * @test
      * @group migration
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function test_template_loader_setting_value() {
         do_action("plugins_loaded");
@@ -34,8 +32,6 @@ class CPTP_Module_Migration_Test extends WP_UnitTestCase {
      *
      * @test
      * @group migration
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function test_template_loader_setting_value_for_update_older_0_9_6() {
         update_option( 'cptp_version', '0.9.6');
