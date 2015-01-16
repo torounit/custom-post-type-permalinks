@@ -10,7 +10,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		create_initial_taxonomies();
 		$wp_rewrite->flush_rules();
-		cptp_init_instance();
+		do_action("plugins_loaded");
 
 		update_option( 'page_comments', true );
 		update_option( 'comments_per_page', 5 );
