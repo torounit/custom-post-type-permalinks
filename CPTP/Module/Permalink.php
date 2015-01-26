@@ -69,7 +69,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		//%post_id%/attachment/%attachement_name%;
 		//画像の編集ページでのリンク
 		if ( isset( $_GET['post'] ) && $_GET['post'] != $post->ID ) {
-			$parent_structure = trim( CPTP_Util::get_permalink_structure( $this->post_type ), '/' );
+			$parent_structure = trim( CPTP_Util::get_permalink_structure( $post->post_type ), '/' );
 			$parent_dirs = explode( '/', $parent_structure );
 			if ( is_array( $parent_dirs ) ) {
 				$last_dir = array_pop( $parent_dirs );
