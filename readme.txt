@@ -160,3 +160,5 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 = 0.6 =
 * First release on wordpress.org
+
+Join the chat at https://gitter.im/torounit/custom-post-type-permalinks
