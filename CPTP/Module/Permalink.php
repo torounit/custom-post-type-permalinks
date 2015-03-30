@@ -33,9 +33,12 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 *
 	 * @version 2.0
 	 *
+	 * @return string
 	 */
 	public function post_type_link( $post_link, $post, $leavename ) {
-		global $wp_rewrite;
+
+		global /** @var WP_Rewrite $wp_rewrite */
+		$wp_rewrite;
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if ( $draft_or_pending and ! $leavename ) {
 			return $post_link;
@@ -148,12 +151,15 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	}
 
 
-
 	/**
 	 *
 	 * create %tax% -> term
 	 *
-	 * */
+	 * @param int $post_id
+	 * @param string $permalink
+	 *
+	 * @return array
+	 */
 	private function create_taxonomy_replace_tag( $post_id, $permalink ) {
 		$search = array();
 		$replace = array();
@@ -203,7 +209,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	}
 
 
-
 	/**
 	 *
 	 * fix attachment output
@@ -211,6 +216,10 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * @version 1.0
 	 * @since 0.8.2
 	 *
+	 * @param string $link
+	 * @param int $postID
+	 *
+	 * @return string
 	 */
 
 	public function attachment_link( $link, $postID ) {
@@ -237,6 +246,11 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * @since 0.6
 	 * @version 1.0
 	 *
+	 * @param string $termlink
+	 * @param Object $term
+	 * @param Object $taxonomy
+	 *
+	 * @return string
 	 */
 	public function term_link( $termlink, $term, $taxonomy ) {
 		global $wp_rewrite;

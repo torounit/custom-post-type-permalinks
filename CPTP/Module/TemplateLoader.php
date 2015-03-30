@@ -5,7 +5,7 @@
  * Template loader.
  *
  * @package Custom_Post_Type_Permalinks
- * @since 0.9.7
+ * @since 1.0.0
  *
  * */
 

@@ -4,7 +4,7 @@
 
 /**
  *
- * Admin Page.
+ * Admin Page View.
  *
  * @package Custom_Post_Type_Permalinks
  * @since 0.9.4

@@ -90,7 +90,7 @@ class CPTP_Util {
 	/**
 	 * Get permalink structure front for date archive.
 	 *
-	 * @since 0.9.7
+	 * @since 1.0.0
 	 * @param string $post_type post type name.
 	 * @return string
 	 */
