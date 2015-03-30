@@ -3,6 +3,7 @@
 class CPTP_Module_Setting_Test extends WP_UnitTestCase {
 
 	public function setUp() {
+		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 		parent::setUp();
 		update_option( 'cptp_version', '0.9.6');

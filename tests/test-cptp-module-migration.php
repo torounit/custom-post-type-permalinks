@@ -3,6 +3,7 @@
 class CPTP_Module_Migration_Test extends WP_UnitTestCase {
 
 	public function setUp() {
+		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 		parent::setUp();
 
