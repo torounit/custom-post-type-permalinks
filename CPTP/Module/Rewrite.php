@@ -82,6 +82,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 	public function register_post_type_rules( $post_type, $args ) {
 
+		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 
 		if ( $args->_builtin or ! $args->publicly_queryable or ! $args->show_ui ){
@@ -219,12 +220,12 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	}
 
 
-
 	/**
 	 *
 	 * Fix taxonomy = parent/child => taxonomy => child
 	 * @since 0.9.3
 	 *
+	 * @param WP $obj
 	 */
 	public function parse_request( $obj ) {
 		$taxes = CPTP_Util::get_taxonomies();
