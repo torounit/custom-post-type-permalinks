@@ -57,15 +57,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 		register_setting( 'permalink', 'no_taxonomy_structure' );
 
-		add_settings_field(
-			'cptp_change_template_loader',
-			__( 'Chage Template loading', 'cptp' ),
-			array( $this, 'setting_change_template_loader_callback_function' ),
-			'permalink',
-			'cptp_setting_section'
-		);
-
-		register_setting( 'permalink', 'cptp_change_template_loader' );
 
 	}
 
@@ -130,11 +121,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 	}
 
 
-	public function setting_change_template_loader_callback_function(){
-		echo '<input name="cptp_change_template_loader" id="cptp_change_template_loader" type="checkbox" value="1" class="code" ' . checked( true, get_option( 'cptp_change_template_loader' ), false ) . ' /> ';
-		$txt = __( 'If you check, template of custom taxonomy takes precedence than the custom post type archive.', 'cptp' );
-		printf( $txt , home_url() );
-	}
 
 
 	/**

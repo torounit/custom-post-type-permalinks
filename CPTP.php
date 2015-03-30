@@ -29,9 +29,7 @@ class CPTP {
 	 */
 	private function load_modules() {
 		new CPTP_Module_Setting();
-		new CPTP_Module_Migration();
 		new CPTP_Module_Rewrite();
-		new CPTP_Module_TemplateLoader();
 		new CPTP_Module_Admin();
 		new CPTP_Module_Option();
 		new CPTP_Module_Permalink();
