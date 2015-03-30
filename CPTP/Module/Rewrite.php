@@ -40,30 +40,52 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 	}
 
+	/**
+	 *
+	 * registered_post_type
+	 *
+	 * queue post_type rewrite.
+	 *
+	 * @param string $post_type Post type.
+	 * @param object $args      Arguments used to register the post type.
+	 */
 	public function registered_post_type( $post_type, $args ) {
 		$this->post_type_args[] = func_get_args();
 	}
 
-	public function registered_taxonomy(  $taxonomy, $object_type, $args ) {
+	/**
+	 *
+	 * registered_taxonomy
+	 *
+	 * queue taxonomy rewrite.
+	 *
+	 * @param string       $taxonomy    Taxonomy slug.
+	 * @param array|string $object_type Object type or array of object types.
+	 * @param array        $args        Array of taxonomy registration arguments.
+	 */
+	public function registered_taxonomy( $taxonomy, $object_type, $args ) {
 		$this->taxonomy_args[] = func_get_args();
 	}
 
 
 	/**
 	 *
-	 * registered_post_type
+	 * register_post_type_rules
 	 *  ** add rewrite tag for Custom Post Type.
 	 * @version 1.1
 	 * @since 0.9
+	 *
+	 * @param string $post_type
+	 * @param object $args
 	 *
 	 */
 
 	public function register_post_type_rules( $post_type, $args ) {
 
-		global $wp_post_types, $wp_rewrite;
+		global $wp_rewrite;
 
 		if ( $args->_builtin or ! $args->publicly_queryable or ! $args->show_ui ){
-			return false;
+			return;
 		}
 		$permalink = CPTP_Util::get_permalink_structure( $post_type );
 
@@ -124,13 +146,23 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	}
 
 
+	/**
+	 *
+	 * register_taxonomy_rules
+	 *
+	 * @param string $taxonomy
+	 * @param array|string $object_type
+	 * @param array $args
+	 *
+	 * @return void
+	 */
 	public function register_taxonomy_rules( $taxonomy, $object_type, $args ) {
 
 		if ( get_option( 'no_taxonomy_structure' ) ) {
-			return false;
+			return;
 		}
 		if ( $args['_builtin'] ) {
-			return false;
+			return;
 		}
 
 		global $wp_rewrite;
