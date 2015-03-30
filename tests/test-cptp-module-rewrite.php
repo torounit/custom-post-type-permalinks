@@ -2,6 +2,9 @@
 
 class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
+	public $post_type;
+	public $taxonomy;
+
 	public function setUp() {
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
