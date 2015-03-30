@@ -199,17 +199,18 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				$taxonomy_key = $taxonomy;
 			}
 
+			// below rules were added by [steve]
+			add_rewrite_rule( $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
+			add_rewrite_rule( $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
+
 			//add taxonomy slug
 			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/page/?([0-9]{1,})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&paged=$matches[2]', 'top' );
 			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&feed=$matches[2]', 'top' );
 			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&feed=$matches[2]', 'top' );
-			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/?$', 'index.php?' . $taxonomy_key . '=$matches[1]', 'top' );  // modified by [steve] [*** bug fixing]
-
-			// below rules were added by [steve]
-			add_rewrite_rule( $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
-			add_rewrite_rule( $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
 			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
 			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
+			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/?$', 'index.php?' . $taxonomy_key . '=$matches[1]', 'top' );
+
 
 			do_action( 'CPTP_registered_' . $taxonomy . '_rules', $object_type, $args, $taxonomy_slug );
 
