@@ -86,15 +86,18 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
-		$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
+		add_action( 'wp_loaded', function() use ( $id ) {
 
-		$this->go_to( get_permalink( $id ) );
-		$this->assertTrue( is_single() );
-		$this->assertEquals( $this->post_type, get_post_type() );
+			$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
+			$this->go_to( get_permalink( $id ) );
+			$this->assertTrue( is_single() );
+			$this->assertEquals( $this->post_type, get_post_type() );
+			$this->factory->comment->create_post_comments( $id, 15 );
+			$this->go_to(get_permalink( $id )."comment-page-2" );
+			$this->assertEquals( get_query_var( "cpage"), 2 );
 
-		$this->factory->comment->create_post_comments( $id, 15 );
-		$this->go_to(get_permalink( $id )."comment-page-2" );
-		$this->assertEquals( get_query_var( "cpage"), 2 );
+		});
+
 
 	}
 
@@ -127,15 +130,17 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
-		$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
+		add_action( 'wp_loaded', function() use ( $id ) {
+			$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
 
-		$this->go_to( get_permalink( $id ) );
-		$this->assertTrue( is_single() );
-		$this->assertEquals( $this->post_type, get_post_type() );
+			$this->go_to( get_permalink( $id ) );
+			$this->assertTrue( is_single() );
+			$this->assertEquals( $this->post_type, get_post_type() );
 
-		$this->factory->comment->create_post_comments( $id, 25 );
-		$this->go_to(get_permalink( $id )."comment-page-5" );
-		$this->assertEquals( get_query_var( "cpage"), 5 );
+			$this->factory->comment->create_post_comments( $id, 25 );
+			$this->go_to( get_permalink( $id ) . "comment-page-5" );
+			$this->assertEquals( get_query_var( "cpage" ), 5 );
+		});
 
 	}
 
@@ -169,13 +174,16 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		}
 
 		wp_set_post_terms( $id, get_term( $term_id, $this->taxonomy )->slug, $this->taxonomy );
-		$single_term_link = get_permalink( $id );
-		$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
 
-		//全てのタームにチェックが付いていた場合。
-		wp_set_post_terms( $id, $slug_list, $this->taxonomy );
-		$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
-		$this->assertEquals( get_permalink( $id ), $single_term_link );
+		add_action( 'wp_loaded', function() use ( $id, $slug_list ) {
+			$single_term_link = get_permalink( $id );
+			$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
+
+			//全てのタームにチェックが付いていた場合。
+			wp_set_post_terms( $id, $slug_list, $this->taxonomy );
+			$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
+			$this->assertEquals( get_permalink( $id ), $single_term_link );
+		});
 
 	}
 

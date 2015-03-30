@@ -13,10 +13,39 @@
 
 class CPTP_Module_Rewrite extends CPTP_Module {
 
+	/** @var  Array */
+	private $post_type_args;
+	/** @var  Array */
+	private $taxonomy_args;
+
 	public function add_hook() {
 		add_action( 'parse_request', array( $this, 'parse_request' ) );
+
 		add_action( 'registered_post_type', array( $this, 'registered_post_type' ), 10, 2 );
 		add_action( 'registered_taxonomy', array( $this, 'registered_taxonomy' ), 10, 3 );
+
+		add_action( 'wp_loaded', array( $this, 'add_rewrite_rules'), 100 );
+	}
+
+
+	public function add_rewrite_rules() {
+
+		foreach( $this->post_type_args as $args ) {
+			call_user_func_array( array( $this, 'register_post_type_rules' ), $args );
+		}
+
+		foreach( $this->taxonomy_args as $args ) {
+			call_user_func_array( array( $this, 'register_taxonomy_rules' ), $args );
+		}
+
+	}
+
+	public function registered_post_type( $post_type, $args ) {
+		$this->post_type_args[] = func_get_args();
+	}
+
+	public function registered_taxonomy(  $taxonomy, $object_type, $args ) {
+		$this->taxonomy_args[] = func_get_args();
 	}
 
 
@@ -29,7 +58,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 *
 	 */
 
-	public function registered_post_type( $post_type, $args ) {
+	public function register_post_type_rules( $post_type, $args ) {
 
 		global $wp_post_types, $wp_rewrite;
 
@@ -59,6 +88,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 		$rewrite_args['walk_dirs'] = false;
 		add_permastruct( $post_type, $permalink, $rewrite_args );
+
 
 		$slug = $args->rewrite['slug'];
 		if ( $args->has_archive ) {
@@ -94,7 +124,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	}
 
 
-	public function registered_taxonomy( $taxonomy, $object_type, $args ) {
+	public function register_taxonomy_rules( $taxonomy, $object_type, $args ) {
 
 		if ( get_option( 'no_taxonomy_structure' ) ) {
 			return false;
@@ -105,7 +135,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 		global $wp_rewrite;
 
-		$taxonomyObject = $args;
 		$post_types = $args['object_type'];
 		foreach ( $post_types as $post_type ):
 			$post_type_obj = get_post_type_object( $post_type );
@@ -119,6 +148,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			if ( ! empty( $post_type_obj->has_archive ) && is_string( $post_type_obj->has_archive ) ) {
 				$slug = $post_type_obj->has_archive;
 			};
+
 
 			if ( ! empty( $post_type_obj->rewrite['with_front'] ) ) {
 				$slug = substr( $wp_rewrite->front, 1 ).$slug;
