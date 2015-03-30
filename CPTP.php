@@ -13,7 +13,8 @@
 
 class CPTP {
 
-	private static $instance;
+
+	private static $_instance;
 
 	private function __construct() {
 		$this->load_modules();
@@ -57,11 +58,11 @@ class CPTP {
 	 */
 	public static function get_instance() {
 
-		if ( ! isset(self::$_instance) ) {
-			self::$instance = new CPTP;
+		if ( ! isset( self::$_instance ) ) {
+			self::$_instance = new CPTP;
 		}
 
-		return self::$instance;
+		return self::$_instance;
 	}
 
 
