@@ -14,6 +14,16 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 		do_action("plugins_loaded");
 	}
 
+	public function test_get_permalink_structure_pass_object() {
+		$post_type = rand_str( 12 );
+		update_option($post_type."_structure", "/%year%/%monthnum%/%day%/%post_id%/" );
+		register_post_type( $post_type, array( "public" => true ) );
+		$post_type_object = get_post_type_object($post_type);
+
+
+		$this->assertEquals( CPTP_Util::get_permalink_structure( $post_type_object ), "/%year%/%monthnum%/%day%/%post_id%/" );
+
+	}
 
 	public function test_get_permalink_structure_from_option() {
 		$post_type = rand_str( 12 );
