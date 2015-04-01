@@ -58,9 +58,9 @@ class CPTP_Module_Admin extends CPTP_Module {
 		register_setting( 'permalink', 'no_taxonomy_structure' );
 
 		add_settings_field(
-			'add_post_type_query_for_tax_archive.',
+			'add_post_type_for_tax.',
 			__( 'Add post_type query for custom taxonomy archive.', 'cptp' ),
-			array( $this, 'add_post_type_query_for_tax_archive_callback_function' ),
+			array( $this, 'add_post_type_for_tax_callback_function' ),
 			'permalink',
 			'cptp_setting_section'
 		);
@@ -130,10 +130,9 @@ class CPTP_Module_Admin extends CPTP_Module {
 	}
 
 
-	public function add_post_type_query_for_tax_archive_callback_function() {
-		echo '<input name="add_post_type_query_for_tax_archive" id="add_post_type_query_for_tax_archive" type="checkbox" value="1" class="code" ' . checked( true, get_option( 'add_post_type_query_for_tax_archive' ), false ) . ' /> ';
+	public function add_post_type_for_tax_callback_function() {
+		echo '<input name="add_post_type_for_tax" id="add_post_type_for_tax" type="checkbox" value="1" class="code" ' . checked( true, get_option( 'add_post_type_for_tax' ), false ) . ' /> ';
 		_e( "custom taxonomy archive also works as post type archive.", 'cptp' );
-		echo '<br>';
 		_e( "There are cases when template to be loaded is changed.", 'cptp' );
 	}
 

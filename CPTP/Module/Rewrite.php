@@ -199,18 +199,76 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				$taxonomy_key = $taxonomy;
 			}
 
-			// below rules were added by [steve]
-			add_rewrite_rule( $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
-			add_rewrite_rule( $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
+			$rules = array(
+				//feed.
+				array(
+					"regex"    => "%s/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]&feed=\$matches[2]"
+				),
+				array(
+					"regex"    => "%s/(.+?)/(feed|rdf|rss|rss2|atom)/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]&feed=\$matches[2]"
+				),
+				//year
+				array(
+					"regex"    => "%s/(.+?)/date/([0-9]{4})/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]"
+				),
+				array(
+					"regex"    => "%s/(.+?)/date/([0-9]{4})/page/?([0-9]{1,})/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&paged=\$matches[3]"
+				),
+				//monthnum
+				array(
+					"regex"    => "%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]"
+				),
+				array(
+					"regex"    => "%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&paged=\$matches[4]"
+				),
+				//day
+				array(
+					"regex"    => "%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&day=\$matches[4]"
+				),
+				array(
+					"regex"    => "%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&day=\$matches[4]&paged=\$matches[5]"
+				),
+				//paging
+				array(
+					"regex"    => "%s/(.+?)/page/?([0-9]{1,})/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]&paged=\$matches[2]"
+				),
+				//tax archive.
+				array(
+					"regex" => "%s/(.+?)/?$",
+					"redirect" => "index.php?{$taxonomy_key}=\$matches[1]"
+				),
+			);
 
-			//add taxonomy slug
-			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/page/?([0-9]{1,})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&paged=$matches[2]', 'top' );
-			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&feed=$matches[2]', 'top' );
-			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/(feed|rdf|rss|rss2|atom)/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&feed=$matches[2]', 'top' );
-			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]', 'top' );
-			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?' . $taxonomy_key . '=$matches[1]&year=$matches[2]&monthnum=$matches[3]&paged=$matches[4]', 'top' );
-			add_rewrite_rule( $slug . '/' . $taxonomy_slug . '/(.+?)/?$', 'index.php?' . $taxonomy_key . '=$matches[1]', 'top' );
+			//no post_type slug.
+			foreach ( $rules as $rule ) {
+				$regex    = sprintf( $rule['regex'], "{$taxonomy_slug}" );
+				$redirect = $rule['redirect'];
+				add_rewrite_rule( $regex, $redirect, 'top' );
+			}
 
+			if ( get_option( 'add_post_type_for_tax' ) ) {
+				foreach ( $rules as $rule ) {
+					$regex    = sprintf( $rule['regex'], "{$slug}/{$taxonomy_slug}" );
+					$redirect = $rule['redirect'] . "&post_type={$post_type}";
+					add_rewrite_rule( $regex, $redirect, 'top' );
+				}
+
+			} else {
+				foreach ( $rules as $rule ) {
+					$regex    = sprintf( $rule['regex'], "{$slug}/{$taxonomy_slug}" );
+					$redirect = $rule['redirect'];
+					add_rewrite_rule( $regex, $redirect, 'top' );
+				}
+			}
 
 			do_action( 'CPTP_registered_' . $taxonomy . '_rules', $object_type, $args, $taxonomy_slug );
 

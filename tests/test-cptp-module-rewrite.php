@@ -216,4 +216,128 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 	}
 
+
+	/**
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 */
+	public function test_term_archive() {
+
+		register_post_type( $this->post_type, array( "public" => true , 'taxonomies' => array('category'), "has_archive" => true ) );
+		register_taxonomy( $this->taxonomy, $this->post_type,  array( "public" => true , "rewrite" => array("slug" => rand_str( 12 ) )));
+		$post_type_object = get_post_type_object( $this->post_type );
+
+		$user_id = $this->factory->user->create();
+
+		$post_ids = $this->factory->post->create_many( 100 , array( 'post_type' => $this->post_type, "post_date" => "2012-12-12", "post_author" => $user_id ) );
+
+		$term_id = $this->factory->term->create( array( "taxonomy" => $this->taxonomy ) );
+		foreach($post_ids as $post_id ) {
+			wp_set_object_terms( $post_id, get_term( $term_id, $this->taxonomy )->slug, $this->taxonomy );
+		}
+
+		$term_obj = get_term( $term_id, $this->taxonomy );
+
+		$taxonomy = get_taxonomy($this->taxonomy);
+		$taxonomy_slug = $taxonomy->rewrite['slug'];
+
+		do_action('wp_loaded');
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+		$this->assertEquals( home_url( $post_type_object->rewrite['slug'].'/'.$taxonomy_slug.'/'.$term_obj->slug.'/' ), get_term_link($term_obj, $taxonomy) );
+		$this->go_to( get_term_link($term_obj, $taxonomy) );
+		$this->assertQueryTrue( "is_archive", "is_tax" );
+
+		$this->go_to( next_posts( 0, false ) );
+		$this->assertQueryTrue( "is_archive", "is_tax", "is_paged" );
+
+	}
+
+	/**
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 */
+	public function test_term_date_archive() {
+
+		register_post_type( $this->post_type, array( "public" => true , 'taxonomies' => array('category'), "has_archive" => true ) );
+		register_taxonomy( $this->taxonomy, $this->post_type,  array( "public" => true , "rewrite" => array("slug" => rand_str( 12 ) )));
+		$post_type_object = get_post_type_object( $this->post_type );
+
+		$user_id = $this->factory->user->create();
+
+		$post_ids = $this->factory->post->create_many( 100 , array( 'post_type' => $this->post_type, "post_date" => "2012-12-12", "post_author" => $user_id ) );
+
+		$term_id = $this->factory->term->create( array( "taxonomy" => $this->taxonomy ) );
+		foreach($post_ids as $post_id ) {
+			wp_set_object_terms( $post_id, get_term( $term_id, $this->taxonomy )->slug, $this->taxonomy );
+		}
+
+		$term_obj = get_term( $term_id, $this->taxonomy );
+
+		$taxonomy = get_taxonomy($this->taxonomy);
+		$taxonomy_slug = $taxonomy->rewrite['slug'];
+
+		do_action('wp_loaded');
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+		$this->go_to( home_url( $post_type_object->rewrite['slug'].'/'.$taxonomy_slug.'/'.$term_obj->slug.'/date/2012') );
+		$this->assertQueryTrue( "is_archive", "is_tax", "is_year", "is_date" );
+
+		$this->go_to( next_posts( 0, false ) );
+		$this->assertQueryTrue( "is_archive", "is_tax", "is_paged", "is_year", "is_date" );
+
+	}
+
+	/**
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 */
+	public function test_cpt_query_term_archive() {
+
+		update_option( 'add_post_type_for_tax',true );
+		register_post_type( $this->post_type, array( "public" => true , 'taxonomies' => array('category'), "has_archive" => true ) );
+		register_taxonomy( $this->taxonomy, $this->post_type,  array( "public" => true , "rewrite" => array("slug" => rand_str( 12 ) )));
+		$post_type_object = get_post_type_object( $this->post_type );
+
+		$user_id = $this->factory->user->create();
+
+		$post_ids = $this->factory->post->create_many( 100 , array( 'post_type' => $this->post_type, "post_date" => "2012-12-12", "post_author" => $user_id ) );
+
+		$term_id = $this->factory->term->create( array( "taxonomy" => $this->taxonomy ) );
+		foreach($post_ids as $post_id ) {
+			wp_set_object_terms( $post_id, get_term( $term_id, $this->taxonomy )->slug, $this->taxonomy );
+		}
+
+		$term_obj = get_term( $term_id, $this->taxonomy );
+
+		$taxonomy = get_taxonomy($this->taxonomy);
+		$taxonomy_slug = $taxonomy->rewrite['slug'];
+
+		do_action('wp_loaded');
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+		$this->assertEquals( home_url( $post_type_object->rewrite['slug'].'/'.$taxonomy_slug.'/'.$term_obj->slug.'/' ), get_term_link($term_obj, $taxonomy) );
+		$this->go_to( get_term_link($term_obj, $taxonomy) );
+		$this->assertQueryTrue( "is_post_type_archive", "is_archive", "is_tax" );
+
+		$this->go_to( next_posts( 0, false ) );
+		$this->assertQueryTrue( "is_post_type_archive", "is_archive", "is_tax", "is_paged" );
+
+	}
+
 }

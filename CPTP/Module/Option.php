@@ -47,7 +47,7 @@ class CPTP_Module_Option extends CPTP_Module {
 				endforeach;
 			}
 			update_option( 'no_taxonomy_structure', ! isset( $_POST['no_taxonomy_structure'] ) );
-			update_option( 'add_post_type_query_for_tax_archive', isset( $_POST['add_post_type_query_for_tax_archive'] ) );
+			update_option( 'add_post_type_for_tax', isset( $_POST['add_post_type_for_tax'] ) );
 
 
 		}
