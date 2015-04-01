@@ -1,9 +1,10 @@
 === Custom Post Type Permalinks ===
-Contributors: Toro_Unit
-Tags: permalink,permalinks,custom post type,custom taxonomy,cms
+Contributors:      Toro_Unit
+Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
+Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.1
-Tested up to: 4.2
-Stable tag: 1.0.0
+Tested up to:      4.2
+Stable tag:        1.0.0
 
 Lets you edit the permalink of custom post type.
 
