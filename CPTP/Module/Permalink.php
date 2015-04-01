@@ -16,12 +16,11 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 
 	public function add_hook() {
-		if ( get_option( 'permalink_structure' ) != '' ) {
-			add_filter( 'post_type_link', array( $this, 'post_type_link' ), 10, 4 );
-			add_filter( 'term_link', array( $this, 'term_link' ), 10, 3 );
-			add_filter( 'attachment_link', array( $this, 'attachment_link' ), 20 , 2 );
-		}
+		add_filter( 'post_type_link', array( $this, 'post_type_link' ), 10, 4 );
+		add_filter( 'term_link', array( $this, 'term_link' ), 10, 3 );
+		add_filter( 'attachment_link', array( $this, 'attachment_link' ), 20 , 2 );
 	}
+
 
 	/**
 	 *
@@ -36,9 +35,14 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * @return string
 	 */
 	public function post_type_link( $post_link, $post, $leavename ) {
-
 		global /** @var WP_Rewrite $wp_rewrite */
 		$wp_rewrite;
+
+		if ( !$wp_rewrite->permalink_structure ) {
+			return $post_link;
+		}
+
+
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) );
 		if ( $draft_or_pending and ! $leavename ) {
 			return $post_link;
@@ -223,6 +227,14 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 */
 
 	public function attachment_link( $link, $postID ) {
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+
+		if ( !$wp_rewrite->permalink_structure ) {
+			return $link;
+		}
+
+
 		$post = get_post( $postID );
 		if ( ! $post->post_parent ){
 			return $link;
@@ -253,7 +265,12 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * @return string
 	 */
 	public function term_link( $termlink, $term, $taxonomy ) {
+		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
+
+		if ( !$wp_rewrite->permalink_structure ) {
+			return $termlink;
+		}
 
 		if ( get_option( 'no_taxonomy_structure' ) ) {
 			return  $termlink;
