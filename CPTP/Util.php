@@ -65,21 +65,23 @@ class CPTP_Util {
 	 * Get permalink structure.
 	 *
 	 * @since 0.9.6
-	 * @param string $post_type post type name. / object post type object.
+	 * @param string|object $post_type post type name. / object post type object.
 	 * @return string post type structure.
 	 */
 	public static function get_permalink_structure( $post_type ) {
-		if ( is_object( $post_type ) ) {
-			$pt_object = $post_type;
-		}
-		else {
+		if ( is_string( $post_type ) ) {
 			$pt_object = get_post_type_object( $post_type );
 		}
+		else {
+			$pt_object = $post_type;
+		}
 
-		if ( isset( $pt_object->cptp_permalink_structure ) and $pt_object->cptp_permalink_structure ) {
+
+		if ( !empty( $pt_object->cptp_permalink_structure ) ) {
 			$structure = $pt_object->cptp_permalink_structure;
 		}
 		else {
+
 			$structure = get_option( $pt_object->name.'_structure' );
 		}
 
