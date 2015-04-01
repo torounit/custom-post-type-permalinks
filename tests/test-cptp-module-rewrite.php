@@ -7,14 +7,13 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	public function setUp() {
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
+
 		parent::setUp();
 
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		create_initial_taxonomies();
 		$wp_rewrite->flush_rules();
-		do_action("plugins_loaded");
-
 		update_option( 'page_comments', true );
 		update_option( 'comments_per_page', 5 );
 		update_option( 'posts_per_page', 5 );
