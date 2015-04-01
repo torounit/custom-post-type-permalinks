@@ -38,6 +38,11 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 1.0.0
+
+* Set Permalink enable register_post_type.
+* Enable add post type query to taxonomy archives.
+
 ### 0.9.7
 
 * Adding date slug only conflicting %post_id%.
