@@ -25,6 +25,23 @@ Donation: Please send amazon.co.jp Gift to donate[at]torounit.com.
 * Japanese(ja) - [Toro_Unit](http://www.torounit.com/)
 * Russian(ru_RU) - [Olart](http://olart.ru)
 
+== Setting on Code ==
+
+Example:
+
+`
+register_post_type( 'foo',
+	array(
+		"public" => true,
+		'has_archive' => true,
+		"rewrite" => [
+			"with_front" => true
+		],
+		"cptp_permalink_structure" => "%post_id%"
+	)
+);
+`
+
 
 == Installation ==
 
@@ -46,6 +63,14 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 = 1.0.0 =
 * Set Permalink enable register_post_type.
 * Enable add post type query to taxonomy archives.
+* Use Class Autoloader.
+* Create Rewrite Rule on `wp_loaded` action.
+* WordPress Code Format Fix.
+* CPTP_Module_Permalink Bug Fix.
+* Bug Fix.
+* Use Semantic Versioning.
+* Date Structure Fix.
+* Use Category Base.
 
 = 0.9.7 =
 * Adding date slug only conflicting %post_id%.
