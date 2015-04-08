@@ -6,7 +6,7 @@
  * Add Rewrite Rules
  *
  * @package Custom_Post_Type_Permalinks
- * @version 1.0.1
+ * @version 1.0.2
  * @since 0.9.4
  *
  * */
