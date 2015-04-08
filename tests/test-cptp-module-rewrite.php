@@ -207,8 +207,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules();
-
-		$this->go_to( home_url( "/" . $post_type_object->rewrite["slug"] . "/" . get_option( 'category_base' ) . "/" . $category_obj->slug ) );
+		$this->go_to( home_url( "/" . $post_type_object->rewrite["slug"] . "/category/" . $category_obj->slug ) );
 		$this->assertQueryTrue( "is_archive", "is_post_type_archive", "is_category" );
 
 		$this->go_to( next_posts( 0, false ) );
