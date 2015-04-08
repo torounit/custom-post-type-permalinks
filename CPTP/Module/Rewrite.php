@@ -28,12 +28,12 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 	public function add_rewrite_rules() {
 
-		foreach ( $this->post_type_args as $args ) {
-			call_user_func_array( array( $this, 'register_post_type_rules' ), $args );
-		}
-
 		foreach ( $this->taxonomy_args as $args ) {
 			call_user_func_array( array( $this, 'register_taxonomy_rules' ), $args );
+		}
+
+		foreach ( $this->post_type_args as $args ) {
+			call_user_func_array( array( $this, 'register_post_type_rules' ), $args );
 		}
 
 	}
@@ -137,8 +137,8 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			add_rewrite_rule( $slug . $date_front . '/([0-9]{4})/?$', 'index.php?year=$matches[1]&post_type=' . $post_type, 'top' );
 			add_rewrite_rule( $slug . '/author/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?author_name=$matches[1]&paged=$matches[2]&post_type=' . $post_type, 'top' );
 			add_rewrite_rule( $slug . '/author/([^/]+)/?$', 'index.php?author_name=$matches[1]&post_type=' . $post_type, 'top' );
-			add_rewrite_rule( $slug . '/' . get_option( 'category_base' ) . '/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?category_name=$matches[1]&paged=$matches[2]&post_type=' . $post_type, 'top' );
-			add_rewrite_rule( $slug . '/' . get_option( 'category_base' ) . '/([^/]+)/?$', 'index.php?category_name=$matches[1]&post_type=' . $post_type, 'top' );
+			add_rewrite_rule( $slug . get_option( 'category_base' ) . '/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?category_name=$matches[1]&paged=$matches[2]&post_type=' . $post_type, 'top' );
+			add_rewrite_rule( $slug . get_option( 'category_base' ) . '/([^/]+)/?$', 'index.php?category_name=$matches[1]&post_type=' . $post_type, 'top' );
 
 			do_action( 'CPTP_registered_' . $post_type . '_rules', $args, $slug );
 		}
