@@ -61,6 +61,9 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
+= 1.0.3 =
+* add category rule, if only attached category to post type.
+
 = 1.0.2 =
 * category slug bug fix.
 
