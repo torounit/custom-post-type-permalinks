@@ -22,7 +22,8 @@ Domain Path: /language/
  */
 
 define( 'CPTP_PLUGIN_FILE', __FILE__ );
-define( 'CPTP_VERSION', '1.0.2' );
+$data = get_file_data( __FILE__, array( 'ver' => 'Version', 'lang_dir' => 'Domain Path' ) );
+define( 'CPTP_VERSION', $data['ver'] );
 define( 'CPTP_DEFAULT_PERMALINK', '/%postname%/' );
 
 
