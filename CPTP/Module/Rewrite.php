@@ -120,10 +120,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 			$date_front = CPTP_Util::get_date_front( $post_type );
 
-			$category_base = get_option( 'category_base' );
-			if( !$category_base ) {
-				$category_base = 'category';
-			}
 			add_rewrite_rule( $slug . $date_front . '/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/feed/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type=' . $post_type, 'top' );
 			add_rewrite_rule( $slug . $date_front . '/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/(feed|rdf|rss|rss2|atom)/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&feed=$matches[4]&post_type=' . $post_type, 'top' );
 			add_rewrite_rule( $slug . $date_front . '/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$', 'index.php?year=$matches[1]&monthnum=$matches[2]&day=$matches[3]&paged=$matches[4]&post_type=' . $post_type, 'top' );
@@ -138,8 +134,18 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			add_rewrite_rule( $slug . $date_front . '/([0-9]{4})/?$', 'index.php?year=$matches[1]&post_type=' . $post_type, 'top' );
 			add_rewrite_rule( $slug . '/author/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?author_name=$matches[1]&paged=$matches[2]&post_type=' . $post_type, 'top' );
 			add_rewrite_rule( $slug . '/author/([^/]+)/?$', 'index.php?author_name=$matches[1]&post_type=' . $post_type, 'top' );
-			add_rewrite_rule( $slug . '/'. $category_base . '/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?category_name=$matches[1]&paged=$matches[2]&post_type=' . $post_type, 'top' );
-			add_rewrite_rule( $slug . '/'. $category_base . '/([^/]+)/?$', 'index.php?category_name=$matches[1]&post_type=' . $post_type, 'top' );
+
+			if( in_array( 'category', $args->taxonomies ) ) {
+
+				$category_base = get_option( 'category_base' );
+				if( !$category_base ) {
+					$category_base = 'category';
+				}
+
+				add_rewrite_rule( $slug . '/'. $category_base . '/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?category_name=$matches[1]&paged=$matches[2]&post_type=' . $post_type, 'top' );
+				add_rewrite_rule( $slug . '/'. $category_base . '/([^/]+)/?$', 'index.php?category_name=$matches[1]&post_type=' . $post_type, 'top' );
+
+			}
 
 			do_action( 'CPTP_registered_' . $post_type . '_rules', $args, $slug );
 		}
