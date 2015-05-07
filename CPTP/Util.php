@@ -52,7 +52,6 @@ class CPTP_Util {
 			$visited[] = $parent->parent;
 			$chain .= CPTP_Util::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
 		}
-
 		if ( $link ) {
 			$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( 'View all posts in %s' ), $parent->name ) ) . '">'.esc_html( $name ).'</a>' .esc_html( $separator );
 		}else {
@@ -76,8 +75,7 @@ class CPTP_Util {
 			$pt_object = $post_type;
 		}
 
-
-		if ( !empty( $pt_object->cptp_permalink_structure ) ) {
+		if ( ! empty( $pt_object->cptp_permalink_structure ) ) {
 			$structure = $pt_object->cptp_permalink_structure;
 		}
 		else {

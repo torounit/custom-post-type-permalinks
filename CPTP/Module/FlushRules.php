@@ -33,9 +33,9 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 	public function update_rules() {
 
 		$post_types = CPTP_Util::get_post_types();
-		foreach ( $post_types as $post_type ):
+		foreach ( $post_types as $post_type ) {
 			add_action( 'update_option_'.$post_type.'_structure', array( __CLASS__, 'queue_flush_rules' ), 10, 2 );
-		endforeach;
+		}
 		add_action( 'update_option_no_taxonomy_structure', array( __CLASS__, 'queue_flush_rules' ), 10, 2 );
 	}
 

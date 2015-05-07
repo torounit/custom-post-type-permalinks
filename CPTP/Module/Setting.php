@@ -30,7 +30,7 @@ class CPTP_Module_Setting extends CPTP_Module {
 		if ( false === $version ){
 			add_option( 'cptp_version', CPTP_VERSION );
 		}
-		else if ( $version != CPTP_VERSION ) {
+		else if ( CPTP_VERSION != $version ) {
 			update_option( 'cptp_version', CPTP_VERSION );
 		}
 	}

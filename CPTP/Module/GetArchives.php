@@ -108,7 +108,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 				}
 			}
 			else {   // [steve]
-				$c['name'] = ( $c['name'] == 'category' && get_option( 'category_base' ) ) ? get_option( 'category_base' ) : $c['name'];
+				$c['name'] = ( 'category' == $c['name']  && get_option( 'category_base' ) ) ? get_option( 'category_base' ) : $c['name'];
 				$link_dir = $post_type->rewrite['slug'].'/'.$c['name'].'/'.$c['termslug'];
 			}
 
