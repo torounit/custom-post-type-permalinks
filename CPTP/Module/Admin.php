@@ -87,9 +87,11 @@ class CPTP_Module_Admin extends CPTP_Module {
 	public function setting_structure_callback_function( $option ) {
 
 		$post_type  = $option['post_type'];
+		$name       = $option['label_for'];
 		$pt_object  = get_post_type_object( $post_type );
 		$slug       = $pt_object->rewrite['slug'];
 		$with_front = $pt_object->rewrite['with_front'];
+
 
 		$value = CPTP_Util::get_permalink_structure( $post_type );
 
@@ -110,7 +112,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 		?>
 		<p>
 			<code><?php echo home_url() . '/' . esc_html( $slug );?></code>
-			<input name="<?php echo esc_attr( $option );?>" id="<?php echo esc_attr( $option );?>" type="text" class="regular-text code " value="<?php echo  esc_attr( $value ) ;?>" <?php  disabled( $disabled, true, true );?> />
+			<input name="<?php echo esc_attr( $name );?>" id="<?php echo esc_attr( $name );?>" type="text" class="regular-text code " value="<?php echo esc_attr( $value ) ;?>" <?php  disabled( $disabled, true, true );?> />
 		</p>
 		<p>has_archive: <code><?php echo $pt_object->has_archive ? 'true' : 'false';?></code> / with_front: <code><?php echo $pt_object->rewrite['with_front'] ? 'true' : 'false';?></code></p>
 		<?php
