@@ -1,85 +1,106 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Custom Post Type Permalinks\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-28 18:45+0900\n"
-"PO-Revision-Date: 2013-05-04 15:27+0400\n"
-"Last-Translator: Olart <oleg@safonov.net>\n"
-"Language-Team: Olart Cretive Group <oleg@safonov.net>\n"
+"POT-Creation-Date: 2015-05-01 00:21+0300\n"
+"PO-Revision-Date: 2015-05-01 00:58+0300\n"
+"Last-Translator: Nataliya Zavyalova <admin@time-impressions.ru>\n"
+"Language-Team: Nataliya Zavyalova <admin@time-impressions.ru>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-KeywordsList: _;gettext;gettext_noop;_e;__\n"
-"X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.4\n"
-"X-Poedit-SearchPath-0: custom-post-type-permalinks\n"
+"X-Generator: Poedit 1.7.6\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:108
-#, php-format
-msgid "View all posts in %s"
-msgstr "Посмотреть все записи в %s"
-
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:552
+#: CPTP/Module/Admin.php:31
 msgid "Permalink Setting for custom post type"
-msgstr "Настройки для пользовательских типов записей"
+msgstr "Настройки структуры ссылок для записей произвольного типа"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:594
+#: CPTP/Module/Admin.php:52
 msgid "Use custom permalink of custom taxonomy archive."
-msgstr "Структура для архива таксономии"
+msgstr "Структура постоянных ссылок для архива таксономии."
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:615
+#: CPTP/Module/Admin.php:62
+msgid "Add post_type query for custom taxonomy archive."
+msgstr "Добавить запрос post_type для архива таксономии."
+
+#: CPTP/Module/Admin.php:74
 msgid "Setting permalinks of custom post type."
-msgstr ""
-"Здесь вы можете ввести произвольную структуру для URL пользовательских типов "
-"записей."
+msgstr "Настройки постоянных ссылок для записей произвольного типа."
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:616
+#: CPTP/Module/Admin.php:75
 msgid ""
 "The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug"
 "\"%'. (e.g. %actors%)"
 msgstr ""
-"Вам доступны стандарнтые теги WordPress для формирования индивидуальных "
-"шаблонов, также вы можете использовать '%\"ярлык_таксономии\"%'. (например "
-"%actors%)"
+"Вы можете использовать стандартные теги WordPress или <code>"
+"%custom_taxonomy_slug%</code> (например <code>%actors%</code>)."
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:617
+#: CPTP/Module/Admin.php:76
 msgid "%\"custom_taxonomy_slug\"% is replaced the taxonomy's term.'."
 msgstr ""
-"%\"ярлык_таксономии\"% заменяется на ярлык пользовательской таксономии."
+"(Замените <code>%custom_taxonomy_slug%</code> на ярлык своей таксономии.)"
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:619
+#: CPTP/Module/Admin.php:78
 msgid ""
 "Presence of the trailing '/' is unified into a standard permalink structure "
 "setting."
-msgstr "Наличие завершающих '/' является обязательным."
+msgstr ""
+"Наличие завершающих слэшей ( / ) в стандартной структуре ссылок является "
+"обязательным."
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:620
+#: CPTP/Module/Admin.php:79
+msgid ""
+"If <code>has_archive</code> is true, add permalinks for custom post type "
+"archive."
+msgstr ""
+"Если <code>has_archive</code> имеет значение <code>true</code>, Вы можете "
+"сформировать постоянные ссылки для страниц архивов записей произвольного "
+"типа.&nbsp;"
+
+#: CPTP/Module/Admin.php:80
 msgid ""
 "If you don't entered permalink structure, permalink is configured /%postname"
 "%/'."
 msgstr ""
-"Если вы оставите поле пустым, то будет установлено значение по умолчанию /"
-"%postname%/."
+"Если вы оставите поле пустым будет установлено значение по умолчанию <code>/"
+"%postname%/</code>."
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:640
+#: CPTP/Module/Admin.php:128
 #, php-format
 msgid ""
 "If you check,The custom taxonomy's permalinks is <code>%s/post_type/taxonomy/"
 "term</code>."
 msgstr ""
-"Если выбирете, произвольная структура URL для таксономии будет <code>%s/"
+"При выборе произвольная структура URL для таксономии будет <code>%s/"
 "post_type/taxonomy/term</code>."
 
-#: custom-post-type-permalinks/custom-post-type-permalinks.php:668
+#: CPTP/Module/Admin.php:135
+msgid "custom taxonomy archive also works as post type archive."
+msgstr ""
+"Архив пользовательской таксономии также работает как архив типа записи.&nbsp;"
+
+#: CPTP/Module/Admin.php:136
+msgid "There are cases when template to be loaded is changed."
+msgstr "Бывают случаи, когда изменяется загрузка шаблона."
+
+#: CPTP/Module/Admin.php:163
 msgid ""
 "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink."
 "php'>Permalinks</a>, set a custom permalink for each post type.</p>"
 msgstr ""
-"<h3>Настройки URL пользовательских типов записей</h3><p>Перейдите в раздел "
-"<a href='options-permalink.php'>Постоянные ссылки</a>, для настройки URL для "
-"пользовательских типов записей.</p>"
+"<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink."
+"php'>Permalinks</a>, set a custom permalink for each post type.</p>"
 
-#~ msgid "From Permalinks, set a custom permalink for each post type."
-#~ msgstr ""
-#~ "パーマリンク設定より、カスタム投稿タイプごとのパーマリンクを設定できます。"
+#: CPTP/Util.php:57
+#, php-format
+msgid "View all posts in %s"
+msgstr "Смотреть все записи в %s"
