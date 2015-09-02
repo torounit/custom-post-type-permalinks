@@ -111,7 +111,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 		}
 		?>
 		<p>
-			<code><?php echo home_url() . '/' . esc_html( $slug );?></code>
+			<code><?php echo home_url() . ( $slug ? '/' : '' ) . esc_html( $slug ); ?></code>
 			<input name="<?php echo esc_attr( $name );?>" id="<?php echo esc_attr( $name );?>" type="text" class="regular-text code " value="<?php echo esc_attr( $value ) ;?>" <?php  disabled( $disabled, true, true );?> />
 		</p>
 		<p>has_archive: <code><?php echo $pt_object->has_archive ? 'true' : 'false';?></code> / with_front: <code><?php echo $pt_object->rewrite['with_front'] ? 'true' : 'false';?></code></p>
