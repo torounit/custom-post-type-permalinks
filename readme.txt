@@ -1,10 +1,10 @@
 === Custom Post Type Permalinks ===
-Contributors:      Toro_Unit
+Contributors:      Toro_Unit,inc2734,ixkaito
 Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.1
 Tested up to:      4.2
-Stable tag:        1.0.4
+Stable tag:        1.0.5
 License: GPLv2 or Later
 
 Lets you edit the permalink of custom post type.
@@ -60,6 +60,9 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+= 1.0.5 =
+* admin bug fix. thanks @ixkaito.
 
 = 1.0.4 =
 * option bug fix.
