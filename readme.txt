@@ -24,7 +24,7 @@ Donation: Please send amazon.co.jp Gift to donate[at]torounit.com.
 = Translators =
 * French(fr_FR) - [Geoffrey Crofte](http://geoffrey.crofte.fr/)
 * Japanese(ja) - [Toro_Unit](http://www.torounit.com/)
-* Russian(ru_RU) - [Olart](http://olart.ru)
+* Russian(ru_RU) - [Olart](http://olart.ru), [Natali_Z](https://profiles.wordpress.org/natali_z)
 
 == Setting on Code ==
 
@@ -62,7 +62,8 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 == Changelog ==
 
 = 1.0.5 =
-* admin bug fix. thanks @ixkaito.
+* admin bug fix. thanks [ixkaito](https://profiles.wordpress.org/ixkaito) !
+* Translation Update Thanks [Natali_Z](https://profiles.wordpress.org/natali_z) !
 
 = 1.0.4 =
 * option bug fix.
