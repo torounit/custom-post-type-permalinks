@@ -12,13 +12,12 @@ php:
   - hhvm
 
 matrix:
- include:
-   - php: 5.3
-     env: WP_VERSION=latest WP_MULTISITE=0 WP_PULUGIN_DEPLOY=1
- allow_failures:
-  - php: hhvm
-  - env: WP_VERSION=trunk WP_MULTISITE=0
-  - env: WP_VERSION=trunk WP_MULTISITE=1
+  include:
+    - php: 5.3
+      env: WP_VERSION=latest WP_MULTISITE=0 WP_PULUGIN_DEPLOY=1
+  allow_failures:
+    - php: hhvm
+    - php: 7
 
 
 
@@ -31,8 +30,6 @@ after_success: curl -L https://raw.githubusercontent.com/miya0001/travis2wpplugi
 
 env:
   matrix:
-    - WP_VERSION=4.1.6 WP_MULTISITE=0
-    - WP_VERSION=4.1.6 WP_MULTISITE=1
     - WP_VERSION=4.2.5 WP_MULTISITE=0
     - WP_VERSION=4.2.5 WP_MULTISITE=1
     - WP_VERSION=4.3.1 WP_MULTISITE=0
