@@ -1,17 +1,17 @@
 === Custom Post Type Permalinks ===
-Contributors:      Toro_Unit,inc2734,ixkaito
+Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
 Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.1
 Tested up to:      4.3
-Stable tag:        1.0.5
+Stable tag:        1.1.0
 License: GPLv2 or Later
 
-Lets you edit the permalink of custom post type.
+Edit the permalink of custom post type.
 
 == Description ==
 
-Custom Post Type Permalinks lets you edit the permalink structure of custom post type.
+Custom Post Type Permalinks allow you edit the permalink structure of custom post type.
 
 Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_name/term_slug". Can disable this fix.
 
@@ -60,6 +60,9 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+= 1.1.0 =
+* WPML Test. thanks [keita_kobayashi](https://profiles.wordpress.org/keita_kobayashi) !
 
 = 1.0.5 =
 * admin bug fix. thanks [ixkaito](https://profiles.wordpress.org/ixkaito) !

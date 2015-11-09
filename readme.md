@@ -1,11 +1,20 @@
 # Custom Post Type Permalinks
 Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
+License: GPLv2 or Later
 
-Lets you edit the permalink of custom post type.
+Edit the permalink of custom post type.
+
+
+[![Build Status](https://travis-ci.org/torounit/custom-post-type-permalinks.svg)](https://travis-ci.org/torounit/custom-post-type-permalinks)
+[![](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+
+[![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 
 ## Description
 
-Custom Post Type Permalinks lets you edit the permalink structure of custom post type.
+Custom Post Type Permalinks allow you edit the permalink structure of custom post type.
 
 Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_name/term_slug". Can disable this fix.
 
@@ -19,13 +28,13 @@ Donation: Please send amazon.co.jp Gift to donate[at]torounit.com.
 
 * French(fr_FR) - [Geoffrey Crofte](http://geoffrey.crofte.fr/)
 * Japanese(ja) - [Toro_Unit](http://www.torounit.com/)
-* Russian(ru_RU) - [Olart](http://olart.ru)
+* Russian(ru_RU) - [Olart](http://olart.ru), [Natali_Z](https://profiles.wordpress.org/natali_z)
 
 ## Setting on Code
 
 Example:
 
-```
+`
 register_post_type( 'foo',
 	array(
 		"public" => true,
@@ -36,7 +45,7 @@ register_post_type( 'foo',
 		"cptp_permalink_structure" => "%post_id%"
 	)
 );
-```
+`
 
 
 ## Installation
@@ -55,6 +64,27 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 ## Changelog
+
+### 1.1.0
+
+* WPML Test. thanks [keita_kobayashi](https://profiles.wordpress.org/keita_kobayashi) !
+
+### 1.0.5
+
+* admin bug fix. thanks [ixkaito](https://profiles.wordpress.org/ixkaito) !
+* Translation Update Thanks [Natali_Z](https://profiles.wordpress.org/natali_z) !
+
+### 1.0.4
+
+* option bug fix.
+
+### 1.0.3
+
+* add category rule, if only attached category to post type.
+
+### 1.0.2
+
+* category slug bug fix.
 
 ### 1.0.0
 
