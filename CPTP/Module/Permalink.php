@@ -14,8 +14,8 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 
 	public function add_hook() {
-		add_filter( 'post_type_link', array( $this, 'post_type_link' ), -10, 4 );
-		add_filter( 'term_link', array( $this, 'term_link' ), -10, 3 );
+		add_filter( 'post_type_link', array( $this, 'post_type_link' ), 0, 4 );
+		add_filter( 'term_link', array( $this, 'term_link' ), 0, 3 );
 		add_filter( 'attachment_link', array( $this, 'attachment_link' ), 20, 2 );
 	}
 
