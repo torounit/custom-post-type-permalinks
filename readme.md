@@ -10,7 +10,7 @@ Edit the permalink of custom post type.
 [![](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 
-[![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![](http://www.torounit.com/wp-content/uploads/2011/11/banner-772x250.png)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 
 ## Description
 
