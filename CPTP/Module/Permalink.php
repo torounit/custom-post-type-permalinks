@@ -13,10 +13,31 @@
 class CPTP_Module_Permalink extends CPTP_Module {
 
 
+	/**
+	 * Add Filter Hooks.
+	 */
 	public function add_hook() {
-		add_filter( 'post_type_link', array( $this, 'post_type_link' ), 0, 4 );
-		add_filter( 'term_link', array( $this, 'term_link' ), 0, 3 );
-		add_filter( 'attachment_link', array( $this, 'attachment_link' ), 20, 2 );
+
+		add_filter(
+			'post_type_link',
+			array( $this, 'post_type_link' ),
+			apply_filters( 'cptp_post_type_link_priority', 0 ),
+			4
+		);
+
+		add_filter(
+			'term_link',
+			array( $this, 'term_link' ),
+			apply_filters( 'cptp_term_link_priority', 0 ),
+			3
+		);
+
+		add_filter(
+			'attachment_link',
+			array( $this, 'attachment_link' ),
+			apply_filters( 'cptp_attachment_link_priority', 20 ),
+			2
+		);
 	}
 
 
