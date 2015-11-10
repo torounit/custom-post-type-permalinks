@@ -9,12 +9,12 @@
  * @since 0.9.4
  *
  * */
-
-
 class CPTP {
 
-
 	private static $_instance;
+
+	/** @var  CPTP_Module[] */
+	public $modules;
 
 	private function __construct() {
 		$this->load_modules();
@@ -29,14 +29,21 @@ class CPTP {
 	 *
 	 */
 	private function load_modules() {
-		new CPTP_Module_Setting();
-		new CPTP_Module_Rewrite();
-		new CPTP_Module_Admin();
-		new CPTP_Module_Option();
-		new CPTP_Module_Permalink();
-		new CPTP_Module_GetArchives();
-		new CPTP_Module_FlushRules();
-		do_action( 'CPTP_load_modules' );
+		$this->modules['setting']      = new CPTP_Module_Setting();
+		$this->modules['rewrite']      = new CPTP_Module_Rewrite();
+		$this->modules['admin']        = new CPTP_Module_Admin();
+		$this->modules['option']       = new CPTP_Module_Option();
+		$this->modules['permalink']    = new CPTP_Module_Permalink();
+		$this->modules['get_archives'] = new CPTP_Module_GetArchives();
+		$this->modules['flush_rules']  = new CPTP_Module_FlushRules();
+
+		do_action( 'CPTP_load_modules', $this );
+
+		foreach ( $this->modules as $module ) {
+			$module->register();
+		}
+
+		do_action( 'CPTP_registered_modules', $this );
 
 	}
 
@@ -64,7 +71,6 @@ class CPTP {
 
 		return self::$_instance;
 	}
-
 
 
 }
