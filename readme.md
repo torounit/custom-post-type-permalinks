@@ -65,6 +65,11 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 1.2.0
+
+* Add filter `cptp_post_type_link_priority`, `cptp_term_link_priority`, `cptp_attachment_link_priority`.
+* Add action `CPTP_registered_modules`.
+
 ### 1.1.0
 
 * WPML Test. thanks [keita_kobayashi](https://profiles.wordpress.org/keita_kobayashi) !
