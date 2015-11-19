@@ -26,7 +26,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 	 */
 	public function settings_api_init() {
 		add_settings_section( 'cptp_setting_section',
-			__( 'Permalink Setting for custom post type', 'cptp' ),
+			__( 'Permalink Settings for Custom Post Types', 'cptp' ),
 			array( $this, 'setting_section_callback_function' ),
 			'permalink'
 		);
@@ -59,7 +59,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 		add_settings_field(
 			'add_post_type_for_tax',
-			__( 'Add post_type query for custom taxonomy archive.', 'cptp' ),
+			__( 'Add <code>post_type</code> query for custom taxonomy archive.', 'cptp' ),
 			array( $this, 'add_post_type_for_tax_callback_function' ),
 			'permalink',
 			'cptp_setting_section',
@@ -72,14 +72,14 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 	public function setting_section_callback_function() {
 		?>
-		<p><?php _e( 'Setting permalinks of custom post type.', 'cptp' ); ?><br/>
-			<?php _e( "The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug\"%'. (e.g. %actors%)", 'cptp' ); ?>
+		<p><?php _e( 'Set the permalinks of your Custom Post Types.', 'cptp' ); ?><br/>
+			<?php _e( "The tags you can use are WordPress Structure Tags and <code>%\"custom_taxonomy_slug\"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).", 'cptp' ); ?>
 			<br/>
-			<?php _e( "%\"custom_taxonomy_slug\"% is replaced the taxonomy's term.'.", 'cptp' ); ?></p>
+			<?php _e( "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term.", 'cptp' ); ?></p>
 
 		<p><?php _e( "Presence of the trailing '/' is unified into a standard permalink structure setting.", 'cptp' ); ?>
 		<p><?php _e( 'If <code>has_archive</code> is true, add permalinks for custom post type archive.', 'cptp' ); ?>
-			<?php _e( "If you don't entered permalink structure, permalink is configured /%postname%/'.", 'cptp' ); ?>
+			<?php _e( "If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>.", 'cptp' ); ?>
 		</p>
 	<?php
 	}
@@ -121,15 +121,15 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 	public function setting_no_tax_structure_callback_function() {
 		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, get_option( 'no_taxonomy_structure' ), false ) . ' /> ';
-		$txt = __( "If you check,The custom taxonomy's permalinks is <code>%s/post_type/taxonomy/term</code>.", 'cptp' );
+		$txt = __( "If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>.", 'cptp' );
 		printf( $txt, home_url() );
 	}
 
 
 	public function add_post_type_for_tax_callback_function() {
 		echo '<input name="add_post_type_for_tax" id="add_post_type_for_tax" type="checkbox" value="1" class="code" ' . checked( true, get_option( 'add_post_type_for_tax' ), false ) . ' /> ';
-		_e( "custom taxonomy archive also works as post type archive.", 'cptp' );
-		_e( "There are cases when template to be loaded is changed.", 'cptp' );
+		_e( "Custom taxonomy archive also works as post type archive. ", 'cptp' );
+		_e( "There are cases when the template to be loaded is changed.", 'cptp' );
 	}
 
 
