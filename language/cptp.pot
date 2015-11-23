@@ -1,0 +1,77 @@
+# WordPress Blank Pot
+# Copyright (C) 2014 ...
+# This file is distributed under the GNU General Public License v2 or later.
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Post Type Permalinks Pot v1.0.0\n"
+"POT-Creation-Date: 2015-11-23 10:45+0900\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Your Name <you@example.com>\n"
+"Language-Team: Toro_Unit <mail@torounit.com>\n"
+"Report-Msgid-Bugs-To: Translator Name <translations@example.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Textdomain-Support: yesX-Generator: Poedit 1.6.4\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;esc_html_e;esc_html_x:1,2c;esc_html__;esc_attr_e;esc_attr_x:1,2c;esc_attr__;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2;_n_noop:1,2;__ngettext:1,2;"
+"__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
+"X-Poedit-Basepath: ..\n"
+"Language: en_US\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: CPTP/Module/Admin.php:29
+msgid "Permalink Settings for Custom Post Types"
+msgstr ""
+
+#: CPTP/Module/Admin.php:51
+msgid "Use custom permalink of custom taxonomy archive."
+msgstr ""
+
+#: CPTP/Module/Admin.php:62
+msgid "Add <code>post_type</code> query for custom taxonomy archive."
+msgstr ""
+
+#: CPTP/Module/Admin.php:75
+msgid "Set the permalinks of your Custom Post Types."
+msgstr ""
+
+#: CPTP/Module/Admin.php:76
+msgid "The tags you can use are WordPress Structure Tags and <code>%\"custom_taxonomy_slug\"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>)."
+msgstr ""
+
+#: CPTP/Module/Admin.php:78
+msgid "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term."
+msgstr ""
+
+#: CPTP/Module/Admin.php:80
+msgid "Presence of the trailing '/' is unified into a standard permalink structure setting."
+msgstr ""
+
+#: CPTP/Module/Admin.php:81
+msgid "If <code>has_archive</code> is true, add permalinks for custom post type archive."
+msgstr ""
+
+#: CPTP/Module/Admin.php:82
+msgid "If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>."
+msgstr ""
+
+#: CPTP/Module/Admin.php:124
+#, php-format
+msgid "If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>."
+msgstr ""
+
+#: CPTP/Module/Admin.php:131
+msgid "Custom taxonomy archive also works as post type archive. "
+msgstr ""
+
+#: CPTP/Module/Admin.php:132
+msgid "There are cases when the template to be loaded is changed."
+msgstr ""
+
+#: CPTP/Module/Admin.php:157
+msgid "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>"
+msgstr ""

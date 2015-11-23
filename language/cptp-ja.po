@@ -16,7 +16,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: CPTP/Module\n"
 
 #: CPTP/Module/Admin.php:30
-msgid "Permalink Setting for custom post type"
+msgid "Permalink Settings for Custom Post Types"
 msgstr "カスタム投稿タイプのパーマリンクの設定"
 
 #: CPTP/Module/Admin.php:72
@@ -24,7 +24,7 @@ msgid "Use custom permalink of custom taxonomy archive."
 msgstr "カスタム分類のアーカイブのパーマリンクを変更する。"
 
 #: CPTP/Module/Admin.php:93
-msgid "Setting permalinks of custom post type."
+msgid "The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug\"%"
 msgstr "カスタム投稿タイプごとのパーマリンク構造を設定できます。"
 
 #: CPTP/Module/Admin.php:94
@@ -36,7 +36,7 @@ msgstr ""
 "%actors%)"
 
 #: CPTP/Module/Admin.php:95
-msgid "%\"custom_taxonomy_slug\"% is replaced the taxonomy's term.'."
+msgid "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term."
 msgstr "'%\"カスタム分類名\"%' は、そのカスタム分類のタームに置換されます。"
 
 #: CPTP/Module/Admin.php:97
@@ -55,15 +55,13 @@ msgstr ""
 
 #: CPTP/Module/Admin.php:99
 msgid ""
-"If you don't entered permalink structure, permalink is configured /%postname"
-"%/'."
+"If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>."
 msgstr "未入力のときは、/%postname%/ に設定されます。"
 
 #: CPTP/Module/Admin.php:128
 #, php-format
 msgid ""
-"If you check,The custom taxonomy's permalinks is <code>%s/post_type/taxonomy/"
-"term</code>."
+"If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>."
 msgstr ""
 "チェックした場合、カスタム分類のアーカイブのパーマリンクは <code>%s/"
 "post_type/taxonomy/term</code>. に変更されます。"

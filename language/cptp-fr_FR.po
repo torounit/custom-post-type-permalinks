@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: ..\n"
 
 #: ../CPTP/Module/Admin.php:30
-msgid "Permalink Setting for custom post type"
+msgid "Permalink Settings for Custom Post Types"
 msgstr "Réglage des permaliens des custom-post-types"
 
 #: ../CPTP/Module/Admin.php:72
@@ -27,7 +27,7 @@ msgstr ""
 "personnalisée."
 
 #: ../CPTP/Module/Admin.php:93
-msgid "Setting permalinks of custom post type."
+msgid "The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug\"%"
 msgstr "Réglage des permaliens des custom-post-types"
 
 #: ../CPTP/Module/Admin.php:94
@@ -39,7 +39,7 @@ msgstr ""
 "que '%custom_taxonomy_slug%'. (ex. %acteurs%)"
 
 #: ../CPTP/Module/Admin.php:95
-msgid "%\"custom_taxonomy_slug\"% is replaced the taxonomy's term.'."
+msgid "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term."
 msgstr "%custom_taxonomy_slug% est remplacé par le nom de la taxonomie."
 
 #: ../CPTP/Module/Admin.php:97
@@ -60,8 +60,7 @@ msgstr ""
 
 #: ../CPTP/Module/Admin.php:99
 msgid ""
-"If you don't entered permalink structure, permalink is configured /%postname"
-"%/'."
+"If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>."
 msgstr ""
 "Si vous n'entrez pas de structure de permalien, celui-ci est configuré avec /"
 "%postname%/."
@@ -69,8 +68,7 @@ msgstr ""
 #: ../CPTP/Module/Admin.php:132
 #, php-format
 msgid ""
-"If you check,The custom taxonomy's permalinks is <code>%s/post_type/taxonomy/"
-"term</code>."
+"If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>."
 msgstr ""
 "Si vous cochez, le permalien d'une taxonomie personnalisée sera <code>%s/"
 "post_type/taxonomy/term</code>."
@@ -84,10 +82,6 @@ msgstr ""
 "php'>Permaliens</a>, paramétrez un permalien personnalisé pour chaque type "
 "de post.</p>"
 
-#: ../CPTP/Util.php:57
-#, php-format
-msgid "View all posts in %s"
-msgstr "Voir tous les posts dans %s"
 
 #~ msgid "From Permalinks, set a custom permalink for each post type."
 #~ msgstr ""

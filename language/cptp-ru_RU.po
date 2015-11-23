@@ -21,7 +21,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: CPTP/Module/Admin.php:31
-msgid "Permalink Setting for custom post type"
+msgid "Permalink Settings for Custom Post Types"
 msgstr "Настройки структуры ссылок для записей произвольного типа"
 
 #: CPTP/Module/Admin.php:52
@@ -29,11 +29,11 @@ msgid "Use custom permalink of custom taxonomy archive."
 msgstr "Структура постоянных ссылок для архива таксономии."
 
 #: CPTP/Module/Admin.php:62
-msgid "Add post_type query for custom taxonomy archive."
+msgid "Add <code>post_type</code> query for custom taxonomy archive."
 msgstr "Добавить запрос post_type для архива таксономии."
 
 #: CPTP/Module/Admin.php:74
-msgid "Setting permalinks of custom post type."
+msgid "The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug\"%"
 msgstr "Настройки постоянных ссылок для записей произвольного типа."
 
 #: CPTP/Module/Admin.php:75
@@ -45,7 +45,7 @@ msgstr ""
 "%custom_taxonomy_slug%</code> (например <code>%actors%</code>)."
 
 #: CPTP/Module/Admin.php:76
-msgid "%\"custom_taxonomy_slug\"% is replaced the taxonomy's term.'."
+msgid "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term."
 msgstr ""
 "(Замените <code>%custom_taxonomy_slug%</code> на ярлык своей таксономии.)"
 
@@ -68,8 +68,7 @@ msgstr ""
 
 #: CPTP/Module/Admin.php:80
 msgid ""
-"If you don't entered permalink structure, permalink is configured /%postname"
-"%/'."
+"If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>."
 msgstr ""
 "Если вы оставите поле пустым будет установлено значение по умолчанию <code>/"
 "%postname%/</code>."
@@ -77,19 +76,18 @@ msgstr ""
 #: CPTP/Module/Admin.php:128
 #, php-format
 msgid ""
-"If you check,The custom taxonomy's permalinks is <code>%s/post_type/taxonomy/"
-"term</code>."
+"If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>."
 msgstr ""
 "При выборе произвольная структура URL для таксономии будет <code>%s/"
 "post_type/taxonomy/term</code>."
 
 #: CPTP/Module/Admin.php:135
-msgid "custom taxonomy archive also works as post type archive."
+msgid "Custom taxonomy archive also works as post type archive. "
 msgstr ""
 "Архив пользовательской таксономии также работает как архив типа записи.&nbsp;"
 
 #: CPTP/Module/Admin.php:136
-msgid "There are cases when template to be loaded is changed."
+msgid "There are cases when the template to be loaded is changed."
 msgstr "Бывают случаи, когда изменяется загрузка шаблона."
 
 #: CPTP/Module/Admin.php:163
@@ -100,7 +98,3 @@ msgstr ""
 "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink."
 "php'>Permalinks</a>, set a custom permalink for each post type.</p>"
 
-#: CPTP/Util.php:57
-#, php-format
-msgid "View all posts in %s"
-msgstr "Смотреть все записи в %s"
