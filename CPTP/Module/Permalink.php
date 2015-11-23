@@ -170,8 +170,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			$permalink
 		);
 		$permalink = str_replace( $search, $replace, $permalink );
-		$permalink = rtrim( home_url(), '/' ) . '/' . ltrim( $permalink, '/' );
-
+		$permalink = home_url( $permalink );
 		return $permalink;
 	}
 
