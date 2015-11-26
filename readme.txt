@@ -3,8 +3,8 @@ Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
 Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.1
-Tested up to:      4.3
-Stable tag:        1.2.0
+Tested up to:      4.4
+Stable tag:        1.3.0
 License: GPLv2 or Later
 
 Edit the permalink of custom post type.
@@ -60,6 +60,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+
+= 1.3.0 =
+* bugfix for polylang.
 
 = 1.2.0 =
 * Add filter `cptp_post_type_link_priority`, `cptp_term_link_priority`, `cptp_attachment_link_priority`.
