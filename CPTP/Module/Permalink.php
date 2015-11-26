@@ -311,17 +311,26 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		} else {
 			$post_type = $taxonomy->object_type[0];
 		}
+
+		$front         = substr( $wp_rewrite->front, 1 );
+		$termlink      = str_replace( $front, '', $termlink );//remove front.
+
 		$post_type_obj = get_post_type_object( $post_type );
+
+		if( empty( $post_type_obj ) ) {
+			return $termlink;
+		}
+
 		$slug          = $post_type_obj->rewrite['slug'];
 		$with_front    = $post_type_obj->rewrite['with_front'];
-		$front         = substr( $wp_rewrite->front, 1 );
-		$termlink      = str_replace( $front, '', $termlink );
 
 		if ( $with_front ) {
 			$slug = $front . $slug;
 		}
 
-		$termlink = str_replace( $wp_home, $wp_home . '/' . $slug, $termlink );
+		if( !empty( $slug )) {
+			$termlink = str_replace( $wp_home, $wp_home . '/' . $slug, $termlink );
+		}
 
 		if ( ! $taxonomy->rewrite['hierarchical'] ) {
 			$termlink = str_replace( $term->slug . '/', CPTP_Util::get_taxonomy_parents( $term->term_id, $taxonomy->name, false, '/', true ), $termlink );
