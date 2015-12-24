@@ -83,6 +83,10 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			return $link;
 		}
 
+		if ( $this->get_archives_where_r['post_type'] == 'post' ) {
+			return $link;
+		}
+
 		$c = isset( $this->get_archives_where_r['taxonomy'] ) && is_array( $this->get_archives_where_r['taxonomy'] ) ? $this->get_archives_where_r['taxonomy'] : '';  //[steve]
 		$t = $this->get_archives_where_r['post_type'];
 
