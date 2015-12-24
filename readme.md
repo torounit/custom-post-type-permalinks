@@ -65,6 +65,14 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 1.3.1
+
+* bugfix `wp_get_archives`.
+
+### 1.3.0
+
+* bugfix for polylang.
+
 ### 1.2.0
 
 * Add filter `cptp_post_type_link_priority`, `cptp_term_link_priority`, `cptp_attachment_link_priority`.
