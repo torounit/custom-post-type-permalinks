@@ -38,5 +38,4 @@ env:
 
   global:
     - SVN_REPO: https://plugins.svn.wordpress.org/custom-post-type-permalinks/
-    - GH_REF: https://github.com/torounit/custom-post-type-permalinks.git
     - secure: "G6ugr3v6cOwWCh8sDsqn4NfJ74zO68n1xwDmPOjkhMr0jhnwdNcPgQzVA5WXf/8yV5I910UAm3XQrT5CajXgwt2Tcsli67Olu3R8Nqcwh0lqAK5Q4LdD5RoP2Ie2jY/ih4Z56CZEhiuZbG9Qp/YeN8j/kIEDf/y/VwzoX/s3OXI="
