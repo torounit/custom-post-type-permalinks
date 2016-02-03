@@ -43,7 +43,7 @@ class CPTP_Module_Setting extends CPTP_Module {
 	 *
 	 */
 	public function load_textdomain() {
-		load_plugin_textdomain( 'cptp', false, 'custom-post-type-permalinks/language' );
+		load_plugin_textdomain( 'custom-post-type-permalinks', false, 'custom-post-type-permalinks/language' );
 	}
 
 }

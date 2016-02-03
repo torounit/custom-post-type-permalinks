@@ -2,6 +2,7 @@
 .git
 .gitignore
 .travis.yml
+.editorconfig
 Gruntfile.js
 LINGUAS
 Makefile
