@@ -226,6 +226,14 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		return array( 'search' => $search, 'replace' => $replace );
 	}
 
+	/**
+	 *
+	 * get parent from term Object
+	 *
+	 * @param WP_Term|stdClass $term
+	 *
+	 * @return mixed
+	 */
 	private static function get_term_parent( $term ) {
 		if ( isset( $term->parent ) and $term->parent > 0 ) {
 			return $term->parent;

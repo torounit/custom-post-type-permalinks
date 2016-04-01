@@ -12,9 +12,9 @@
  * */
 class CPTP_Module_Rewrite extends CPTP_Module {
 
-	/** @var  Array */
+	/** @var array */
 	private $post_type_args;
-	/** @var  Array */
+	/** @var array */
 	private $taxonomy_args;
 
 	public function add_hook() {
