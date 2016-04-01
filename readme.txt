@@ -3,7 +3,7 @@ Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
 Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
-Tested up to:      4.4
+Tested up to:      4.5
 Stable tag:        1.4.0
 License: GPLv2 or Later
 
