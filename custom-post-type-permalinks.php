@@ -17,7 +17,7 @@ Domain Path: /language/
  * Custom Post Type Permalinks
  *
  * @package Custom_Post_Type_Permalinks
- * @version 1.3.1
+ * @version 1.5.1
  *
  */
 
