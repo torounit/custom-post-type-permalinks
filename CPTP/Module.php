@@ -1,5 +1,4 @@
- <?php
-
+<?php
 
 Abstract Class CPTP_Module {
 
