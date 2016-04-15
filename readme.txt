@@ -4,7 +4,7 @@ Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
 Tested up to:      4.5
-Stable tag:        1.5.2
+Stable tag:        1.5.3
 License: GPLv2 or Later
 
 Edit the permalink of custom post type.
@@ -60,6 +60,17 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+
+= 1.5.3 =
+
+* readme fix.
+
+= 1.5.0 =
+
+* Tested for 4.5.
+* Add filter CPTP_set_{$module_name}_module.
+
 
 = 1.4.0 =
 * Fix Translation Problem.

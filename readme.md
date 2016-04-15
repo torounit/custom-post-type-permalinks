@@ -26,8 +26,8 @@ Donation: Please send amazon.co.jp Gift to donate[at]torounit.com.
 
 ### Translators
 
-* French(fr_FR) - [Geoffrey Crofte](http://geoffrey.crofte.fr/)
 * Japanese(ja) - [Toro_Unit](http://www.torounit.com/)
+* French(fr_FR) - [Geoffrey Crofte](http://geoffrey.crofte.fr/)
 * Russian(ru_RU) - [Olart](http://olart.ru), [Natali_Z](https://profiles.wordpress.org/natali_z)
 
 ## Setting on Code
@@ -64,6 +64,22 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 ## Changelog
+
+
+### 1.5.3
+
+* readme fix.
+
+### 1.5.0
+
+* Tested for 4.5.
+* Add filter CPTP_set_{$module_name}_module.
+
+
+### 1.4.0
+
+* Fix Translation Problem.
+
 
 ### 1.3.1
 
