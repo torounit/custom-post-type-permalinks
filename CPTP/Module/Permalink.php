@@ -266,7 +266,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		if ( ! $post->post_parent ) {
 			return $link;
 		}
-		$post_parent = get_post( $post->post_parent );
+
 		$post_parent = get_post( $post->post_parent );
 		if ( ! $post_parent) {
 			return $link;
