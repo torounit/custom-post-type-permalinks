@@ -267,6 +267,10 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $link;
 		}
 		$post_parent = get_post( $post->post_parent );
+		$post_parent = get_post( $post->post_parent );
+		if ( ! $post_parent) {
+			return $link;
+		}
 		$permalink   = CPTP_Util::get_permalink_structure( $post_parent->post_type );
 		$post_type   = get_post_type_object( $post_parent->post_type );
 
