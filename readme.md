@@ -65,6 +65,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 1.5.4
+
+* Fixed removed parent post problem.
+
 
 ### 1.5.3
 
