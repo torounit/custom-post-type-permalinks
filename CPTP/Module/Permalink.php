@@ -196,7 +196,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		foreach ( $taxonomies as $taxonomy => $objects ) {
 
 			if ( false !== strpos( $permalink, '%' . $taxonomy . '%' ) ) {
-				$terms = wp_get_post_terms( $post_id, $taxonomy, array( 'orderby' => 'term_id' ) );
+				$terms = get_the_terms( $post_id, $taxonomy );
 
 				if ( $terms and ! is_wp_error( $terms ) ) {
 					$parents  = array_map( array( __CLASS__, 'get_term_parent' ), $terms ); //親の一覧
