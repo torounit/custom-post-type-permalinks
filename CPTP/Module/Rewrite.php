@@ -23,7 +23,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		add_action( 'registered_post_type', array( $this, 'registered_post_type' ), 10, 2 );
 		add_action( 'registered_taxonomy', array( $this, 'registered_taxonomy' ), 10, 3 );
 
-		add_action( 'wp_loaded', array( $this, 'add_rewrite_rules' ), 100 );
+		add_action( 'wp_loaded', array( $this, 'add_rewrite_rules' ), 10 );
 	}
 
 
