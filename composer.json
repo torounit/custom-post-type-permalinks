@@ -1,0 +1,13 @@
+{
+    "name": "torounit/custom-post-type-permalinks",
+    "description": "Edit the permalink of custom post type !",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Hiroshi Urabe",
+            "email": "mail@torounit.com"
+        }
+    ],
+    "require": {}
+}
