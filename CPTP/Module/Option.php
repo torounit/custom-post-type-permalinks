@@ -15,7 +15,6 @@ class CPTP_Module_Option extends CPTP_Module {
 
 	public function add_hook() {
 		add_action( 'admin_init', array( $this, 'save_options' ), 30 );
-		register_uninstall_hook( CPTP_PLUGIN_FILE, array( __CLASS__, 'uninstall_hook' ) );
 	}
 
 	public function save_options() {
