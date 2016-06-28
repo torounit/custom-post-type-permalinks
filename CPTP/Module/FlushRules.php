@@ -66,6 +66,7 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 
 	/**
 	 * uninstall hooks
+	 * @staitc
 	 */
 	public static function uninstall_hook() {
 		delete_option( 'queue_flush_rules' );
@@ -74,7 +75,7 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 	/**
 	 * fire on activate
 	 */
-	public static function activation_hook() {
+	public function activation_hook() {
 		CPTP_Module_FlushRules::queue_flush_rules();
 	}
 

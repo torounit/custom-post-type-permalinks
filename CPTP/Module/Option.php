@@ -68,6 +68,11 @@ class CPTP_Module_Option extends CPTP_Module {
 
 	}
 
+	/**
+	 * fire on uninstall. delete options.
+	 *
+	 * @static
+	 */
 	public static function uninstall_hook() {
 		foreach ( CPTP_Util::get_post_types() as $post_type ) {
 			delete_option( $post_type . '_structure' );

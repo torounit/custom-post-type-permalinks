@@ -18,7 +18,6 @@ class CPTP {
 
 	private function __construct() {
 		$this->load_modules();
-		$this->init_modules();
 	}
 
 	/**
@@ -42,7 +41,7 @@ class CPTP {
 
 	/**
 	 * initialize modules.
-	 * @since 1.6.0
+	 * @since 2.0.0
 	 *
 	 */
 	private function init_modules() {
@@ -75,6 +74,7 @@ class CPTP {
 	 *
 	 */
 	public function init() {
+		$this->init_modules();
 		do_action( 'CPTP_init' );
 	}
 
@@ -97,13 +97,11 @@ class CPTP {
 	 * Activation Hooks
 	 * This function will browse initialized modules and execute their activation_hook methods.
 	 * It will also set the uninstall_hook to the cptp_uninstall function which behaves the same way as this one.
-	 * @since 1.6.0
+	 * @since 2.0.0
 	 *
 	 */
-	public static function activate() {
-		$cptp = CPTP::get_instance();
-
-		foreach ( $cptp->modules as $module ) {
+	public function activate() {
+		foreach ( $this->modules as $module ) {
 			$module->activation_hook();
 		}
 
@@ -114,7 +112,7 @@ class CPTP {
 	 *
 	 * Uninstall Hooks
 	 * This function will browse initialized modules and execute their uninstall_hook methods.
-	 * @since 1.6.0
+	 * @since 2.0.0
 	 *
 	 */
 	public static function uninstall() {
