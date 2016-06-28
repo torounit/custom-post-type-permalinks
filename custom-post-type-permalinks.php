@@ -52,7 +52,8 @@ spl_autoload_register( 'cptp_class_loader' );
  */
 add_action( 'plugins_loaded', 'cptp_init_instance' );
 function cptp_init_instance() {
-	CPTP::get_instance();
+	$cptp = CPTP::get_instance();
+	$cptp->init();
 }
 
 /**
@@ -60,10 +61,10 @@ function cptp_init_instance() {
  * Activation Hooks
  * This function will browse initialized modules and execute their activation_hook methods.
  * It will also set the uninstall_hook to the cptp_uninstall function which behaves the same way as this one.
- * @since X.X.X
+ * @since 1.6.0
  *
  */
-register_activation_hook( __FILE__, 'cptp_activate' );
+register_activation_hook( CPTP_PLUGIN_FILE, 'cptp_activate' );
 function cptp_activate() {
 	$cptp = CPTP::get_instance();
 
@@ -73,14 +74,14 @@ function cptp_activate() {
 		}
 	}
 
-	register_uninstall_hook( __FILE__, 'cptp_uninstall' );
+	register_uninstall_hook( CPTP_PLUGIN_FILE, 'cptp_uninstall' );
 }
 
 /**
  *
  * Uninstall Hooks
  * This function will browse initialized modules and execute their uninstall_hook methods.
- * @since X.X.X
+ * @since 1.6.0
  *
  */
 function cptp_uninstall() {

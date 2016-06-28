@@ -18,11 +18,10 @@ class CPTP {
 
 	private function __construct() {
 		$this->load_modules();
-		$this->init();
+		$this->init_modules();
 	}
 
 	/**
-	 * load_modules
 	 *
 	 * Load CPTP_Modules.
 	 * @since 0.9.5
@@ -39,12 +38,19 @@ class CPTP {
 
 		do_action( 'CPTP_load_modules', $this );
 
+	}
+
+	/**
+	 * initialize modules.
+	 * @since 1.6.0
+	 *
+	 */
+	private function init_modules() {
 		foreach ( $this->modules as $module ) {
 			$module->init();
 		}
 
 		do_action( 'CPTP_registered_modules', $this );
-
 	}
 
 	/**
@@ -68,7 +74,7 @@ class CPTP {
 	 * @since 0.9.5
 	 *
 	 */
-	private function init() {
+	public function init() {
 		do_action( 'CPTP_init' );
 	}
 
