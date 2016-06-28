@@ -213,48 +213,48 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				//feed.
 				array(
 					'regex'    => '%s/(.+?)/feed/(feed|rdf|rss|rss2|atom)/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&feed=\$matches[2]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&feed=\$matches[2]",
 				),
 				array(
 					'regex'    => '%s/(.+?)/(feed|rdf|rss|rss2|atom)/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&feed=\$matches[2]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&feed=\$matches[2]",
 				),
 				//year
 				array(
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]",
 				),
 				array(
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/page/?([0-9]{1,})/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&paged=\$matches[3]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&paged=\$matches[3]",
 				),
 				//monthnum
 				array(
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]",
 				),
 				array(
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&paged=\$matches[4]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&paged=\$matches[4]",
 				),
 				//day
 				array(
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&day=\$matches[4]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&day=\$matches[4]",
 				),
 				array(
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&day=\$matches[4]&paged=\$matches[5]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&day=\$matches[4]&paged=\$matches[5]",
 				),
 				//paging
 				array(
 					'regex'    => '%s/(.+?)/page/?([0-9]{1,})/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&paged=\$matches[2]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&paged=\$matches[2]",
 				),
 				//tax archive.
 				array(
 					'regex' => '%s/(.+?)/?$',
-					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]"
+					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]",
 				),
 			);
 
