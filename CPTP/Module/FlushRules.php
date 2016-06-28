@@ -6,7 +6,6 @@
  *
  * @package Custom_Post_Type_Permalinks
  * @since 0.9.4
- *
  * */
 
 class CPTP_Module_FlushRules extends CPTP_Module {
@@ -24,8 +23,8 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 	/**
 	 *
 	 * Add hook flush_rules
-	 * @since 0.7.9
 	 *
+	 * @since 0.7.9
 	 */
 	public function update_rules() {
 
@@ -40,11 +39,11 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 	/**
 	 *
 	 * dequeue flush rules
-	 * @since 0.9
 	 *
+	 * @since 0.9
 	 */
 
-	public static function dequeue_flush_rules () {
+	public static function dequeue_flush_rules() {
 		if ( get_option( 'queue_flush_rules' ) ) {
 			flush_rewrite_rules();
 			update_option( 'queue_flush_rules', 0 );
@@ -57,15 +56,15 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 	 * Flush rules
 	 *
 	 * @since 0.7.9
-	 *
 	 */
 
-	public static function queue_flush_rules(){
+	public static function queue_flush_rules() {
 		update_option( 'queue_flush_rules', 1 );
 	}
 
 	/**
 	 * uninstall hooks
+	 *
 	 * @staitc
 	 */
 	public static function uninstall_hook() {
@@ -78,5 +77,4 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 	public function activation_hook() {
 		CPTP_Module_FlushRules::queue_flush_rules();
 	}
-
 }

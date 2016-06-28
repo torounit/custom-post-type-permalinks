@@ -6,9 +6,9 @@
  * CPTP_Permalink
  *
  * Override Permalinks
+ *
  * @package Custom_Post_Type_Permalinks
  * @since 0.9.4
- *
  * */
 class CPTP_Module_Permalink extends CPTP_Module {
 
@@ -77,7 +77,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
 		$permalink = str_replace( '%' . $post_type . '_slug%', $pt_object->rewrite['slug'], $permalink );
 
-		//親ページが有るとき。
+		// 親ページが有るとき。
 		$parentsDirs = '';
 		if ( $pt_object->hierarchical ) {
 			if ( ! $leavename ) {
@@ -95,8 +95,8 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			$permalink = str_replace( '%' . $post_type . '%', $post->post_name, $permalink );
 		}
 
-		//%post_id%/attachment/%attachement_name%;
-		//画像の編集ページでのリンク
+		// %post_id%/attachment/%attachement_name%;
+		// 画像の編集ページでのリンク
 		if ( isset( $_GET['post'] ) && $_GET['post'] != $post->ID ) {
 			$parent_structure = trim( CPTP_Util::get_permalink_structure( $post->post_type ), '/' );
 			$parent_dirs      = explode( '/', $parent_structure );
@@ -118,7 +118,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$search      = $search + $replace_tag['search'];
 		$replace     = $replace + $replace_tag['replace'];
 
-		//from get_permalink.
+		// from get_permalink.
 		$category = '';
 		if ( false !== strpos( $permalink, '%category%' ) ) {
 			$categories = get_the_category( $post->ID );
@@ -179,7 +179,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 *
 	 * create %tax% -> term
 	 *
-	 * @param int $post_id
+	 * @param int    $post_id
 	 * @param string $permalink
 	 *
 	 * @return array
@@ -190,16 +190,15 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		$taxonomies = CPTP_Util::get_taxonomies( true );
 
-		//%taxnomomy% -> parent/child
-		//運用でケアすべきかも。
-
+		// %taxnomomy% -> parent/child
+		// 運用でケアすべきかも。
 		foreach ( $taxonomies as $taxonomy => $objects ) {
 
 			if ( false !== strpos( $permalink, '%' . $taxonomy . '%' ) ) {
 				$terms = get_the_terms( $post_id, $taxonomy );
 
 				if ( $terms and ! is_wp_error( $terms ) ) {
-					$parents  = array_map( array( __CLASS__, 'get_term_parent' ), $terms ); //親の一覧
+					$parents  = array_map( array( __CLASS__, 'get_term_parent' ), $terms ); // 親の一覧
 					$newTerms = array();
 					foreach ( $terms as $key => $term ) {
 						if ( ! in_array( $term->term_id, $parents ) ) {
@@ -207,8 +206,8 @@ class CPTP_Module_Permalink extends CPTP_Module {
 						}
 					}
 
-					//このブロックだけで良いはず。
-					$term_obj  = reset( $newTerms ); //最初のOBjectのみを対象。
+					// このブロックだけで良いはず。
+					$term_obj  = reset( $newTerms ); // 最初のOBjectのみを対象。
 					$term_slug = $term_obj->slug;
 
 					if ( isset( $term_obj->parent ) and 0 != $term_obj->parent ) {
@@ -249,7 +248,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * @since 0.8.2
 	 *
 	 * @param string $link
-	 * @param int $postID
+	 * @param int    $postID
 	 *
 	 * @return string
 	 */
@@ -286,6 +285,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	/**
 	 *
 	 * Fix taxonomy link outputs.
+	 *
 	 * @since 0.6
 	 * @version 1.0
 	 *
@@ -325,7 +325,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		$front         = substr( $wp_rewrite->front, 1 );
-		$termlink      = str_replace( $front, '', $termlink );//remove front.
+		$termlink      = str_replace( $front, '', $termlink );// remove front.
 
 		$post_type_obj = get_post_type_object( $post_type );
 
@@ -350,5 +350,4 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		return $termlink;
 	}
-
 }

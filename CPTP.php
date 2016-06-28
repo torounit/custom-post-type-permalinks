@@ -7,7 +7,6 @@
  *
  * @package Custom_Post_Type_Permalinks
  * @since 0.9.4
- *
  * */
 class CPTP {
 
@@ -23,8 +22,8 @@ class CPTP {
 	/**
 	 *
 	 * Load CPTP_Modules.
-	 * @since 0.9.5
 	 *
+	 * @since 0.9.5
 	 */
 	private function load_modules() {
 		$this->set_module( 'setting', new CPTP_Module_Setting() );
@@ -41,8 +40,8 @@ class CPTP {
 
 	/**
 	 * initialize modules.
-	 * @since 2.0.0
 	 *
+	 * @since 2.0.0
 	 */
 	private function init_modules() {
 		foreach ( $this->modules as $module ) {
@@ -71,7 +70,6 @@ class CPTP {
 	 * Fire Module::add_hook
 	 *
 	 * @since 0.9.5
-	 *
 	 */
 	public function init() {
 		$this->init_modules();
@@ -80,6 +78,7 @@ class CPTP {
 
 	/**
 	 * Singleton
+	 *
 	 * @static
 	 */
 	public static function get_instance() {
@@ -97,8 +96,8 @@ class CPTP {
 	 * Activation Hooks
 	 * This function will browse initialized modules and execute their activation_hook methods.
 	 * It will also set the uninstall_hook to the cptp_uninstall function which behaves the same way as this one.
-	 * @since 2.0.0
 	 *
+	 * @since 2.0.0
 	 */
 	public function activate() {
 		foreach ( $this->modules as $module ) {
@@ -112,8 +111,8 @@ class CPTP {
 	 *
 	 * Uninstall Hooks
 	 * This function will browse initialized modules and execute their uninstall_hook methods.
-	 * @since 2.0.0
 	 *
+	 * @since 2.0.0
 	 */
 	public static function uninstall() {
 		$cptp = CPTP::get_instance();
@@ -122,6 +121,4 @@ class CPTP {
 			$module->uninstall_hook();
 		}
 	}
-
-
 }

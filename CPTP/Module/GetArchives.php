@@ -7,7 +7,6 @@
  *
  * @package Custom_Post_Type_Permalinks
  * @since 0.9.4
- *
  * */
 
 class CPTP_Module_GetArchives extends CPTP_Module {
@@ -25,8 +24,8 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 	 *
 	 * wp_get_archives fix for custom post
 	 * Ex:wp_get_archives('&post_type='.get_query_var( 'post_type' ));
-	 * @version 2.0
 	 *
+	 * @version 2.0
 	 */
 
 	public $get_archives_where_r;
@@ -38,7 +37,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			$where = str_replace( '\'post\'', '\'' . $r['post_type'] . '\'', $where );
 		}
 
-		if ( isset( $r['taxonomy'] ) && is_array( $r['taxonomy'] ) ){
+		if ( isset( $r['taxonomy'] ) && is_array( $r['taxonomy'] ) ) {
 			global $wpdb;
 			$where = $where . " AND $wpdb->term_taxonomy.taxonomy = '".$r['taxonomy']['name']."' AND $wpdb->term_taxonomy.term_id = '".$r['taxonomy']['termid']."'";
 		}
@@ -48,15 +47,14 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 
 
 
-	//function added by [steve]
+	// function added by [steve]
 	/**
 	 *
 	 * get_archive_join
+	 *
 	 * @author Steve
 	 * @since 0.8
 	 * @version 1.0
-	 *
-	 *
 	 */
 	public function getarchives_join( $join, $r ) {
 		global $wpdb;
@@ -73,8 +71,8 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 	/**
 	 *
 	 * get_arcihves_link
-	 * @version 2.2 03/27/14
 	 *
+	 * @version 2.2 03/27/14
 	 */
 	public function get_archives_link( $link ) {
 		global $wp_rewrite;
@@ -87,7 +85,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			return $link;
 		}
 
-		$c = isset( $this->get_archives_where_r['taxonomy'] ) && is_array( $this->get_archives_where_r['taxonomy'] ) ? $this->get_archives_where_r['taxonomy'] : '';  //[steve]
+		$c = isset( $this->get_archives_where_r['taxonomy'] ) && is_array( $this->get_archives_where_r['taxonomy'] ) ? $this->get_archives_where_r['taxonomy'] : '';  // [steve]
 		$t = $this->get_archives_where_r['post_type'];
 
 		$this->get_archives_where_r['post_type'] = isset( $this->get_archives_where_r['post_type_slug'] ) ? $this->get_archives_where_r['post_type_slug'] : $t; // [steve] [*** bug fixing]
@@ -95,23 +93,21 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 		if ( isset( $this->get_archives_where_r['post_type'] ) and 'postbypost' != $this->get_archives_where_r['type'] ) {
 			$blog_url = rtrim( home_url() ,'/' );
 
-			//remove front
+			// remove front
 			$front = substr( $wp_rewrite->front, 1 );
 			$link = str_replace( $front, '', $link );
 
 			$blog_url = preg_replace( '/https?:\/\//', '', $blog_url );
-			$ret_link = str_replace( $blog_url, $blog_url.'/'.'%link_dir%', $link );
+			$ret_link = str_replace( $blog_url, $blog_url.'/%link_dir%', $link );
 
 			$post_type = get_post_type_object( $this->get_archives_where_r['post_type'] );
 			if ( empty( $c ) ) {    // [steve]
 				if ( isset( $post_type->rewrite['slug'] ) ) {
 					$link_dir = $post_type->rewrite['slug'];
-				}
-				else {
+				} else {
 					$link_dir = $this->get_archives_where_r['post_type'];
 				}
-			}
-			else {   // [steve]
+			} else {   // [steve]
 				$c['name'] = ( 'category' == $c['name']  && get_option( 'category_base' ) ) ? get_option( 'category_base' ) : $c['name'];
 				$link_dir = $post_type->rewrite['slug'].'/'.$c['name'].'/'.$c['termslug'];
 			}
@@ -125,12 +121,11 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			}
 
 			$ret_link = str_replace( '%link_dir%', $link_dir, $ret_link );
-		}else {
+		} else {
 			$ret_link = $link;
 		}
 		$this->get_archives_where_r['post_type'] = $t;	// [steve] reverting post_type to previous value
 
 		return $ret_link;
 	}
-
 }

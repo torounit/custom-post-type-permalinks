@@ -1,6 +1,6 @@
 <?php
 
-Abstract Class CPTP_Module {
+abstract class CPTP_Module {
 
 	final public function init() {
 		$this->register();

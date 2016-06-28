@@ -18,7 +18,6 @@ Domain Path: /language/
  *
  * @package Custom_Post_Type_Permalinks
  * @version 2.0.0
- *
  */
 
 define( 'CPTP_PLUGIN_FILE', __FILE__ );
@@ -30,8 +29,8 @@ define( 'CPTP_DEFAULT_PERMALINK', '/%postname%/' );
 /**
  *
  * Autoloader for CPTP.
- * @since 1.0.0
  *
+ * @since 1.0.0
  */
 function cptp_class_loader( $class_name ) {
 	$dir       = dirname( __FILE__ );

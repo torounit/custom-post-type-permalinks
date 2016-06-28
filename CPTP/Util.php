@@ -6,7 +6,6 @@
  *
  * @package Custom_Post_Type_Permalinks
  * @since 0.9.4
- *
  * */
 
 class CPTP_Util {
@@ -21,8 +20,7 @@ class CPTP_Util {
 	public static function get_taxonomies( $objects = false ) {
 		if ( $objects ) {
 			$output = 'objects';
-		}
-		else {
+		} else {
 			$output = 'names';
 		}
 		return get_taxonomies( array( 'show_ui' => true, '_builtin' => false ), $output );
@@ -32,8 +30,8 @@ class CPTP_Util {
 	/**
 	 *
 	 * Get Custom Taxonomies parents.
-	 * @version 1.0
 	 *
+	 * @version 1.0
 	 */
 	public static function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
 		$chain = '';
@@ -42,9 +40,9 @@ class CPTP_Util {
 			return $parent;
 		}
 
-		if ( $nicename ){
+		if ( $nicename ) {
 			$name = $parent->slug;
-		}else {
+		} else {
 			$name = $parent->name;
 		}
 
@@ -54,7 +52,7 @@ class CPTP_Util {
 		}
 		if ( $link ) {
 			$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( 'View all posts in %s' ), $parent->name ) ) . '">'.esc_html( $name ).'</a>' .esc_html( $separator );
-		}else {
+		} else {
 			$chain .= $name.$separator;
 		}
 		return $chain;
@@ -70,15 +68,13 @@ class CPTP_Util {
 	public static function get_permalink_structure( $post_type ) {
 		if ( is_string( $post_type ) ) {
 			$pt_object = get_post_type_object( $post_type );
-		}
-		else {
+		} else {
 			$pt_object = $post_type;
 		}
 
 		if ( ! empty( $pt_object->cptp_permalink_structure ) ) {
 			$structure = $pt_object->cptp_permalink_structure;
-		}
-		else {
+		} else {
 
 			$structure = get_option( $pt_object->name.'_structure' );
 		}
@@ -112,7 +108,4 @@ class CPTP_Util {
 		return $front;
 
 	}
-
-
-
 }

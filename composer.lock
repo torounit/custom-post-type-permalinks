@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "457c3d9e5541f75c457e244583e82f47",
-    "content-hash": "c8f91b6db96695621e383eae342c6a42",
+    "hash": "488f0f58de669fe5363099b4044d67bb",
+    "content-hash": "0d59468637359a1ef4eda32dc7dba059",
     "packages": [],
     "packages-dev": [
         {
@@ -88,20 +88,20 @@
         },
         {
             "name": "wp-coding-standards/wpcs",
-            "version": "2014-12-11",
+            "version": "0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git",
-                "reference": "71db077c5527969b11c45dd0333bd79984c5804c"
+                "reference": "b415094aa5fd24da6eba2295323bcff840902dd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress-Coding-Standards/WordPress-Coding-Standards/zipball/71db077c5527969b11c45dd0333bd79984c5804c",
-                "reference": "71db077c5527969b11c45dd0333bd79984c5804c",
+                "url": "https://api.github.com/repos/WordPress-Coding-Standards/WordPress-Coding-Standards/zipball/b415094aa5fd24da6eba2295323bcff840902dd3",
+                "reference": "b415094aa5fd24da6eba2295323bcff840902dd3",
                 "shasum": ""
             },
             "require": {
-                "squizlabs/php_codesniffer": "~2.0"
+                "squizlabs/php_codesniffer": "~2.2"
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
@@ -109,10 +109,6 @@
                 "MIT"
             ],
             "authors": [
-                {
-                    "name": "X-Team",
-                    "homepage": "http://x-team.com/"
-                },
                 {
                     "name": "Contributors",
                     "homepage": "https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/graphs/contributors"
@@ -124,7 +120,7 @@
                 "standards",
                 "wordpress"
             ],
-            "time": "2014-12-11 00:25:17"
+            "time": "2016-02-01 16:14:59"
         }
     ],
     "aliases": [],

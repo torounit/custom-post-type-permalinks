@@ -7,7 +7,6 @@
  *
  * @package Custom_Post_Type_Permalinks
  * @since 0.9.4
- *
  * */
 class CPTP_Module_Admin extends CPTP_Module {
 
@@ -21,8 +20,8 @@ class CPTP_Module_Admin extends CPTP_Module {
 	/**
 	 *
 	 * Setting Init
-	 * @since 0.7
 	 *
+	 * @since 0.7
 	 */
 	public function settings_api_init() {
 		add_settings_section( 'cptp_setting_section',
@@ -72,14 +71,14 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 	public function setting_section_callback_function() {
 		?>
-		<p><?php _e( 'Set the permalinks of your Custom Post Types.', 'custom-post-type-permalinks' ); ?><br/>
-			<?php _e( 'The tags you can use are WordPress Structure Tags and <code>%"custom_taxonomy_slug"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).', 'custom-post-type-permalinks' ); ?>
+		<p><?php esc_html_e( 'Set the permalinks of your Custom Post Types.', 'custom-post-type-permalinks' ); ?><br/>
+			<?php esc_html_e( 'The tags you can use are WordPress Structure Tags and <code>%"custom_taxonomy_slug"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).', 'custom-post-type-permalinks' ); ?>
 			<br/>
-			<?php _e( "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term.", 'custom-post-type-permalinks' ); ?></p>
+			<?php esc_html_e( "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term.", 'custom-post-type-permalinks' ); ?></p>
 
-		<p><?php _e( "Presence of the trailing '/' is unified into a standard permalink structure setting.", 'custom-post-type-permalinks' ); ?>
-		<p><?php _e( 'If <code>has_archive</code> is true, add permalinks for custom post type archive.', 'custom-post-type-permalinks' ); ?>
-			<?php _e( "If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>.", 'custom-post-type-permalinks' ); ?>
+		<p><?php esc_html_e( "Presence of the trailing '/' is unified into a standard permalink structure setting.", 'custom-post-type-permalinks' ); ?>
+		<p><?php esc_html_e( 'If <code>has_archive</code> is true, add permalinks for custom post type archive.', 'custom-post-type-permalinks' ); ?>
+			<?php esc_html_e( "If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>.", 'custom-post-type-permalinks' ); ?>
 		</p>
 	<?php
 	}
@@ -121,22 +120,22 @@ class CPTP_Module_Admin extends CPTP_Module {
 	public function setting_no_tax_structure_callback_function() {
 		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, get_option( 'no_taxonomy_structure' ), false ) . ' /> ';
 		$txt = __( "If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>.", 'custom-post-type-permalinks' );
-		printf( $txt, home_url() );
+		echo esc_html( sprintf( $txt, home_url() ) );
 	}
 
 
 	public function add_post_type_for_tax_callback_function() {
 		echo '<input name="add_post_type_for_tax" id="add_post_type_for_tax" type="checkbox" value="1" class="code" ' . checked( true, get_option( 'add_post_type_for_tax' ), false ) . ' /> ';
-		_e( 'Custom taxonomy archive also works as post type archive. ', 'custom-post-type-permalinks' );
-		_e( 'There are cases when the template to be loaded is changed.', 'custom-post-type-permalinks' );
+		esc_html_e( 'Custom taxonomy archive also works as post type archive. ', 'custom-post-type-permalinks' );
+		esc_html_e( 'There are cases when the template to be loaded is changed.', 'custom-post-type-permalinks' );
 	}
 
 
 	/**
 	 *
 	 * enqueue CSS and JS
-	 * @since 0.8.5
 	 *
+	 * @since 0.8.5
 	 */
 	public function enqueue_css_js() {
 		wp_enqueue_style( 'wp-pointer' );
@@ -147,6 +146,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 	/**
 	 *
 	 * add js for pointer
+	 *
 	 * @since 0.8.5
 	 */
 	public function pointer_js() {
@@ -158,7 +158,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 					jQuery(function ($) {
 
 						$("#menu-settings .wp-has-submenu").pointer({
-							content: "<?php _e( "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>", 'custom-post-type-permalinks' );?>",
+							content: "<?php esc_html_e( "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>", 'custom-post-type-permalinks' );?>",
 							position: {"edge": "left", "align": "center"},
 							close: function () {
 								$.post('admin-ajax.php', {

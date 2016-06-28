@@ -7,7 +7,6 @@
  *
  * @package Custom_Post_Type_Permalinks
  * @since 0.9.4
- *
  * */
 
 
@@ -21,16 +20,15 @@ class CPTP_Module_Setting extends CPTP_Module {
 	/**
 	 *
 	 * check_version
-	 * @since 0.8.6
 	 *
+	 * @since 0.8.6
 	 */
 
 	public function check_version() {
 		$version = get_option( 'cptp_version', 0 );
-		if ( false === $version ){
+		if ( false === $version ) {
 			add_option( 'cptp_version', CPTP_VERSION );
-		}
-		else if ( CPTP_VERSION != $version ) {
+		} else if ( CPTP_VERSION != $version ) {
 			update_option( 'cptp_version', CPTP_VERSION );
 		}
 	}
@@ -39,11 +37,10 @@ class CPTP_Module_Setting extends CPTP_Module {
 	/**
 	 *
 	 * load textdomain
-	 * @since 0.6.2
 	 *
+	 * @since 0.6.2
 	 */
 	public function load_textdomain() {
 		load_plugin_textdomain( 'custom-post-type-permalinks', false, 'custom-post-type-permalinks/language' );
 	}
-
 }
