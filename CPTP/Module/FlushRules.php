@@ -52,8 +52,7 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 		}
 	}
 
-
-
+	
 	/**
 	 * Flush rules
 	 *
@@ -64,6 +63,7 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 	public static function queue_flush_rules(){
 		update_option( 'queue_flush_rules', 1 );
 	}
+
 
 	public static function uninstall_hook() {
 		delete_option( 'queue_flush_rules' );
