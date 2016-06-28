@@ -55,6 +55,11 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 	 * @author Steve
 	 * @since 0.8
 	 * @version 1.0
+	 *
+	 * @param string $join
+	 * @param array $r
+	 *
+	 * @return string
 	 */
 	public function getarchives_join( $join, $r ) {
 		global $wpdb;
@@ -67,12 +72,15 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 	}
 
 
-
 	/**
 	 *
 	 * get_arcihves_link
 	 *
 	 * @version 2.2 03/27/14
+	 *
+	 * @param string $link
+	 *
+	 * @return string
 	 */
 	public function get_archives_link( $link ) {
 		global $wp_rewrite;

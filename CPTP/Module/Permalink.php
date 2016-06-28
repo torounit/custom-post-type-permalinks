@@ -46,8 +46,8 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * Fix permalinks output.
 	 *
 	 * @param String $post_link
-	 * @param Object $post 投稿情報
-	 * @param String $leavename 記事編集画面でのみ渡される
+	 * @param WP_Post $post
+	 * @param String $leavename for edit.php
 	 *
 	 * @version 2.0
 	 *
@@ -77,7 +77,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
 		$permalink = str_replace( '%' . $post_type . '_slug%', $pt_object->rewrite['slug'], $permalink );
 
-		// 親ページが有るとき。
+		// has parent.
 		$parentsDirs = '';
 		if ( $pt_object->hierarchical ) {
 			if ( ! $leavename ) {
@@ -96,7 +96,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		// %post_id%/attachment/%attachement_name%;
-		// 画像の編集ページでのリンク
 		if ( isset( $_GET['post'] ) && $_GET['post'] != $post->ID ) {
 			$parent_structure = trim( CPTP_Util::get_permalink_structure( $post->post_type ), '/' );
 			$parent_dirs      = explode( '/', $parent_structure );
@@ -248,12 +247,12 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * @since 0.8.2
 	 *
 	 * @param string $link
-	 * @param int    $postID
+	 * @param int    $post_id
 	 *
 	 * @return string
 	 */
 
-	public function attachment_link( $link, $postID ) {
+	public function attachment_link( $link, $post_id ) {
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 
@@ -261,7 +260,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $link;
 		}
 
-		$post = get_post( $postID );
+		$post = get_post( $post_id );
 		if ( ! $post->post_parent ) {
 			return $link;
 		}
