@@ -65,7 +65,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 				'draft',
 				'pending',
 				'auto-draft',
-			) );
+		) );
 		if ( $draft_or_pending and ! $leavename ) {
 			return $post_link;
 		}
@@ -268,7 +268,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		$post_parent = get_post( $post->post_parent );
-		if ( ! $post_parent) {
+		if ( ! $post_parent ) {
 			return $link;
 		}
 		$permalink   = CPTP_Util::get_permalink_structure( $post_parent->post_type );
@@ -329,7 +329,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		$post_type_obj = get_post_type_object( $post_type );
 
-		if( empty( $post_type_obj ) ) {
+		if ( empty( $post_type_obj ) ) {
 			return $termlink;
 		}
 
@@ -340,7 +340,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			$slug = $front . $slug;
 		}
 
-		if( !empty( $slug )) {
+		if ( ! empty( $slug ) ) {
 			$termlink = str_replace( $wp_home, $wp_home . '/' . $slug, $termlink );
 		}
 

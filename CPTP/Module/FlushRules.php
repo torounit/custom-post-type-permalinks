@@ -52,7 +52,7 @@ class CPTP_Module_FlushRules extends CPTP_Module {
 		}
 	}
 
-	
+
 	/**
 	 * Flush rules
 	 *

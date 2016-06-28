@@ -90,7 +90,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 		$c = isset( $this->get_archives_where_r['taxonomy'] ) && is_array( $this->get_archives_where_r['taxonomy'] ) ? $this->get_archives_where_r['taxonomy'] : '';  //[steve]
 		$t = $this->get_archives_where_r['post_type'];
 
-		$this->get_archives_where_r['post_type'] = isset($this->get_archives_where_r['post_type_slug']) ? $this->get_archives_where_r['post_type_slug'] : $t; // [steve] [*** bug fixing]
+		$this->get_archives_where_r['post_type'] = isset( $this->get_archives_where_r['post_type_slug'] ) ? $this->get_archives_where_r['post_type_slug'] : $t; // [steve] [*** bug fixing]
 
 		if ( isset( $this->get_archives_where_r['post_type'] ) and 'postbypost' != $this->get_archives_where_r['type'] ) {
 			$blog_url = rtrim( home_url() ,'/' );

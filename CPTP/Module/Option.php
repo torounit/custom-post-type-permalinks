@@ -31,7 +31,7 @@ class CPTP_Module_Option extends CPTP_Module {
 			return false;
 		}
 
-		if ( empty ( $_POST['_wpnonce'] ) ) {
+		if ( empty( $_POST['_wpnonce'] ) ) {
 			return false;
 		}
 		$nonce = $_POST['_wpnonce'];

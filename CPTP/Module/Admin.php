@@ -73,7 +73,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 	public function setting_section_callback_function() {
 		?>
 		<p><?php _e( 'Set the permalinks of your Custom Post Types.', 'custom-post-type-permalinks' ); ?><br/>
-			<?php _e( "The tags you can use are WordPress Structure Tags and <code>%\"custom_taxonomy_slug\"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).", 'custom-post-type-permalinks' ); ?>
+			<?php _e( 'The tags you can use are WordPress Structure Tags and <code>%"custom_taxonomy_slug"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).', 'custom-post-type-permalinks' ); ?>
 			<br/>
 			<?php _e( "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term.", 'custom-post-type-permalinks' ); ?></p>
 
@@ -91,7 +91,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 		$pt_object  = get_post_type_object( $post_type );
 		$slug       = $pt_object->rewrite['slug'];
 		$with_front = $pt_object->rewrite['with_front'];
-
 
 		$value = CPTP_Util::get_permalink_structure( $post_type );
 
@@ -112,7 +111,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 		?>
 		<p>
 			<code><?php echo home_url() . ( $slug ? '/' : '' ) . esc_html( $slug ); ?></code>
-			<input name="<?php echo esc_attr( $name );?>" id="<?php echo esc_attr( $name );?>" type="text" class="regular-text code " value="<?php echo esc_attr( $value ) ;?>" <?php  disabled( $disabled, true, true );?> />
+			<input name="<?php echo esc_attr( $name );?>" id="<?php echo esc_attr( $name );?>" type="text" class="regular-text code " value="<?php echo esc_attr( $value );?>" <?php  disabled( $disabled, true, true );?> />
 		</p>
 		<p>has_archive: <code><?php echo $pt_object->has_archive ? 'true' : 'false';?></code> / with_front: <code><?php echo $pt_object->rewrite['with_front'] ? 'true' : 'false';?></code></p>
 		<?php
@@ -128,8 +127,8 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 	public function add_post_type_for_tax_callback_function() {
 		echo '<input name="add_post_type_for_tax" id="add_post_type_for_tax" type="checkbox" value="1" class="code" ' . checked( true, get_option( 'add_post_type_for_tax' ), false ) . ' /> ';
-		_e( "Custom taxonomy archive also works as post type archive. ", 'custom-post-type-permalinks' );
-		_e( "There are cases when the template to be loaded is changed.", 'custom-post-type-permalinks' );
+		_e( 'Custom taxonomy archive also works as post type archive. ', 'custom-post-type-permalinks' );
+		_e( 'There are cases when the template to be loaded is changed.', 'custom-post-type-permalinks' );
 	}
 
 
