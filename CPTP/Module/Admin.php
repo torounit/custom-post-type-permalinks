@@ -110,10 +110,10 @@ class CPTP_Module_Admin extends CPTP_Module {
 		}
 		?>
 		<p>
-			<code><?php echo home_url() . ( $slug ? '/' : '' ) . esc_html( $slug ); ?></code>
+			<code><?php echo esc_html( home_url() . ( $slug ? '/' : '' ) .  $slug ); ?></code>
 			<input name="<?php echo esc_attr( $name );?>" id="<?php echo esc_attr( $name );?>" type="text" class="regular-text code " value="<?php echo esc_attr( $value );?>" <?php  disabled( $disabled, true, true );?> />
 		</p>
-		<p>has_archive: <code><?php echo $pt_object->has_archive ? 'true' : 'false';?></code> / with_front: <code><?php echo $pt_object->rewrite['with_front'] ? 'true' : 'false';?></code></p>
+		<p>has_archive: <code><?php echo esc_html( $pt_object->has_archive ? 'true' : 'false' );?></code> / with_front: <code><?php echo esc_html( $pt_object->rewrite['with_front'] ? 'true' : 'false' );?></code></p>
 		<?php
 	}
 
@@ -153,13 +153,12 @@ class CPTP_Module_Admin extends CPTP_Module {
 		if ( ! is_network_admin() ) {
 			$dismissed = explode( ',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
 			if ( false === array_search( 'cptp_pointer0871', $dismissed ) ) {
-				$content = __( "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>", 'custom-post-type-permalinks' );
 				?>
 				<script type="text/javascript">
 					jQuery(function ($) {
 
 						$("#menu-settings .wp-has-submenu").pointer({
-							content: "<?php echo $content;?>",
+							content: "<?php _e( "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>", 'custom-post-type-permalinks' );?>",
 							position: {"edge": "left", "align": "center"},
 							close: function () {
 								$.post('admin-ajax.php', {
