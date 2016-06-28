@@ -56,42 +56,6 @@ function cptp_init_instance() {
 	$cptp->init();
 }
 
-/**
- *
- * Activation Hooks
- * This function will browse initialized modules and execute their activation_hook methods.
- * It will also set the uninstall_hook to the cptp_uninstall function which behaves the same way as this one.
- * @since 1.6.0
- *
- */
-register_activation_hook( CPTP_PLUGIN_FILE, 'cptp_activate' );
-function cptp_activate() {
-	$cptp = CPTP::get_instance();
 
-	foreach ( $cptp->modules as $module ) {
-		if ( is_object( $module ) && method_exists( $module, 'activation_hook' ) ) {
-			$module->activation_hook();
-		}
-	}
-
-	register_uninstall_hook( CPTP_PLUGIN_FILE, 'cptp_uninstall' );
-}
-
-/**
- *
- * Uninstall Hooks
- * This function will browse initialized modules and execute their uninstall_hook methods.
- * @since 1.6.0
- *
- */
-function cptp_uninstall() {
-	$cptp = CPTP::get_instance();
-
-	foreach ( $cptp->modules as $module ) {
-		if ( is_object( $module ) && method_exists( $module, 'uninstall_hook' ) ) {
-			$module->uninstall_hook();
-		}
-	}
-}
-
+register_activation_hook( CPTP_PLUGIN_FILE, array( 'CPTP', 'activate' ) );
 

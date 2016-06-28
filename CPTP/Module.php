@@ -11,4 +11,16 @@ Abstract Class CPTP_Module {
 	}
 
 	abstract function add_hook();
+
+	/**
+	 * uninstall hooks
+	 */
+	public static function uninstall_hook() {
+	}
+
+	/**
+	 * fire on activate
+	 */
+	public static function activation_hook() {
+	}
 }
