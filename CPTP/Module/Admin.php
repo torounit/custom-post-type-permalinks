@@ -71,16 +71,17 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 	public function setting_section_callback_function() {
 		?>
-		<p><?php esc_html_e( 'Set the permalinks of your Custom Post Types.', 'custom-post-type-permalinks' ); ?><br/>
-			<?php esc_html_e( 'The tags you can use are WordPress Structure Tags and <code>%"custom_taxonomy_slug"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).', 'custom-post-type-permalinks' ); ?>
+		<p><?php _e( 'Set the permalinks of your Custom Post Types.', 'custom-post-type-permalinks' ); ?><br/>
+			<?php _e( 'The tags you can use are WordPress Structure Tags and <code>%"custom_taxonomy_slug"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).', 'custom-post-type-permalinks' ); ?>
 			<br/>
-			<?php esc_html_e( "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term.", 'custom-post-type-permalinks' ); ?></p>
-
-		<p><?php esc_html_e( "Presence of the trailing '/' is unified into a standard permalink structure setting.", 'custom-post-type-permalinks' ); ?>
-		<p><?php esc_html_e( 'If <code>has_archive</code> is true, add permalinks for custom post type archive.', 'custom-post-type-permalinks' ); ?>
-			<?php esc_html_e( "If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>.", 'custom-post-type-permalinks' ); ?>
+			<?php _e( "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term.", 'custom-post-type-permalinks' ); ?>
 		</p>
-	<?php
+
+		<p><?php _e( "Presence of the trailing '/' is unified into a standard permalink structure setting.", 'custom-post-type-permalinks' ); ?>
+		<p><?php _e( 'If <code>has_archive</code> is true, add permalinks for custom post type archive.', 'custom-post-type-permalinks' ); ?>
+			<?php _e( "If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>.", 'custom-post-type-permalinks' ); ?>
+		</p>
+		<?php
 	}
 
 	public function setting_structure_callback_function( $option ) {
@@ -109,10 +110,13 @@ class CPTP_Module_Admin extends CPTP_Module {
 		}
 		?>
 		<p>
-			<code><?php echo esc_html( home_url() . ( $slug ? '/' : '' ) .  $slug ); ?></code>
-			<input name="<?php echo esc_attr( $name );?>" id="<?php echo esc_attr( $name );?>" type="text" class="regular-text code " value="<?php echo esc_attr( $value );?>" <?php  disabled( $disabled, true, true );?> />
+			<code><?php echo esc_html( home_url() . ( $slug ? '/' : '' ) . $slug ); ?></code>
+			<input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" type="text"
+			       class="regular-text code "
+			       value="<?php echo esc_attr( $value ); ?>" <?php disabled( $disabled, true, true ); ?> />
 		</p>
-		<p>has_archive: <code><?php echo esc_html( $pt_object->has_archive ? 'true' : 'false' );?></code> / with_front: <code><?php echo esc_html( $pt_object->rewrite['with_front'] ? 'true' : 'false' );?></code></p>
+		<p>has_archive: <code><?php echo esc_html( $pt_object->has_archive ? 'true' : 'false' ); ?></code> / with_front:
+			<code><?php echo esc_html( $pt_object->rewrite['with_front'] ? 'true' : 'false' ); ?></code></p>
 		<?php
 	}
 
@@ -120,7 +124,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 	public function setting_no_tax_structure_callback_function() {
 		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, get_option( 'no_taxonomy_structure' ), false ) . ' /> ';
 		$txt = __( "If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>.", 'custom-post-type-permalinks' );
-		echo esc_html( sprintf( $txt, home_url() ) );
+		echo sprintf( $txt, esc_html( home_url() ) );
 	}
 
 
@@ -170,7 +174,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 						}).pointer("open");
 					});
 				</script>
-			<?php
+				<?php
 			}
 		}
 	}
