@@ -27,7 +27,6 @@ define( 'CPTP_VERSION', $data['ver'] );
 define( 'CPTP_DEFAULT_PERMALINK', '/%postname%/' );
 
 
-
 /**
  *
  * Autoloader for CPTP.
@@ -35,12 +34,13 @@ define( 'CPTP_DEFAULT_PERMALINK', '/%postname%/' );
  *
  */
 function cptp_class_loader( $class_name ) {
-	$dir = dirname( __FILE__ );
-	$file_name = $dir . '/'. str_replace( '_', '/', $class_name ).'.php';
+	$dir       = dirname( __FILE__ );
+	$file_name = $dir . '/' . str_replace( '_', '/', $class_name ) . '.php';
 	if ( is_readable( $file_name ) ) {
 		include $file_name;
 	}
 }
+
 spl_autoload_register( 'cptp_class_loader' );
 
 
@@ -56,22 +56,19 @@ function cptp_init_instance() {
 }
 
 /**
- * 
+ *
  * Activation Hooks
  * This function will browse initialized modules and execute their activation_hook methods.
  * It will also set the uninstall_hook to the cptp_uninstall function which behaves the same way as this one.
  * @since X.X.X
- * 
+ *
  */
 register_activation_hook( __FILE__, 'cptp_activate' );
-function cptp_activate()
-{
+function cptp_activate() {
 	$cptp = CPTP::get_instance();
-	
-	foreach( $cptp->modules as $module )
-	{
-		if( is_object($module) && method_exists($module, 'activation_hook') )
-		{
+
+	foreach ( $cptp->modules as $module ) {
+		if ( is_object( $module ) && method_exists( $module, 'activation_hook' ) ) {
 			$module->activation_hook();
 		}
 	}
@@ -80,20 +77,17 @@ function cptp_activate()
 }
 
 /**
- * 
+ *
  * Uninstall Hooks
  * This function will browse initialized modules and execute their uninstall_hook methods.
  * @since X.X.X
- * 
+ *
  */
-function cptp_uninstall()
-{
+function cptp_uninstall() {
 	$cptp = CPTP::get_instance();
-	
-	foreach( $cptp->modules as $module )
-	{
-		if( is_object($module) && method_exists($module, 'uninstall_hook') )
-		{
+
+	foreach ( $cptp->modules as $module ) {
+		if ( is_object( $module ) && method_exists( $module, 'uninstall_hook' ) ) {
 			$module->uninstall_hook();
 		}
 	}
