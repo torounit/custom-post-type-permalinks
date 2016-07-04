@@ -27,6 +27,11 @@ Donation: Please send [bitcoin](https://blockchain.info/ja/address/3HwkojX2pd9wc
 * French(fr_FR) - [Geoffrey Crofte](http://geoffrey.crofte.fr/)
 * Russian(ru_RU) - [Olart](http://olart.ru), [Natali_Z](https://profiles.wordpress.org/natali_z)
 
+= Also checkout =
+
+* [Simple Post Type Permalinks](https://wordpress.org/plugins/simple-post-type-permalinks/)
+
+
 == Setting on Code ==
 
 Example:
