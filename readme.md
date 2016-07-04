@@ -9,6 +9,7 @@ Edit the permalink of custom post type.
 [![](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX)
 
 [![](http://www.torounit.com/wp-content/uploads/2011/11/banner-772x250.png)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 
@@ -22,7 +23,8 @@ And support wp_get_archives( "post_type=foo" ).
 
 [This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
-Donation: Please send amazon.co.jp Gift to donate[at]torounit.com.
+Donation: Please send [bitcoin](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX) or amazon.co.jp Gift to donate[at]torounit.com.
+
 
 ### Translators
 
@@ -64,6 +66,11 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 ## Changelog
+
+### 2.0.0
+
+* Replace wp_get_post_terms by get_the_terms. [fix issue #55](https://github.com/torounit/custom-post-type-permalinks/issues/55)
+* Fix bug register_uninstall_hook called twice on each page. [fix issue #56](https://github.com/torounit/custom-post-type-permalinks/issues/56)
 
 ### 1.5.4
 
