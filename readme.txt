@@ -69,6 +69,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 = 2.0.0 =
 
+* `add_rewrite_rules` on `wp_loaded` priority is changed 10 from 100. [fix issue #53](https://github.com/torounit/custom-post-type-permalinks/issues/53)
 * Replace wp_get_post_terms by get_the_terms. [fix issue #55](https://github.com/torounit/custom-post-type-permalinks/issues/55)
 * Fix bug register_uninstall_hook called twice on each page. [fix issue #56](https://github.com/torounit/custom-post-type-permalinks/issues/56)
 
