@@ -22,7 +22,19 @@ class CPTP_Module_Option extends CPTP_Module {
 			return false;
 		}
 
-		if ( ! check_admin_referer( 'update-permalink' ) ) {
+		if ( empty( $_POST['_wpnonce'] ) ) {
+			return false;
+		}
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'update-permalink' ) ) {
+			return false;
+		}
+
+		if ( empty( $_POST['_wp_http_referer'] ) ) {
+			return false;
+		}
+
+		if ( false === strpos( $_POST['_wp_http_referer'], 'options-permalink.php' ) ) {
 			return false;
 		}
 
