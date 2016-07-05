@@ -162,7 +162,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 					jQuery(function ($) {
 
 						$("#menu-settings .wp-has-submenu").pointer({
-							content: "<?php esc_html_e( "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>", 'custom-post-type-permalinks' );?>",
+							content: "<?php _e( "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>", 'custom-post-type-permalinks' );?>",
 							position: {"edge": "left", "align": "center"},
 							close: function () {
 								$.post('admin-ajax.php', {
