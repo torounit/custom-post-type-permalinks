@@ -1,5 +1,6 @@
 ﻿.DS_Store
 .git
+.github
 .gitignore
 .travis.yml
 .editorconfig
@@ -9,11 +10,9 @@ Makefile
 README.md
 _site
 bin
-composer.json
 composer.lock
 node_modules
 npm-debug.log
-package.json
 phpunit.xml
 tests
 vendor
