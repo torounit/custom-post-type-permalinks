@@ -20,3 +20,5 @@
 * Make commits of logical units.
 * Check for unnecessary whitespace with `git diff --check` before committing.
 * Make sure your commit messages are in the proper format.
+
+By contributing code, you grant its use under the [GNU General Public License v2 (or later)](http://www.gnu.org/licenses/gpl-2.0.html).
