@@ -13,7 +13,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 	public function add_hook() {
 		add_action( 'admin_init', array( $this, 'settings_api_init' ), 30 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_css_js' ) );
-		add_action( 'admin_footer', array( $this, 'pointer_js' ) );
 	}
 
 
@@ -142,41 +141,27 @@ class CPTP_Module_Admin extends CPTP_Module {
 	 * @since 0.8.5
 	 */
 	public function enqueue_css_js() {
-		wp_enqueue_style( 'wp-pointer' );
-		wp_enqueue_script( 'wp-pointer' );
-	}
-
-
-	/**
-	 *
-	 * add js for pointer
-	 *
-	 * @since 0.8.5
-	 */
-	public function pointer_js() {
+		$pointer_name = 'custom-post-type-permalinks-settings';
 		if ( ! is_network_admin() ) {
 			$dismissed = explode( ',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
-			if ( false === array_search( 'cptp_pointer0871', $dismissed ) ) {
-				?>
-				<script type="text/javascript">
-					jQuery(function ($) {
+			if ( false === array_search( $pointer_name, $dismissed ) ) {
+				$content = '';
+				$content .= '<h3>' . __( 'Custom Post Type Permalinks', 'custom-post-type-permalinks' ) . '</h3>';
+				$content .= '<p>' . __( "You can setting permalink for post type in <a href='options-permalink.php'>Permalinks</a>.", 'custom-post-type-permalinks' ) . '</p>';
 
-						$("#menu-settings .wp-has-submenu").pointer({
-							content: "<?php _e( "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink.php'>Permalinks</a>, set a custom permalink for each post type.</p>", 'custom-post-type-permalinks' );?>",
-							position: {"edge": "left", "align": "center"},
-							close: function () {
-								$.post('admin-ajax.php', {
-									action: 'dismiss-wp-pointer',
-									pointer: 'cptp_pointer0871'
-								})
+				wp_enqueue_style( 'wp-pointer' );
+				wp_enqueue_script( 'wp-pointer' );
+				wp_enqueue_script( 'custom-post-type-permalinks-pointer', plugins_url( 'assets/settings-pointer.js', CPTP_PLUGIN_FILE ), array( 'wp-pointer' ), CPTP_VERSION );
 
-							}
-						}).pointer("open");
-					});
-				</script>
-				<?php
+				wp_localize_script('custom-post-type-permalinks-pointer', 'CPTP_Settings_Pointer', array(
+					'content' => $content,
+					'name'   => $pointer_name,
+				));
+
+
 			}
 		}
 	}
+
 }
 
