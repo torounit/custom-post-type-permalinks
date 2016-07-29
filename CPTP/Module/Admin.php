@@ -157,8 +157,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 					'content' => $content,
 					'name'   => $pointer_name,
 				));
-
-
 			}
 		}
 	}
