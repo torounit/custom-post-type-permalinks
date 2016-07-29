@@ -1,19 +1,18 @@
 # Custom Post Type Permalinks
 Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
-License: GPLv2 or Later
 
 Edit the permalink of custom post type.
 
 
+[![Latest Stable Version](https://poser.pugx.org/torounit/custom-post-type-permalinks/v/stable)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
+[![License](https://poser.pugx.org/torounit/custom-post-type-permalinks/license)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
+[![Downloads](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![Build Status](https://travis-ci.org/torounit/custom-post-type-permalinks.svg)](https://travis-ci.org/torounit/custom-post-type-permalinks)
-[![](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX)
-[![](https://img.shields.io/gratipay/team/custom-post-type-permalinks.svg)](https://gratipay.com/Custom-Post-Type-Permalinks/)
-[![](http://www.torounit.com/wp-content/uploads/2011/11/banner-772x250.png)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-
-
+[![Donation](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX)
+[![Gratipay](https://img.shields.io/gratipay/team/custom-post-type-permalinks.svg)](https://gratipay.com/Custom-Post-Type-Permalinks/)
+[![](https://torounit.com/wp-content/uploads/2011/11/banner-772x250.png)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 
 ## Description
 
@@ -73,6 +72,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 ## Changelog
+
+### 2.0.2
+
+* pointer html bug fix.
 
 ### 2.0.0
 
