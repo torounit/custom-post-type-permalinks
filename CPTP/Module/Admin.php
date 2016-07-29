@@ -147,7 +147,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 			if ( false === array_search( $pointer_name, $dismissed ) ) {
 				$content = '';
 				$content .= '<h3>' . __( 'Custom Post Type Permalinks', 'custom-post-type-permalinks' ) . '</h3>';
-				$content .= '<p>' . __( "You can setting permalink for post type in <a href='options-permalink.php'>Permalinks</a>.", 'custom-post-type-permalinks' ) . '</p>';
+				$content .= '<p>' . __( 'You can setting permalink for post type in <a href="options-permalink.php">Permalinks</a>.', 'custom-post-type-permalinks' ) . '</p>';
 
 				wp_enqueue_style( 'wp-pointer' );
 				wp_enqueue_script( 'wp-pointer' );
