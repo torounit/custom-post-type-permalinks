@@ -119,15 +119,19 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 * @return void
 	 */
 	public function register_taxonomy_rules( $taxonomy, $object_type, $args ) {
+		global $wp_rewrite;
 
 		if ( get_option( 'no_taxonomy_structure' ) ) {
 			return;
 		}
+
 		if ( $args['_builtin'] ) {
 			return;
 		}
 
-		global $wp_rewrite;
+		if ( false === $args['rewrite'] ) {
+			return;
+		}
 
 		$post_types = $args['object_type'];
 		foreach ( $post_types as $post_type ) :
