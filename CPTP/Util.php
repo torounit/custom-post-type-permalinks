@@ -14,7 +14,7 @@ class CPTP_Util {
 	}
 
 	public static function get_post_types() {
-		return get_post_types( array( '_builtin' => false, 'publicly_queryable' => true, 'show_ui' => true ) );
+		return get_post_types( array( '_builtin' => false, 'publicly_queryable' => true ) );
 	}
 
 	public static function get_taxonomies( $objects = false ) {

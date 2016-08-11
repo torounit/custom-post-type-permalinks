@@ -83,7 +83,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 
-		if ( $args->_builtin or ! $args->publicly_queryable or ! $args->show_ui ) {
+		if ( $args->_builtin or ! $args->publicly_queryable ) {
 			return;
 		}
 		$permalink = CPTP_Util::get_permalink_structure( $post_type );
