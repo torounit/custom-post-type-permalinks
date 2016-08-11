@@ -13,10 +13,18 @@ class CPTP_Util {
 	private function __construct() {
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function get_post_types() {
 		return get_post_types( array( '_builtin' => false, 'publicly_queryable' => true ) );
 	}
 
+	/**
+	 * @param bool $objects
+	 *
+	 * @return array
+	 */
 	public static function get_taxonomies( $objects = false ) {
 		if ( $objects ) {
 			$output = 'objects';
@@ -32,10 +40,19 @@ class CPTP_Util {
 	 * Get Custom Taxonomies parents.
 	 *
 	 * @version 1.0
+	 *
+	 * @param int|WP_Term|object $term
+	 * @param string $taxonomy
+	 * @param bool $link
+	 * @param string $separator
+	 * @param bool $nicename
+	 * @param array $visited
+	 *
+	 * @return string
 	 */
-	public static function get_taxonomy_parents( $id, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
+	public static function get_taxonomy_parents( $term, $taxonomy = 'category', $link = false, $separator = '/', $nicename = false, $visited = array() ) {
 		$chain = '';
-		$parent = get_term( $id, $taxonomy );
+		$parent = get_term( $term, $taxonomy );
 		if ( is_wp_error( $parent ) ) {
 			return $parent;
 		}
