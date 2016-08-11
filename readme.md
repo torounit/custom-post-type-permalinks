@@ -73,6 +73,11 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 2.1.0
+
+* Create rewrite rule on `registered_post_type` and `registered_taxonomy` action.
+* Not create taxonomy rewrite rule when `rewrite` is `false`.
+
 ### 2.0.2
 
 * pointer html bug fix.
