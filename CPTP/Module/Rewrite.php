@@ -11,58 +11,11 @@
  * */
 class CPTP_Module_Rewrite extends CPTP_Module {
 
-	/** @var array */
-	private $post_type_args;
-	/** @var array */
-	private $taxonomy_args;
 
 	public function add_hook() {
 		add_action( 'parse_request', array( $this, 'parse_request' ) );
-
-		add_action( 'registered_post_type', array( $this, 'registered_post_type' ), 10, 2 );
-		add_action( 'registered_taxonomy', array( $this, 'registered_taxonomy' ), 10, 3 );
-
-		add_action( 'wp_loaded', array( $this, 'add_rewrite_rules' ), 10 );
-	}
-
-
-	public function add_rewrite_rules() {
-
-		foreach ( $this->taxonomy_args as $args ) {
-			call_user_func_array( array( $this, 'register_taxonomy_rules' ), $args );
-		}
-
-		foreach ( $this->post_type_args as $args ) {
-			call_user_func_array( array( $this, 'register_post_type_rules' ), $args );
-		}
-
-	}
-
-	/**
-	 *
-	 * registered_post_type
-	 *
-	 * queue post_type rewrite.
-	 *
-	 * @param string $post_type Post type.
-	 * @param object $args Arguments used to register the post type.
-	 */
-	public function registered_post_type( $post_type, $args ) {
-		$this->post_type_args[] = func_get_args();
-	}
-
-	/**
-	 *
-	 * registered_taxonomy
-	 *
-	 * queue taxonomy rewrite.
-	 *
-	 * @param string       $taxonomy Taxonomy slug.
-	 * @param array|string $object_type Object type or array of object types.
-	 * @param array        $args Array of taxonomy registration arguments.
-	 */
-	public function registered_taxonomy( $taxonomy, $object_type, $args ) {
-		$this->taxonomy_args[] = func_get_args();
+		add_action( 'registered_post_type', array( $this, 'register_post_type_rules' ), 10, 2 );
+		add_action( 'registered_taxonomy', array( $this, 'register_taxonomy_rules' ), 10, 3 );
 	}
 
 
