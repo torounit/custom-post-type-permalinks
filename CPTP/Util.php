@@ -37,9 +37,45 @@ class CPTP_Util {
 
 	/**
 	 *
-	 * Get Custom Taxonomies parents.
+	 * Get Custom Taxonomies parents slug.
 	 *
 	 * @version 1.0
+	 *
+	 * @param int|WP_Term|object $term
+	 * @param string $taxonomy
+	 * @param string $separator
+	 * @param bool $nicename
+	 * @param array $visited
+	 *
+	 * @return string
+	 */
+	public static function get_taxonomy_parents_slug( $term, $taxonomy = 'category', $separator = '/', $nicename = false, $visited = array() ) {
+		$chain = '';
+		$parent = get_term( $term, $taxonomy );
+		if ( is_wp_error( $parent ) ) {
+			return $parent;
+		}
+
+		if ( $nicename ) {
+			$name = $parent->slug;
+		} else {
+			$name = $parent->name;
+		}
+
+		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && ! in_array( $parent->parent, $visited ) ) {
+			$visited[] = $parent->parent;
+			$chain .= CPTP_Util::get_taxonomy_parents_slug( $parent->parent, $taxonomy, $separator, $nicename, $visited );
+		}
+		$chain .= $name.$separator;
+
+		return $chain;
+	}
+
+	/**
+	 *
+	 * Get Custom Taxonomies parents.
+	 *
+	 * @deprecated
 	 *
 	 * @param int|WP_Term|object $term
 	 * @param string $taxonomy

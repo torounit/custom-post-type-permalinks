@@ -210,7 +210,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 					$term_slug = $term_obj->slug;
 
 					if ( isset( $term_obj->parent ) and 0 != $term_obj->parent ) {
-						$term_slug = CPTP_Util::get_taxonomy_parents( $term_obj->parent, $taxonomy, false, '/', true ) . $term_slug;
+						$term_slug = CPTP_Util::get_taxonomy_parents_slug( $term_obj->parent, $taxonomy, '/', true ) . $term_slug;
 					}
 				}
 
@@ -344,7 +344,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		if ( ! $taxonomy->rewrite['hierarchical'] ) {
-			$termlink = str_replace( $term->slug . '/', CPTP_Util::get_taxonomy_parents( $term->term_id, $taxonomy->name, false, '/', true ), $termlink );
+			$termlink = str_replace( $term->slug . '/', CPTP_Util::get_taxonomy_parents_slug( $term->term_id, $taxonomy->name, false, '/', true ), $termlink );
 		}
 
 		return $termlink;
