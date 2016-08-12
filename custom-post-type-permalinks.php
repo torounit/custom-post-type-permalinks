@@ -5,7 +5,7 @@ Plugin URI: https://github.com/torounit/custom-post-type-permalinks
 Description:  Add post archives of custom post type and customizable permalinks.
 Author: Toro_Unit
 Author URI: https://torounit.com/
-Version: 2.1.0
+Version: 2.1.1
 Text Domain: custom-post-type-permalinks
 License: GPL2 or later
 Domain Path: /language/
@@ -17,7 +17,7 @@ Domain Path: /language/
  * Custom Post Type Permalinks
  *
  * @package Custom_Post_Type_Permalinks
- * @version 2.1.0
+ * @version 2.1.1
  */
 
 define( 'CPTP_PLUGIN_FILE', __FILE__ );
