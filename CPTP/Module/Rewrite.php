@@ -39,6 +39,11 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		if ( $args->_builtin or ! $args->publicly_queryable ) {
 			return;
 		}
+
+		if ( false === $args->rewrite ) {
+			return;
+		}
+
 		$permalink = CPTP_Util::get_permalink_structure( $post_type );
 
 		if ( ! $permalink ) {
