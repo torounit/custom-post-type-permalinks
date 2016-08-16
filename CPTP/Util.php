@@ -17,7 +17,22 @@ class CPTP_Util {
 	 * @return array
 	 */
 	public static function get_post_types() {
-		return get_post_types( array( '_builtin' => false, 'publicly_queryable' => true ) );
+		$post_type =  get_post_types( array( '_builtin' => false, 'publicly_queryable' => true, 'show_ui' => true ) );
+		return array_filter( $post_type, array( __CLASS__, 'is_post_type_support_rewrite' ) );
+
+	}
+
+	/**
+	 * @param string $post_type
+	 *
+	 * @return bool
+	 */
+	private static function is_post_type_support_rewrite( $post_type ) {
+		$post_type_object = get_post_type_object( $post_type );
+		if( false === $post_type_object->rewrite ) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
