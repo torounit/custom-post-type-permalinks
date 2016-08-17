@@ -73,7 +73,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$post_type = $post->post_type;
 		$pt_object = get_post_type_object( $post_type );
 
-		if( false === $pt_object->rewrite ) {
+		if ( false === $pt_object->rewrite ) {
 			return $post_link;
 		}
 
@@ -277,7 +277,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		$pt_object = get_post_type_object( $post_parent->post_type );
 
-		if( false === $pt_object->rewrite ) {
+		if ( false === $pt_object->rewrite ) {
 			return $link;
 		}
 
