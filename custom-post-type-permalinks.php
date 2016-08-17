@@ -17,7 +17,7 @@ Domain Path: /language/
  * Custom Post Type Permalinks
  *
  * @package Custom_Post_Type_Permalinks
- * @version 2.1.1
+ * @version 2.1.2
  */
 
 define( 'CPTP_PLUGIN_FILE', __FILE__ );
