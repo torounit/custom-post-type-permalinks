@@ -11,8 +11,8 @@
     ],
     "require": {},
     "require-dev": {
-        "squizlabs/php_codesniffer": "2.*",
-        "wp-coding-standards/wpcs": "0.9.0"
+        "squizlabs/php_codesniffer": "*",
+        "wp-coding-standards/wpcs": "*"
     },
     "scripts": {
         "post-install-cmd": [

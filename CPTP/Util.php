@@ -81,7 +81,7 @@ class CPTP_Util {
 			$visited[] = $parent->parent;
 			$chain .= CPTP_Util::get_taxonomy_parents_slug( $parent->parent, $taxonomy, $separator, $nicename, $visited );
 		}
-		$chain .= $name.$separator;
+		$chain .= $name . $separator;
 
 		return $chain;
 	}
@@ -119,9 +119,9 @@ class CPTP_Util {
 			$chain .= CPTP_Util::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
 		}
 		if ( $link ) {
-			$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( 'View all posts in %s' ), $parent->name ) ) . '">'.esc_html( $name ).'</a>' .esc_html( $separator );
+			$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( 'View all posts in %s' ), $parent->name ) ) . '">' . esc_html( $name ) . '</a>' . esc_html( $separator );
 		} else {
-			$chain .= $name.$separator;
+			$chain .= $name . $separator;
 		}
 		return $chain;
 	}
@@ -144,10 +144,10 @@ class CPTP_Util {
 			$structure = $pt_object->cptp_permalink_structure;
 		} else {
 
-			$structure = get_option( $pt_object->name.'_structure' );
+			$structure = get_option( $pt_object->name . '_structure' );
 		}
 
-		return apply_filters( 'CPTP_'.$pt_object->name.'_structure', $structure );
+		return apply_filters( 'CPTP_' . $pt_object->name . '_structure', $structure );
 	}
 
 

@@ -39,7 +39,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 
 		if ( isset( $r['taxonomy'] ) && is_array( $r['taxonomy'] ) ) {
 			global $wpdb;
-			$where = $where . " AND $wpdb->term_taxonomy.taxonomy = '".$r['taxonomy']['name']."' AND $wpdb->term_taxonomy.term_id = '".$r['taxonomy']['termid']."'";
+			$where = $where . " AND $wpdb->term_taxonomy.taxonomy = '" . $r['taxonomy']['name'] . "' AND $wpdb->term_taxonomy.term_id = '" . $r['taxonomy']['termid'] . "'";
 		}
 
 		return $where;
@@ -106,7 +106,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			$link = str_replace( $front, '', $link );
 
 			$blog_url = preg_replace( '/https?:\/\//', '', $blog_url );
-			$ret_link = str_replace( $blog_url, $blog_url.'/%link_dir%', $link );
+			$ret_link = str_replace( $blog_url, $blog_url . '/%link_dir%', $link );
 
 			$post_type = get_post_type_object( $this->get_archives_where_r['post_type'] );
 			if ( empty( $c ) ) {    // [steve]
@@ -117,7 +117,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 				}
 			} else {   // [steve]
 				$c['name'] = ( 'category' == $c['name']  && get_option( 'category_base' ) ) ? get_option( 'category_base' ) : $c['name'];
-				$link_dir = $post_type->rewrite['slug'].'/'.$c['name'].'/'.$c['termslug'];
+				$link_dir = $post_type->rewrite['slug'] . '/' . $c['name'] . '/' . $c['termslug'];
 			}
 
 			if ( ! strstr( $link, '/date/' ) ) {
@@ -125,7 +125,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			}
 
 			if ( $post_type->rewrite['with_front'] ) {
-				$link_dir = $front.$link_dir;
+				$link_dir = $front . $link_dir;
 			}
 
 			$ret_link = str_replace( '%link_dir%', $link_dir, $ret_link );
