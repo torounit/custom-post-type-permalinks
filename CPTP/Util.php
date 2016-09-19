@@ -57,10 +57,10 @@ class CPTP_Util {
 	 * @version 1.0
 	 *
 	 * @param int|WP_Term|object $term
-	 * @param string $taxonomy
-	 * @param string $separator
-	 * @param bool $nicename
-	 * @param array $visited
+	 * @param string             $taxonomy
+	 * @param string             $separator
+	 * @param bool               $nicename
+	 * @param array              $visited
 	 *
 	 * @return string
 	 */
@@ -93,11 +93,11 @@ class CPTP_Util {
 	 * @deprecated
 	 *
 	 * @param int|WP_Term|object $term
-	 * @param string $taxonomy
-	 * @param bool $link
-	 * @param string $separator
-	 * @param bool $nicename
-	 * @param array $visited
+	 * @param string             $taxonomy
+	 * @param bool               $link
+	 * @param string             $separator
+	 * @param bool               $nicename
+	 * @param array              $visited
 	 *
 	 * @return string
 	 */

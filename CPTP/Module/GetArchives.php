@@ -57,7 +57,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 	 * @version 1.0
 	 *
 	 * @param string $join
-	 * @param array $r
+	 * @param array  $r
 	 *
 	 * @return string
 	 */

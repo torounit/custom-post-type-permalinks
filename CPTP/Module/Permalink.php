@@ -45,9 +45,9 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 *
 	 * Fix permalinks output.
 	 *
-	 * @param String $post_link
+	 * @param String  $post_link
 	 * @param WP_Post $post
-	 * @param String $leavename for edit.php
+	 * @param String  $leavename for edit.php
 	 *
 	 * @version 2.0
 	 *
