@@ -70,11 +70,11 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 	public function setting_section_callback_function() {
 		?>
-		<p><?php _e( 'The tags you can use are WordPress Structure Tags and <code>%"custom_taxonomy_slug"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).', 'custom-post-type-permalinks' ); ?>
-			<?php _e( '<code>%"custom_taxonomy_slug"%</code> is replaced by the term of taxonomy.', 'custom-post-type-permalinks' ); ?></p>
+		<p><?php echo wp_kses( __( 'The tags you can use are WordPress Structure Tags and <code>%"custom_taxonomy_slug"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).', 'custom-post-type-permalinks' ), array( 'code' => array() ) ); ?>
+			<?php echo wp_kses( __( '<code>%"custom_taxonomy_slug"%</code> is replaced by the term of taxonomy.', 'custom-post-type-permalinks' ), array( 'code' => array() ) ); ?></p>
 
-		<p><?php _e( "Presence of the trailing '/' is unified into a standard permalink structure setting.", 'custom-post-type-permalinks' ); ?>
-		<p><?php _e( 'If <code>has_archive</code> is true, add permalinks for custom post type archive.', 'custom-post-type-permalinks' ); ?></p>
+		<p><?php esc_html_e( "Presence of the trailing '/' is unified into a standard permalink structure setting.", 'custom-post-type-permalinks' ); ?>
+		<p><?php echo wp_kses( __( 'If <code>has_archive</code> is true, add permalinks for custom post type archive.', 'custom-post-type-permalinks' ), array( 'code' => array() ) ); ?></p>
 		<?php
 	}
 
@@ -118,7 +118,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 	public function setting_no_tax_structure_callback_function() {
 		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, get_option( 'no_taxonomy_structure' ), false ) . ' /> ';
 		$txt = __( "If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>.", 'custom-post-type-permalinks' );
-		echo sprintf( $txt, esc_html( home_url() ) );
+		echo sprintf( wp_kses( $txt, array( 'code' => array() ) ), esc_html( home_url() ) );
 	}
 
 

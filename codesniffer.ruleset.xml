@@ -11,8 +11,6 @@
         <exclude name="Generic.Commenting" />
         <exclude name="Generic.Files.LowercasedFilename" />
         <exclude name="WordPress.NamingConventions" />
-        <exclude name="WordPress.XSS.EscapeOutput.UnsafePrintingFunction" />
-        <exclude name="WordPress.XSS.EscapeOutput.OutputNotEscaped" />
     </rule>
 
     <exclude-pattern>*/vendor/*</exclude-pattern>
