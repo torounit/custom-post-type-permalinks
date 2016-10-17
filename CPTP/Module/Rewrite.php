@@ -61,8 +61,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		$permalink = $args->rewrite['slug'] . $permalink;
 		$permalink = str_replace( '%postname%', '%' . $post_type . '%', $permalink );
 
-		add_rewrite_tag( '%' . $post_type . '_slug%', '(' . $args->rewrite['slug'] . ')', 'post_type=' . $post_type . '&slug=' );
-
 		$taxonomies = CPTP_Util::get_taxonomies( true );
 		foreach ( $taxonomies as $taxonomy => $objects ) :
 			$wp_rewrite->add_rewrite_tag( "%$taxonomy%", '(.+?)', "$taxonomy=" );
