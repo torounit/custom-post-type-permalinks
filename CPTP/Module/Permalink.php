@@ -80,6 +80,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
 
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
+		$permalink = str_replace( '%' . $post_type . '_slug%', $pt_object->rewrite['slug'], $permalink );
 
 		// has parent.
 		$parentsDirs = '';
