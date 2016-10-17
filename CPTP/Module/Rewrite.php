@@ -50,14 +50,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			$permalink = CPTP_DEFAULT_PERMALINK;
 		}
 
-		// WPML: attempt to translate the CPT slug
-		$args->rewrite['slug'] = apply_filters(
-			'wpml_translate_single_string',
-			$args->rewrite['slug'],
-			'WordPress',
-			'URL slug: ' . $args->rewrite['slug']
-		);
-
 		$permalink = $args->rewrite['slug'] . $permalink;
 		$permalink = str_replace( '%postname%', '%' . $post_type . '%', $permalink );
 
