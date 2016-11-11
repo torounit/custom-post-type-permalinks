@@ -4,7 +4,7 @@ Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
 Tested up to:      4.6
-Stable tag:        2.1.2
+Stable tag:        2.1.3
 License: GPLv2 or Later
 
 Edit the permalink of custom post type.
@@ -66,6 +66,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+= 2.1.3 =
+
+* Set `no_taxonomy_structure` default true.
 
 = 2.1.2 =
 

@@ -314,7 +314,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $termlink;
 		}
 
-		if ( get_option( 'no_taxonomy_structure' ) ) {
+		if ( get_option( 'no_taxonomy_structure', true ) ) {
 			return $termlink;
 		}
 
