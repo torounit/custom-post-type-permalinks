@@ -117,9 +117,9 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 *
 	 * register_taxonomy_rules
 	 *
-	 * @param string       $taxonomy
+	 * @param string $taxonomy
 	 * @param array|string $object_type
-	 * @param array        $args
+	 * @param array $args
 	 *
 	 * @return void
 	 */
@@ -130,7 +130,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			return;
 		}
 
-		if ( $args['_builtin'] ) {
+		if ( ! empty( $args['_builtin'] ) ) {
 			return;
 		}
 
@@ -213,7 +213,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				),
 				// tax archive.
 				array(
-					'regex' => '%s/(.+?)/?$',
+					'regex'    => '%s/(.+?)/?$',
 					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]",
 				),
 			);
