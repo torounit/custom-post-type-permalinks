@@ -8,15 +8,17 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 
+
 		parent::setUp();
 
+		delete_option( 'no_taxonomy_structure' );
+		add_option( 'no_taxonomy_structure', false );
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		create_initial_taxonomies();
 		update_option( 'page_comments', true );
 		update_option( 'comments_per_page', 5 );
 		update_option( 'posts_per_page', 5 );
-		update_option( 'no_taxonomy_structure', false );
 		$this->post_type = rand_str( 12 );
 		$this->taxonomy = rand_str( 12 );
 

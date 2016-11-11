@@ -13,13 +13,14 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
+		delete_option( 'no_taxonomy_structure' );
+		add_option( 'no_taxonomy_structure', false );
 
 		create_initial_taxonomies();
 
 		update_option( 'page_comments', true );
 		update_option( 'comments_per_page', 5 );
 		update_option( 'posts_per_page', 5 );
-		update_option( 'no_taxonomy_structure', false );
 		$this->post_type = "cpt";
 		$this->taxonomy = "ctax";
 	}
