@@ -129,7 +129,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		/* for 4.7 */
 		$args = (array) $args;
 
-		if ( get_option( 'no_taxonomy_structure', true ) ) {
+		if ( CPTP_Util::get_no_taxonomy_structure() ) {
 			return;
 		}
 

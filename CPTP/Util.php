@@ -176,4 +176,14 @@ class CPTP_Util {
 		return $front;
 
 	}
+
+	/**
+	 * Get Option no_taxonomy_structure.
+	 *
+	 * @since 2.2.0
+	 * @return bool
+	 */
+	public static function get_no_taxonomy_structure() {
+		return ! ! intval( get_option( 'no_taxonomy_structure', true ) );
+	}
 }

@@ -116,7 +116,8 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 
 	public function setting_no_tax_structure_callback_function() {
-		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, get_option( 'no_taxonomy_structure', true ), false ) . ' /> ';
+		$no_taxonomy_structure = CPTP_Util::get_no_taxonomy_structure();
+		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, $no_taxonomy_structure, false ) . ' /> ';
 		$txt = __( "If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>.", 'custom-post-type-permalinks' );
 		echo sprintf( wp_kses( $txt, array( 'code' => array() ) ), esc_html( home_url() ) );
 	}
@@ -148,10 +149,10 @@ class CPTP_Module_Admin extends CPTP_Module {
 				wp_enqueue_script( 'wp-pointer' );
 				wp_enqueue_script( 'custom-post-type-permalinks-pointer', plugins_url( 'assets/settings-pointer.js', CPTP_PLUGIN_FILE ), array( 'wp-pointer' ), CPTP_VERSION );
 
-				wp_localize_script('custom-post-type-permalinks-pointer', 'CPTP_Settings_Pointer', array(
+				wp_localize_script( 'custom-post-type-permalinks-pointer', 'CPTP_Settings_Pointer', array(
 					'content' => $content,
-					'name'   => $pointer_name,
-				));
+					'name'    => $pointer_name,
+				) );
 			}
 		}
 	}
