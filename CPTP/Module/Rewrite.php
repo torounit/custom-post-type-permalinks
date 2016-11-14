@@ -119,7 +119,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 *
 	 * @param string $taxonomy
 	 * @param array|string $object_type
-	 * @param array $args
+	 * @param array|WP_Taxonomy $args
 	 *
 	 * @return void
 	 */
