@@ -127,7 +127,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		global $wp_rewrite;
 
 		/* for 4.7 */
-		$args = (array)$args;
+		$args = (array) $args;
 
 		if ( get_option( 'no_taxonomy_structure', true ) ) {
 			return;
