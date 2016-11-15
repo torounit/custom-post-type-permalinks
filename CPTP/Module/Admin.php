@@ -69,12 +69,17 @@ class CPTP_Module_Admin extends CPTP_Module {
 	}
 
 	public function setting_section_callback_function() {
+		$sptp_link = admin_url( 'plugin-install.php?s=simple-post-type-permalinks&tab=search&type=term' );
+		$sptp_template = __( 'If you need post type permalink only, you should use <a href="%s">Simple Post Type Permalinks</a>.', 'custom-post-type-permalinks' );
 		?>
+		<p><strong><?php echo wp_kses( sprintf( $sptp_template, esc_url( $sptp_link ) ) , array( 'a' => array( 'href' => true ) ) ); ?></strong></p>
+
 		<p><?php echo wp_kses( __( 'The tags you can use are WordPress Structure Tags and <code>%"custom_taxonomy_slug"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).', 'custom-post-type-permalinks' ), array( 'code' => array() ) ); ?>
 			<?php echo wp_kses( __( '<code>%"custom_taxonomy_slug"%</code> is replaced by the term of taxonomy.', 'custom-post-type-permalinks' ), array( 'code' => array() ) ); ?></p>
 
 		<p><?php esc_html_e( "Presence of the trailing '/' is unified into a standard permalink structure setting.", 'custom-post-type-permalinks' ); ?>
 		<p><?php echo wp_kses( __( 'If <code>has_archive</code> is true, add permalinks for custom post type archive.', 'custom-post-type-permalinks' ), array( 'code' => array() ) ); ?></p>
+
 		<?php
 	}
 
