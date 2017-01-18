@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Custom Post Type Permalinks\n"
-"POT-Creation-Date: 2015-05-01 00:21+0300\n"
-"PO-Revision-Date: 2015-05-01 00:58+0300\n"
+"POT-Creation-Date: 2016-12-02 12:16+0300\n"
+"PO-Revision-Date: 2016-12-02 12:16+0300\n"
 "Last-Translator: Nataliya Zavyalova <admin@time-impressions.ru>\n"
 "Language-Team: Nataliya Zavyalova <admin@time-impressions.ru>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.6\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
@@ -20,36 +20,36 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: CPTP/Module/Admin.php:31
+#: CPTP/Module/Admin.php:27
 msgid "Permalink Settings for Custom Post Types"
 msgstr "Настройки структуры ссылок для записей произвольного типа"
 
-#: CPTP/Module/Admin.php:52
+#: CPTP/Module/Admin.php:49
 msgid "Use custom permalink of custom taxonomy archive."
 msgstr "Структура постоянных ссылок для архива таксономии."
 
-#: CPTP/Module/Admin.php:62
+#: CPTP/Module/Admin.php:60
 msgid "Add <code>post_type</code> query for custom taxonomy archive."
 msgstr "Добавить запрос post_type для архива таксономии."
 
-#: CPTP/Module/Admin.php:74
-msgid "The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug\"%"
-msgstr "Настройки постоянных ссылок для записей произвольного типа."
-
-#: CPTP/Module/Admin.php:75
+#: CPTP/Module/Admin.php:73
 msgid ""
-"The tags you can use is WordPress Structure Tags and '%\"custom_taxonomy_slug"
-"\"%'. (e.g. %actors%)"
+"The tags you can use are WordPress Structure Tags and <code>%"
+"\"custom_taxonomy_slug\"%</code> (e.g. <code>%actors%</code> or <code>"
+"%movie_actors%</code>)."
 msgstr ""
-"Вы можете использовать стандартные теги WordPress или <code>"
-"%custom_taxonomy_slug%</code> (например <code>%actors%</code>)."
+"Вы можете использовать теги стандартной структуры ссылок WordPresss и <code>%"
+"\"custom_taxonomy_slug\"%</code> (например <code>%actors%</code> или <code>"
+"%movie_actors%</code>)."
+
+#: CPTP/Module/Admin.php:74
+msgid ""
+"<code>%\"custom_taxonomy_slug\"%</code> is replaced by the term of taxonomy."
+msgstr ""
+"<code>%\"custom_taxonomy_slug\"%</code> будет заменён на соответствующий "
+"термин таксономии."
 
 #: CPTP/Module/Admin.php:76
-msgid "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term."
-msgstr ""
-"(Замените <code>%custom_taxonomy_slug%</code> на ярлык своей таксономии.)"
-
-#: CPTP/Module/Admin.php:78
 msgid ""
 "Presence of the trailing '/' is unified into a standard permalink structure "
 "setting."
@@ -57,7 +57,7 @@ msgstr ""
 "Наличие завершающих слэшей ( / ) в стандартной структуре ссылок является "
 "обязательным."
 
-#: CPTP/Module/Admin.php:79
+#: CPTP/Module/Admin.php:77
 msgid ""
 "If <code>has_archive</code> is true, add permalinks for custom post type "
 "archive."
@@ -66,35 +66,87 @@ msgstr ""
 "сформировать постоянные ссылки для страниц архивов записей произвольного "
 "типа.&nbsp;"
 
-#: CPTP/Module/Admin.php:80
-msgid ""
-"If you don't enter a permalink structure, permalinks will be configured as <code>/%postname%/</code>."
-msgstr ""
-"Если вы оставите поле пустым будет установлено значение по умолчанию <code>/"
-"%postname%/</code>."
-
-#: CPTP/Module/Admin.php:128
+#: CPTP/Module/Admin.php:121
 #, php-format
 msgid ""
-"If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>."
+"If you check this, the custom taxonomy's permalinks will be <code>%s/"
+"post_type/taxonomy/term</code>."
 msgstr ""
 "При выборе произвольная структура URL для таксономии будет <code>%s/"
 "post_type/taxonomy/term</code>."
 
-#: CPTP/Module/Admin.php:135
+#: CPTP/Module/Admin.php:128
 msgid "Custom taxonomy archive also works as post type archive. "
 msgstr ""
 "Архив пользовательской таксономии также работает как архив типа записи.&nbsp;"
 
-#: CPTP/Module/Admin.php:136
+#: CPTP/Module/Admin.php:129
 msgid "There are cases when the template to be loaded is changed."
 msgstr "Бывают случаи, когда изменяется загрузка шаблона."
 
-#: CPTP/Module/Admin.php:163
-msgid ""
-"<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink."
-"php'>Permalinks</a>, set a custom permalink for each post type.</p>"
-msgstr ""
-"<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink."
-"php'>Permalinks</a>, set a custom permalink for each post type.</p>"
+#. Plugin Name of the plugin/theme
+#: CPTP/Module/Admin.php:145
+msgid "Custom Post Type Permalinks"
+msgstr "Custom Post Type Permalinks"
 
+#: CPTP/Module/Admin.php:146
+msgid ""
+"You can setting permalink for post type in <a href=\"options-permalink.php"
+"\">Permalinks</a>."
+msgstr ""
+"Вы можете настроить постоянные ссылки для разных типов записей на странице "
+"<a href=\"options-permalink.php\">Постоянные ссылки</a>."
+
+#: CPTP/Util.php:122
+#, php-format
+msgid "View all posts in %s"
+msgstr "Посмотреть все записи в %s"
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/torounit/custom-post-type-permalinks"
+msgstr "https://github.com/torounit/custom-post-type-permalinks"
+
+#. Description of the plugin/theme
+msgid "Add post archives of custom post type and customizable permalinks."
+msgstr ""
+"Формирование структуры постоянных ссылок для архивных страниц и записей "
+"произвольного  типа."
+
+#. Author of the plugin/theme
+msgid "Toro_Unit"
+msgstr "Toro_Unit"
+
+#. Author URI of the plugin/theme
+msgid "https://torounit.com/"
+msgstr "https://torounit.com/"
+
+#~ msgid ""
+#~ "The tags you can use is WordPress Structure Tags and '%"
+#~ "\"custom_taxonomy_slug\"%"
+#~ msgstr "Настройки постоянных ссылок для записей произвольного типа."
+
+#~ msgid ""
+#~ "The tags you can use is WordPress Structure Tags and '%"
+#~ "\"custom_taxonomy_slug\"%'. (e.g. %actors%)"
+#~ msgstr ""
+#~ "Вы можете использовать стандартные теги WordPress или <code>"
+#~ "%custom_taxonomy_slug%</code> (например <code>%actors%</code>)."
+
+#~ msgid ""
+#~ "<code>%\"custom_taxonomy_slug\"%</code> will replace the taxonomy's term."
+#~ msgstr ""
+#~ "(Замените <code>%custom_taxonomy_slug%</code> на ярлык своей таксономии.)"
+
+#~ msgid ""
+#~ "If you don't enter a permalink structure, permalinks will be configured "
+#~ "as <code>/%postname%/</code>."
+#~ msgstr ""
+#~ "Если вы оставите поле пустым будет установлено значение по умолчанию "
+#~ "<code>/%postname%/</code>."
+
+#~ msgid ""
+#~ "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink."
+#~ "php'>Permalinks</a>, set a custom permalink for each post type.</p>"
+#~ msgstr ""
+#~ "<h3>Custom Post Type Permalinks</h3><p>From <a href='options-permalink."
+#~ "php'>Permalinks</a>, set a custom permalink for each post type.</p>"
