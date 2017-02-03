@@ -13,7 +13,7 @@
 class CPTP_Module_Option extends CPTP_Module {
 
 	public function add_hook() {
-		add_action( 'init', array( $this, 'set_default_option' ), 1 );
+		add_action( 'shutdown', array( $this, 'set_default_option' ), 1 );
 		add_action( 'admin_init', array( $this, 'save_options' ), 30 );
 	}
 

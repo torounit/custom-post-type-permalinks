@@ -13,7 +13,7 @@ class CPTP_Module_Setting extends CPTP_Module {
 	public function add_hook() {
 		$this->update_version();
 		add_action( 'init', array( $this, 'load_textdomain' ) );
-		add_action( 'upgrader_process_complete', array( $this, 'upgrader_process_complete' ) );
+		add_action( 'upgrader_process_complete', array( $this, 'upgrader_process_complete' ), 10, 2 );
 	}
 
 	/**
@@ -29,19 +29,18 @@ class CPTP_Module_Setting extends CPTP_Module {
 	/**
 	 * After update complete.
 	 *
-	 * @since 2.3.0
+	 * @since 3.0.0
 	 *
 	 * @param object $wp_upgrader WP_Upgrader instance.
 	 * @param array $options Extra information about performed upgrade.
 	 */
 	public function upgrader_process_complete( $wp_upgrader, $options ) {
-
-		if ( ! is_array( $options['plugins'] ) ) {
+		if ( ! empty( $options['plugins'] ) && ! is_array( $options['plugins'] ) ) {
 			return;
 		}
 
-		$plugin_path = plugin_basename( CPTP_PLUGIN_FILE );
 		if ( 'update' == $options['action'] && 'plugin' == $options['type'] ) {
+			$plugin_path = plugin_basename( CPTP_PLUGIN_FILE );
 			if ( in_array( $plugin_path, $options['plugins'] ) ) {
 				//for update code.
 				add_option( 'no_taxonomy_structure', false );

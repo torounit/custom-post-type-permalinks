@@ -13,6 +13,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 	public function add_hook() {
 		add_action( 'admin_init', array( $this, 'settings_api_init' ), 30 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_css_js' ) );
+		add_action( 'admin_notices', array( $this, 'admin_notices') );
 	}
 
 
@@ -161,5 +162,19 @@ class CPTP_Module_Admin extends CPTP_Module {
 			}
 		}
 	}
+
+
+	/**
+	 * Admin notice for update permalink settings!
+	 */
+	public function admin_notices() {
+		if( version_compare( get_option( 'cptp_permalink_checked' ), '3.0.0', '<' ) ) {
+			$format = __( '[Custom Post Type Permalinks] <a href="%s"><strong>Please check your permalink settings!</strong></a>', 'custom-post-type-permalinks' );
+			$message = sprintf( $format , admin_url( 'options-permalink.php') );
+			echo sprintf( '<div class="notice notice-warning"><p>%s</p></div>', $message );
+		}
+
+	}
+
 }
 
