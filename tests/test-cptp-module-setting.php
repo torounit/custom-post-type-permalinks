@@ -6,7 +6,6 @@ class CPTP_Module_Setting_Test extends WP_UnitTestCase {
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 		parent::setUp();
-		update_option( 'cptp_version', '0.9.6');
 
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
