@@ -32,7 +32,7 @@ class CPTP_Module_Setting extends CPTP_Module {
 	 * @since 2.3.0
 	 *
 	 * @param object $wp_upgrader WP_Upgrader instance.
-	 * @param array  $options      Extra information about performed upgrade.
+	 * @param array $options Extra information about performed upgrade.
 	 */
 	public function upgrader_process_complete( $wp_upgrader, $options ) {
 
@@ -41,7 +41,7 @@ class CPTP_Module_Setting extends CPTP_Module {
 		}
 
 		$plugin_path = plugin_basename( CPTP_PLUGIN_FILE );
-		if ( $options['action'] == 'update' && $options['type'] == 'plugin' ) {
+		if ( 'update' == $options['action'] && 'plugin' == $options['type'] ) {
 			if ( in_array( $plugin_path, $options['plugins'] ) ) {
 				//for update code.
 				add_option( 'no_taxonomy_structure', false );
