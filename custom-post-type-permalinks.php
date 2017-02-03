@@ -27,7 +27,6 @@ define( 'CPTP_DEFAULT_PERMALINK', '/%postname%/' );
 
 
 /**
- *
  * Autoloader for CPTP.
  *
  * @since 1.0.0
@@ -42,10 +41,14 @@ function cptp_class_loader( $class_name ) {
 
 spl_autoload_register( 'cptp_class_loader' );
 
+/**
+ * CPTP init.
+ */
 function cptp_init() {
-	$custom_post_type_permalinks =  CPTP::get_instance();
+	$custom_post_type_permalinks = CPTP::get_instance();
 	$custom_post_type_permalinks->init();
 }
+
 cptp_init();
 
 /**
