@@ -173,7 +173,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 		if ( version_compare( get_option( 'cptp_permalink_checked' ), '3.0.0', '<' ) ) {
 			$format  = __( '[Custom Post Type Permalinks] <a href="%s"><strong>Please check your permalink settings!</strong></a>', 'custom-post-type-permalinks' );
 			$message = sprintf( $format, admin_url( 'options-permalink.php' ) );
-			echo sprintf( '<div class="notice notice-warning"><p>%s</p></div>', esc_html( $message ) );
+			echo sprintf( '<div class="notice notice-warning"><p>%s</p></div>', wp_kses( $message, wp_kses_allowed_html( 'post' ) ) );
 		}
 
 	}

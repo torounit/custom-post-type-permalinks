@@ -68,8 +68,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 == Changelog ==
 
 = 3.0.0 =
-
+* Admin notice on update plugin.
 * Large bug fix.
+* no_taxonomy_structure bug fix.
+* Add default value for options.
 
 = 2.2.0 =
 

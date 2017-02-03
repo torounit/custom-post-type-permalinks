@@ -73,6 +73,25 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 3.0.0
+
+* Admin notice on update plugin.
+* Large bug fix.
+* no_taxonomy_structure bug fix.
+* Add default value for options.
+
+### 2.2.0
+
+* add `CPTP_Util::get_no_taxonomy_structure`.
+
+### 2.1.3
+
+* Set `no_taxonomy_structure` default true.
+
+### 2.1.2
+
+* `rewirte => false` post type support.
+
 ### 2.1.0
 
 * Create rewrite rule on `registered_post_type` and `registered_taxonomy` action.
