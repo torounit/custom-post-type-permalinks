@@ -13,7 +13,7 @@
 class CPTP_Module_Option extends CPTP_Module {
 
 	public function add_hook() {
-		add_action( 'shutdown', array( $this, 'set_default_option' ), 1 );
+		add_action( 'init', array( $this, 'set_default_option' ), 1 );
 		add_action( 'admin_init', array( $this, 'save_options' ), 30 );
 	}
 
@@ -67,7 +67,7 @@ class CPTP_Module_Option extends CPTP_Module {
 			update_option( $post_type . '_structure', $structure );
 		endforeach;
 
-		update_option( 'no_taxonomy_structure', ! isset( $_POST['no_taxonomy_structure'] ) );
+		update_option( 'no_taxonomy_structure', empty( $_POST['no_taxonomy_structure'] ) );
 		update_option( 'add_post_type_for_tax', isset( $_POST['add_post_type_for_tax'] ) );
 		update_option( 'cptp_permalink_checked', CPTP_VERSION );
 	}
