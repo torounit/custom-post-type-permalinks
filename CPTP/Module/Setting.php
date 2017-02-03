@@ -14,7 +14,7 @@ class CPTP_Module_Setting extends CPTP_Module {
 
 	public function add_hook() {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
-		add_action( 'plugins_loaded', array( $this, 'check_version' ) );
+		$this->check_version();
 	}
 
 	/**
@@ -25,12 +25,7 @@ class CPTP_Module_Setting extends CPTP_Module {
 	 */
 
 	public function check_version() {
-		$version = get_option( 'cptp_version', 0 );
-		if ( false === $version ) {
-			add_option( 'cptp_version', CPTP_VERSION );
-		} else if ( CPTP_VERSION != $version ) {
-			update_option( 'cptp_version', CPTP_VERSION );
-		}
+		update_option( 'cptp_version', CPTP_VERSION );
 	}
 
 
