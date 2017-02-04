@@ -1,5 +1,5 @@
 # Custom Post Type Permalinks
-Donate link:       http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
+Donate link:       https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX
 
 Edit the permalink of custom post type.
 
@@ -24,7 +24,7 @@ And support wp_get_archives( "post_type=foo" ).
 
 [This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
-Donation: Please send [bitcoin](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX) or amazon.co.jp Gift to donate[at]torounit.com.
+Donation: Please send [bitcoin](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX) or [My Wishlist](http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV)
 
 
 ### Translators
