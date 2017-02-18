@@ -128,6 +128,11 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			$categories = get_the_category( $post->ID );
 			if ( $categories ) {
 				usort( $categories, '_usort_terms_by_ID' ); // order by ID
+				if ( function_exists( 'wp_list_sort' ) ) {
+					$categories = wp_list_sort( $categories, 'term_id', 'ASC' );
+				} else {
+					usort( $terms, '_usort_terms_by_ID' );
+				}
 				$category_object = apply_filters( 'post_link_category', $categories[0], $categories, $post );
 				$category_object = get_term( $category_object, 'category' );
 				$category        = $category_object->slug;
