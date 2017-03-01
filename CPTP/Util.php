@@ -173,8 +173,7 @@ class CPTP_Util {
 			$tok_index++;
 		}
 
-		return $front;
-
+		return apply_filters( 'CPTP_date_front', $front, $post_type, $structure );
 	}
 
 	/**
