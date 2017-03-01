@@ -4,7 +4,7 @@ Donate link:       https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNb
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
 Tested up to:      4.7
-Stable tag:        3.0.0
+Stable tag:        3.1.0
 License: GPLv2 or Later
 
 Edit the permalink of custom post type.
@@ -66,6 +66,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+= 3.1.0 =
+* Add filter 'CPTP_date_front'.
+* Fix sort term by `wp_list_sort` .
 
 = 3.0.0 =
 * Admin notice on update plugin.
