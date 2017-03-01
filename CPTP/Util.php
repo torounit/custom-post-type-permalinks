@@ -185,4 +185,35 @@ class CPTP_Util {
 	public static function get_no_taxonomy_structure() {
 		return ! ! intval( get_option( 'no_taxonomy_structure', true ) );
 	}
+
+	/**
+	 * Sort Terms.
+	 *
+	 * @since 3.1.0
+	 * @param WP_Term[] $terms
+	 * @param string|array $orderby
+	 * @param string $order
+	 *
+	 * @return WP_Term[]
+	 */
+	public static function sort_terms( $terms , $orderby = 'term_id', $order = 'ASC' ) {
+
+		if ( function_exists( 'wp_list_sort' ) ) {
+			$terms = wp_list_sort( $terms, 'term_id', 'ASC' );
+		} else {
+
+			if( 'name' == $orderby ) {
+				usort( $terms, '_usort_terms_by_name' );
+			}
+			else {
+				usort( $terms, '_usort_terms_by_ID' );
+			}
+
+			if( 'DESC' == $order ) {
+				$terms = array_reverse( $terms );
+			}
+		}
+
+		return $terms;
+	}
 }
