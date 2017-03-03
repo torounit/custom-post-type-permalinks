@@ -4,7 +4,7 @@ Donate link:       https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNb
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
 Tested up to:      4.7
-Stable tag:        3.1.0
+Stable tag:        3.1.1
 License: GPLv2 or Later
 
 Edit the permalink of custom post type.
