@@ -35,7 +35,12 @@ class CPTP_Module_Setting extends CPTP_Module {
 	 * @param array $options Extra information about performed upgrade.
 	 */
 	public function upgrader_process_complete( $wp_upgrader, $options ) {
-		if ( ! empty( $options['plugins'] ) && ! is_array( $options['plugins'] ) ) {
+
+		if ( empty( $options['plugins'] ) ) {
+			return;
+		}
+
+		if ( ! is_array( $options['plugins'] ) ) {
 			return;
 		}
 
