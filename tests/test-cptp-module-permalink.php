@@ -83,6 +83,12 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
+		$file = DIR_TESTDATA . '/images/canola.jpg';
+		$attachment_id = $this->factory->attachment->create_object( $file, $id, array(
+			'post_mime_type' => 'image/jpeg',
+			'menu_order' => rand( 1, 100 )
+		) );
+
 		do_action('wp_loaded');
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
@@ -96,6 +102,10 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->factory->comment->create_post_comments( $id, 15 );
 		$this->go_to(get_permalink( $id )."comment-page-2" );
 		$this->assertEquals( get_query_var( "cpage"), 2 );
+
+		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
+		$this->go_to( get_attachment_link( $attachment_id ) );
+		$this->assertTrue( is_attachment() );
 
 	}
 
@@ -128,13 +138,18 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
+		$file = DIR_TESTDATA . '/images/canola.jpg';
+		$attachment_id = $this->factory->attachment->create_object( $file, $id, array(
+			'post_mime_type' => 'image/jpeg',
+			'menu_order' => rand( 1, 100 )
+		) );
+
 		do_action('wp_loaded');
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules();
 
 		$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
-
 		$this->go_to( get_permalink( $id ) );
 		$this->assertTrue( is_single() );
 		$this->assertEquals( $this->post_type, get_post_type() );
@@ -142,6 +157,10 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->factory->comment->create_post_comments( $id, 25 );
 		$this->go_to( get_permalink( $id ) . "comment-page-5" );
 		$this->assertEquals( get_query_var( "cpage" ), 5 );
+
+		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
+		$this->go_to( get_attachment_link( $attachment_id ) );
+		$this->assertTrue( is_attachment() );
 	}
 
 
@@ -166,6 +185,12 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
+		$file = DIR_TESTDATA . '/images/canola.jpg';
+		$attachment_id = $this->factory->attachment->create_object( $file, $id, array(
+			'post_mime_type' => 'image/jpeg',
+			'menu_order' => rand( 1, 100 )
+		) );
+
 		$term_id = 0;
 		$slug_list = array();
 		for ($i=0; $i < 4; $i++) {
@@ -187,6 +212,10 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		wp_set_post_terms( $id, $slug_list, $this->taxonomy );
 		$this->assertEquals( $id, url_to_postid( get_permalink( $id ) ) );
 		$this->assertEquals( get_permalink( $id ), $single_term_link );
+
+		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
+		$this->go_to( get_attachment_link( $attachment_id ) );
+		$this->assertTrue( is_attachment() );
 
 	}
 
