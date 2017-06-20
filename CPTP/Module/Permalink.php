@@ -278,15 +278,16 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		$pt_object = get_post_type_object( $post_parent->post_type );
 
-		if ( false === $pt_object->rewrite ) {
+		if ( empty( $pt_object->rewrite ) ) {
 			return $link;
 		}
 
 		$permalink   = CPTP_Util::get_permalink_structure( $post_parent->post_type );
 		$post_type   = get_post_type_object( $post_parent->post_type );
 
-		if ( false == $post_type->_builtin ) {
-			if ( strpos( $permalink, '%postname%' ) < strrpos( $permalink, '%post_id%' ) && false === strrpos( $permalink, 'attachment/' ) ) {
+		if ( empty( $post_type->_builtin ) ) {
+			if ( strpos( $permalink, '%postname%' ) < strrpos( $permalink, '%post_id%' ) && false === strrpos( $link, 'attachment/' ) ) {
+
 				$link = str_replace( $post->post_name, 'attachment/' . $post->post_name, $link );
 			}
 		}
