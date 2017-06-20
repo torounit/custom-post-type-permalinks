@@ -3,8 +3,8 @@ Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
 Donate link:       https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
-Tested up to:      4.7
-Stable tag:        3.1.1
+Tested up to:      4.8
+Stable tag:        3.1.2
 License: GPLv2 or Later
 
 Edit the permalink of custom post type.
