@@ -4,7 +4,7 @@ Donate link:       https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNb
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
 Tested up to:      4.8
-Stable tag:        3.1.2
+Stable tag:        3.1.3
 License: GPLv2 or Later
 
 Edit the permalink of custom post type.
@@ -66,6 +66,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 == Changelog ==
+
+= 3.1.3 =
+* Test for WordPress 4.8.
+* Bug fix for attachment link.
 
 = 3.1.1 =
 * Bug fix in CPTP_Module_Setting::upgrader_process_complete.

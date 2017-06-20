@@ -73,6 +73,20 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 3.1.3
+
+* Test for WordPress 4.8.
+* Bug fix for attachment link.
+
+### 3.1.1
+
+* Bug fix in CPTP_Module_Setting::upgrader_process_complete.
+
+### 3.1.0
+
+* Add filter 'CPTP_date_front'.
+* Fix sort term by `wp_list_sort` .
+
 ### 3.0.0
 
 * Admin notice on update plugin.
