@@ -1,6 +1,7 @@
 ## Customize the test machine
 machine:
-
+  php:
+    version: 7.1
   # Override /etc/hosts
 
   # Add some environment variables
