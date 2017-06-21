@@ -11,7 +11,7 @@ badges = <<"EOS"
 [![Build Status](https://travis-ci.org/torounit/custom-post-type-permalinks.svg)](https://travis-ci.org/torounit/custom-post-type-permalinks)
 [![Donation](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX)
 [![Gratipay](https://img.shields.io/gratipay/team/custom-post-type-permalinks.svg)](https://gratipay.com/Custom-Post-Type-Permalinks/)
-[![](https://torounit.com/wp-content/uploads/2011/11/banner-772x250.png)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png?rev=1044335)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 EOS
 
 string = File.read(txtpath, :encoding => Encoding::UTF_8);
