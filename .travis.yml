@@ -8,11 +8,12 @@ notifications:
     on_failure: change
 
 php:
-  - 5.3
   - 7.1
 
 matrix:
   include:
+    - php: 5.3
+      dist: precise
     - php: 5.3
       env: WP_VERSION=latest WP_MULTISITE=0 WP_PULUGIN_DEPLOY=1
   allow_failures:
