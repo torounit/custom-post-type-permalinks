@@ -7,14 +7,28 @@ notifications:
     on_success: never
     on_failure: change
 
+dist: precise
+
 php:
+  - 5.3
   - 7.1
+
+env:
+  matrix:
+    - WP_VERSION=4.3.6 WP_MULTISITE=0
+    - WP_VERSION=4.3.6 WP_MULTISITE=1
+    - WP_VERSION=4.8 WP_MULTISITE=0
+    - WP_VERSION=4.8 WP_MULTISITE=1
+    - WP_VERSION=trunk WP_MULTISITE=0
+    - WP_VERSION=trunk WP_MULTISITE=1
+
+  global:
+    - SVN_REPO: https://plugins.svn.wordpress.org/custom-post-type-permalinks/
+    - secure: "G6ugr3v6cOwWCh8sDsqn4NfJ74zO68n1xwDmPOjkhMr0jhnwdNcPgQzVA5WXf/8yV5I910UAm3XQrT5CajXgwt2Tcsli67Olu3R8Nqcwh0lqAK5Q4LdD5RoP2Ie2jY/ih4Z56CZEhiuZbG9Qp/YeN8j/kIEDf/y/VwzoX/s3OXI="
+
 
 matrix:
   include:
-    - php: 5.3
-      dist: precise
-    - php: 5.3
       env: WP_VERSION=latest WP_MULTISITE=0 WP_PULUGIN_DEPLOY=1
   allow_failures:
     - env: WP_VERSION=trunk WP_MULTISITE=0
@@ -37,15 +51,3 @@ script:
 
 after_success: curl -L https://raw.githubusercontent.com/miya0001/travis2wpplugin/master/deploy.sh | bash
 
-env:
-  matrix:
-    - WP_VERSION=4.3.6 WP_MULTISITE=0
-    - WP_VERSION=4.3.6 WP_MULTISITE=1
-    - WP_VERSION=4.8 WP_MULTISITE=0
-    - WP_VERSION=4.8 WP_MULTISITE=1
-    - WP_VERSION=trunk WP_MULTISITE=0
-    - WP_VERSION=trunk WP_MULTISITE=1
-
-  global:
-    - SVN_REPO: https://plugins.svn.wordpress.org/custom-post-type-permalinks/
-    - secure: "G6ugr3v6cOwWCh8sDsqn4NfJ74zO68n1xwDmPOjkhMr0jhnwdNcPgQzVA5WXf/8yV5I910UAm3XQrT5CajXgwt2Tcsli67Olu3R8Nqcwh0lqAK5Q4LdD5RoP2Ie2jY/ih4Z56CZEhiuZbG9Qp/YeN8j/kIEDf/y/VwzoX/s3OXI="
