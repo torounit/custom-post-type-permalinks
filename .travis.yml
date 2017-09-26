@@ -39,6 +39,7 @@ before_script:
   - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/composer /usr/local/bin/
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
+      docker exec wpenv composer global remove "phpunit/phpunit"
       if [[ ${PHP_VERSION:0:2} == "5." ]]; then
         docker exec wpenv composer global require "phpunit/phpunit=4.8.*"
       else
