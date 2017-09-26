@@ -11,18 +11,12 @@ notifications:
 
 env:
   matrix:
-    - PHP_VERSION=5.3 WP_VERSION=4.3.6 WP_MULTISITE=0
-    - PHP_VERSION=5.3 WP_VERSION=4.3.6 WP_MULTISITE=1
-    - PHP_VERSION=5.3 WP_VERSION=4.8 WP_MULTISITE=0
-    - PHP_VERSION=5.3 WP_VERSION=4.8 WP_MULTISITE=1
-    - PHP_VERSION=5.3 WP_VERSION=trunk WP_MULTISITE=0
-    - PHP_VERSION=5.3 WP_VERSION=trunk WP_MULTISITE=1
-    - PHP_VERSION=7.1 WP_VERSION=4.3.6 WP_MULTISITE=0
-    - PHP_VERSION=7.1 WP_VERSION=4.3.6 WP_MULTISITE=1
-    - PHP_VERSION=7.1 WP_VERSION=4.8 WP_MULTISITE=0
-    - PHP_VERSION=7.1 WP_VERSION=4.8 WP_MULTISITE=1
-    - PHP_VERSION=7.1 WP_VERSION=trunk WP_MULTISITE=0
-    - PHP_VERSION=7.1 WP_VERSION=trunk WP_MULTISITE=1
+    - PHP_VERSION=5.3 WP_VERSION=4.3.6
+    - PHP_VERSION=5.3 WP_VERSION=latest
+    - PHP_VERSION=5.3 WP_VERSION=trunk
+    - PHP_VERSION=7.1 WP_VERSION=4.3.6
+    - PHP_VERSION=7.1 WP_VERSION=latest
+    - PHP_VERSION=7.1 WP_VERSION=trunk
 
   global:
     - SVN_REPO: https://plugins.svn.wordpress.org/custom-post-type-permalinks/
@@ -31,21 +25,31 @@ env:
 
 matrix:
   include:
-      env: PHP_VERSION=5.3 WP_VERSION=latest WP_MULTISITE=0 WP_PULUGIN_DEPLOY=1
+      env: PHP_VERSION=5.3 WP_VERSION=latest WP_PULUGIN_DEPLOY=1
   allow_failures:
-    - env: PHP_VERSION=5.3 WP_VERSION=trunk WP_MULTISITE=0
-    - env: PHP_VERSION=5.3 WP_VERSION=trunk WP_MULTISITE=1
-    - env: PHP_VERSION=7.1 WP_VERSION=trunk WP_MULTISITE=0
-    - env: PHP_VERSION=7.1 WP_VERSION=trunk WP_MULTISITE=1
+    - env: PHP_VERSION=5.3 WP_VERSION=trunk
+    - env: PHP_VERSION=7.1 WP_VERSION=trunk
 
 before_script:
   - curl -L https://raw.githubusercontent.com/miya0001/wpenv/master/run.sh | bash -s $PHP_VERSION $WP_VERSION
-  - docker exec -it -u root wpenv bash -c "ln -s /home/ubuntu/.phpenv/shims/php /usr/local/bin/"
-  - docker exec -it -u $(id -u) wpenv bash -c "/home/ubuntu/.phpenv/shims/composer install"
+  - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/php /usr/local/bin/
+  - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/composer /usr/local/bin/
+  - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/phpunit /usr/local/bin/
+  - |
+    if [[ ! -z "$WP_VERSION" ]] ; then
+      if [[ ${PHP_VERSION:0:2} == "5." ]]; then
+        docker exec -it wpenv composer global require "phpunit/phpunit=4.8.*"
+      else
+        docker exec -it composer global require "phpunit/phpunit=5.7.*"
+      fi
+    fi
+  - |
+  - docker exec -it -u $(id -u) wpenv bash -c "composer install"
 
 script:
-  - docker exec -it -u $(id -u) wpenv bash -c "/home/ubuntu/.phpenv/shims/composer phpcs"
-  - docker exec -u ubuntu wpenv bash -c "/home/ubuntu/.phpenv/shims/phpunit"
+  - docker exec -it -u $(id -u) wpenv bash -c "composer phpcs"
+  - docker exec wpenv bash -c "phpunit"
+  - docker exec wpenv bash -c "WP_MULTISITE=1 phpunit"
 
 after_success: curl -L https://raw.githubusercontent.com/miya0001/travis2wpplugin/master/deploy.sh | bash
 
