@@ -1,5 +1,8 @@
 language: php
 
+php:
+  - 7.1.9
+
 services:
   - docker
 
@@ -7,10 +10,6 @@ cache:
   directories:
     - vendor
     - $HOME/.composer/cache
-
-
-php:
-  - 7.1
 
 notifications:
   email:
@@ -48,7 +47,7 @@ before_script:
   - docker exec -u root wpenv ln -s /home/ubuntu/.phpenv/shims/phpunit /usr/local/bin/
 
 script:
-  - docker exec -u $(id -u) wpenv composer phpcs
+  - docker exec wpenv composer phpcs
   - docker exec wpenv phpunit
   - docker exec -e WP_MULTISITE=1 wpenv phpunit
 

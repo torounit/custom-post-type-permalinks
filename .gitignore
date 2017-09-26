@@ -1,3 +1,10 @@
 .svn
+.DS_Store
+Thumbs.db
+wp-cli.local.yml
+node_modules/
+vendor/
+*.sql
+*.tar.gz
+*.zip
 
-/vendor/
