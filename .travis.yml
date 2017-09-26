@@ -45,7 +45,7 @@ before_script:
 
 script:
   - docker exec -it -u $(id -u) wpenv bash -c "/home/ubuntu/.phpenv/shims/composer phpcs"
-  - docker exec -it -u ubuntu wpenv bash -c "/home/ubuntu/.phpenv/shims/phpunit"
+  - docker exec -u ubuntu wpenv bash -c "/home/ubuntu/.phpenv/shims/phpunit"
 
 after_success: curl -L https://raw.githubusercontent.com/miya0001/travis2wpplugin/master/deploy.sh | bash
 
