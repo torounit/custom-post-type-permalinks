@@ -39,14 +39,11 @@ matrix:
 
 before_script:
   - curl -L https://raw.githubusercontent.com/miya0001/wpenv/master/run.sh | bash -s $PHP_VERSION $WP_VERSION
-  - docker exec -it wpenv bash -c "whoami"
-  - docker exec -it wpenv bash -c "id ubuntu"
-  - docker exec -it wpenv bash -c "ls -la"
-  - docker exec -it wpenv bash -c "/home/ubuntu/.phpenv/shims/composer install"
+  - docker exec -it -u ubuntu wpenv bash -c "/home/ubuntu/.phpenv/shims/composer install"
 
 script:
-  - docker exec -it wpenv bash -c "/home/ubuntu/.phpenv/shims/composer phpcs"
-  - docker exec -it wpenv bash -c "/home/ubuntu/.phpenv/shims/phpunit"
+  - docker exec -it -u ubuntu wpenv bash -c "/home/ubuntu/.phpenv/shims/composer phpcs"
+  - docker exec -it -u ubuntu wpenv bash -c "/home/ubuntu/.phpenv/shims/phpunit"
 
 after_success: curl -L https://raw.githubusercontent.com/miya0001/travis2wpplugin/master/deploy.sh | bash
 
