@@ -1,6 +1,7 @@
 language: php
 
-sudo: false
+services:
+  - docker
 
 notifications:
   email:
