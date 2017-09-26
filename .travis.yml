@@ -3,6 +3,12 @@ language: php
 services:
   - docker
 
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+
 php:
   - 7.1
 
@@ -13,21 +19,22 @@ notifications:
 
 matrix:
   include:
-      env: PHP_VERSION=5.3 WP_VERSION=4.3.6
-      env: PHP_VERSION=5.3 WP_VERSION=latest WP_PULUGIN_DEPLOY=1
-      env: PHP_VERSION=5.3 WP_VERSION=trunk
-      env: PHP_VERSION=7.1 WP_VERSION=4.3.6
-      env: PHP_VERSION=7.1 WP_VERSION=latest
-      env: PHP_VERSION=7.1 WP_VERSION=trunk
+    - env: PHP_VERSION=5.3 WP_VERSION=4.3.12
+    - env: PHP_VERSION=5.3 WP_VERSION=latest WP_PULUGIN_DEPLOY=1
+    - env: PHP_VERSION=5.3 WP_VERSION=trunk
+    - env: PHP_VERSION=7.1 WP_VERSION=4.3.12
+    - env: PHP_VERSION=7.1 WP_VERSION=latest
+    - env: PHP_VERSION=7.1 WP_VERSION=trunk
 
   allow_failures:
     - env: PHP_VERSION=5.3 WP_VERSION=trunk
     - env: PHP_VERSION=7.1 WP_VERSION=trunk
 
 before_script:
+  - composer install
   - curl -L https://raw.githubusercontent.com/torounit/wpenv/issue/support-nightly/run.sh | bash -s $PHP_VERSION $WP_VERSION
-  - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/php /usr/local/bin/
-  - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/composer /usr/local/bin/
+  - docker exec -u root wpenv ln -s /home/ubuntu/.phpenv/shims/php /usr/local/bin/
+  - docker exec -u root wpenv ln -s /home/ubuntu/.phpenv/shims/composer /usr/local/bin/
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
       docker exec wpenv composer global remove "phpunit/phpunit"
@@ -38,11 +45,10 @@ before_script:
       fi
     fi
   - |
-  - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/phpunit /usr/local/bin/
-  - docker exec -it -u $(id -u) wpenv composer install
+  - docker exec -u root wpenv ln -s /home/ubuntu/.phpenv/shims/phpunit /usr/local/bin/
 
 script:
-  - docker exec -it -u $(id -u) wpenv composer phpcs
+  - docker exec -u $(id -u) wpenv composer phpcs
   - docker exec wpenv phpunit
   - docker exec -e WP_MULTISITE=1 wpenv phpunit
 

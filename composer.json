@@ -15,13 +15,8 @@
         "wp-coding-standards/wpcs": "^0.10"
     },
     "scripts": {
-        "post-install-cmd": [
-            "@php vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs/"
-        ],
-        "post-update-cmd": [
-            "@php vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs/"
-        ],
         "phpcs": [
+            "@php vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs/",
             "@php vendor/bin/phpcs -p -s -v -n . --standard=./codesniffer.ruleset.xml --extensions=php"
         ]
     }
