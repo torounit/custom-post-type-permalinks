@@ -11,24 +11,15 @@ notifications:
     on_success: never
     on_failure: change
 
-
-env:
-  matrix:
-    - PHP_VERSION=5.3 WP_VERSION=4.3.6
-    - PHP_VERSION=5.3 WP_VERSION=latest
-    - PHP_VERSION=5.3 WP_VERSION=trunk
-    - PHP_VERSION=7.1 WP_VERSION=4.3.6
-    - PHP_VERSION=7.1 WP_VERSION=latest
-    - PHP_VERSION=7.1 WP_VERSION=trunk
-
-  global:
-    - SVN_REPO: https://plugins.svn.wordpress.org/custom-post-type-permalinks/
-    - secure: "G6ugr3v6cOwWCh8sDsqn4NfJ74zO68n1xwDmPOjkhMr0jhnwdNcPgQzVA5WXf/8yV5I910UAm3XQrT5CajXgwt2Tcsli67Olu3R8Nqcwh0lqAK5Q4LdD5RoP2Ie2jY/ih4Z56CZEhiuZbG9Qp/YeN8j/kIEDf/y/VwzoX/s3OXI="
-
-
 matrix:
   include:
+      env: PHP_VERSION=5.3 WP_VERSION=4.3.6
       env: PHP_VERSION=5.3 WP_VERSION=latest WP_PULUGIN_DEPLOY=1
+      env: PHP_VERSION=5.3 WP_VERSION=trunk
+      env: PHP_VERSION=7.1 WP_VERSION=4.3.6
+      env: PHP_VERSION=7.1 WP_VERSION=latest
+      env: PHP_VERSION=7.1 WP_VERSION=trunk
+
   allow_failures:
     - env: PHP_VERSION=5.3 WP_VERSION=trunk
     - env: PHP_VERSION=7.1 WP_VERSION=trunk
