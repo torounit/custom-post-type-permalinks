@@ -40,6 +40,7 @@ matrix:
 
 before_script:
   - curl -L https://raw.githubusercontent.com/miya0001/wpenv/master/run.sh | bash -s $PHP_VERSION $WP_VERSION
+  - docker exec -it -u root wpenv bash -c "ln -s /home/ubuntu/.phpenv/shims/php /usr/local/bin/"
   - docker exec -it -u $(id -u) wpenv bash -c "/home/ubuntu/.phpenv/shims/composer install"
 
 script:
