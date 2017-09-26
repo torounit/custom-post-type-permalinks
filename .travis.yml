@@ -3,6 +3,9 @@ language: php
 services:
   - docker
 
+php:
+  - 7.1
+
 notifications:
   email:
     on_success: never
@@ -31,25 +34,25 @@ matrix:
     - env: PHP_VERSION=7.1 WP_VERSION=trunk
 
 before_script:
-  - curl -L https://raw.githubusercontent.com/miya0001/wpenv/master/run.sh | bash -s $PHP_VERSION $WP_VERSION
+  - curl -L https://raw.githubusercontent.com/torounit/wpenv/issue/support-nightly/run.sh | bash -s $PHP_VERSION $WP_VERSION
   - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/php /usr/local/bin/
   - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/composer /usr/local/bin/
-  - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/phpunit /usr/local/bin/
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
       if [[ ${PHP_VERSION:0:2} == "5." ]]; then
-        docker exec -it wpenv composer global require "phpunit/phpunit=4.8.*"
+        docker exec wpenv composer global require "phpunit/phpunit=4.8.*"
       else
-        docker exec -it composer global require "phpunit/phpunit=5.7.*"
+        docker exec wpenv composer global require "phpunit/phpunit=5.7.*"
       fi
     fi
   - |
-  - docker exec -it -u $(id -u) wpenv bash -c "composer install"
+  - docker exec -it -u root wpenv ln -s /home/ubuntu/.phpenv/shims/phpunit /usr/local/bin/
+  - docker exec -it -u $(id -u) wpenv composer install
 
 script:
-  - docker exec -it -u $(id -u) wpenv bash -c "composer phpcs"
-  - docker exec wpenv bash -c "phpunit"
-  - docker exec wpenv bash -c "WP_MULTISITE=1 phpunit"
+  - docker exec -it -u $(id -u) wpenv composer phpcs
+  - docker exec wpenv phpunit
+  - docker exec -e WP_MULTISITE=1 wpenv phpunit
 
 after_success: curl -L https://raw.githubusercontent.com/miya0001/travis2wpplugin/master/deploy.sh | bash
 
