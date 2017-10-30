@@ -1,19 +1,36 @@
 <?php
+/**
+ * Abstract Module.
+ *
+ * @package Custom_Post_Type_Permalinks
+ */
 
+/**
+ * Class CPTP_Module
+ */
 abstract class CPTP_Module {
 
+	/**
+	 * Entry point.
+	 */
 	final public function init() {
 		$this->register();
 	}
 
+	/**
+	 * Register hook on CPTP_init.
+	 */
 	public function register() {
 		add_action( 'CPTP_init', array( $this, 'add_hook' ) );
 	}
 
+	/**
+	 * Module hook point.
+	 */
 	abstract function add_hook();
 
 	/**
-	 * uninstall hooks
+	 * Uninstall hooks
 	 *
 	 * @static
 	 */
@@ -21,7 +38,7 @@ abstract class CPTP_Module {
 	}
 
 	/**
-	 * fire on activate
+	 * Fire on activate
 	 */
 	public function activation_hook() {
 	}

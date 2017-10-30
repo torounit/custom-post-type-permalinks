@@ -1,42 +1,47 @@
 <?php
-
-
 /**
- *
  * Add Rewrite Rules
  *
  * @package Custom_Post_Type_Permalinks
+ */
+
+/**
+ * Add CPTP_Module_Rewrite Rules
+ *
  * @version 1.0.3
  * @since 0.9.4
  * */
 class CPTP_Module_Rewrite extends CPTP_Module {
 
-
+	/**
+	 * Add Actions.
+	 */
 	public function add_hook() {
 		add_action( 'parse_request', array( $this, 'parse_request' ) );
 		add_action( 'registered_post_type', array( $this, 'register_post_type_rules' ), 10, 2 );
 		add_action( 'registered_taxonomy', array( $this, 'register_taxonomy_rules' ), 10, 3 );
 	}
 
-
 	/**
-	 *
-	 * register_post_type_rules
-	 *  ** add rewrite tag for Custom Post Type.
+	 * Register_post_type_rules
+	 * add rewrite tag for Custom Post Type.
 	 *
 	 * @version 1.1
 	 * @since 0.9
 	 *
-	 * @param string $post_type
-	 * @param object $args
+	 * @param string       $post_type        Post type.
+	 * @param WP_Post_Type $args Arguments used to register the post type.
 	 */
-
 	public function register_post_type_rules( $post_type, $args ) {
 
-		/** @var WP_Rewrite $wp_rewrite */
+		/**
+		 * WP_Rewrite.
+		 *
+		 * @var WP_Rewrite $wp_rewrite
+		 */
 		global $wp_rewrite;
 
-		if ( $args->_builtin or ! $args->publicly_queryable ) {
+		if ( $args->_builtin || ! $args->publicly_queryable ) {
 			return;
 		}
 
@@ -62,7 +67,9 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 		$rewrite_args = $args->rewrite;
 		if ( ! is_array( $rewrite_args ) ) {
-			$rewrite_args = array( 'with_front' => $args->rewrite );
+			$rewrite_args = array(
+				'with_front' => $args->rewrite,
+			);
 		}
 
 		$slug = $args->rewrite['slug'];
@@ -92,7 +99,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			add_rewrite_rule( $slug . '/author/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?author_name=$matches[1]&paged=$matches[2]&post_type=' . $post_type, 'top' );
 			add_rewrite_rule( $slug . '/author/([^/]+)/?$', 'index.php?author_name=$matches[1]&post_type=' . $post_type, 'top' );
 
-			if ( in_array( 'category', $args->taxonomies ) ) {
+			if ( in_array( 'category', $args->taxonomies, true ) ) {
 
 				$category_base = get_option( 'category_base' );
 				if ( ! $category_base ) {
@@ -114,12 +121,11 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 
 	/**
+	 * Register_taxonomy_rules
 	 *
-	 * register_taxonomy_rules
-	 *
-	 * @param string $taxonomy
-	 * @param array|string $object_type
-	 * @param array|WP_Taxonomy $args
+	 * @param string       $taxonomy        Taxonomy slug.
+	 * @param array|string $object_type     Object type or array of object types.
+	 * @param array        $args            Array of taxonomy registration arguments.
 	 *
 	 * @return void
 	 */
@@ -158,11 +164,12 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				$slug = substr( $wp_rewrite->front, 1 ) . $slug;
 			}
 
-			if ( 'category' == $taxonomy ) {
-				$taxonomy_slug = ( $cb = get_option( 'category_base' ) ) ? $cb : $taxonomy;
+			if ( 'category' === $taxonomy ) {
+				$cb = get_option( 'category_base' );
+				$taxonomy_slug = ( $cb ) ? $cb : $taxonomy;
 				$taxonomy_key  = 'category_name';
 			} else {
-				// Edit by [Xiphe]
+				// Edit by [Xiphe].
 				if ( isset( $args['rewrite']['slug'] ) ) {
 					$taxonomy_slug = $args['rewrite']['slug'];
 				} else {
@@ -182,7 +189,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 					'regex'    => '%s/(.+?)/(feed|rdf|rss|rss2|atom)/?$',
 					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&feed=\$matches[2]",
 				),
-				// year
+				// year.
 				array(
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/?$',
 					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]",
@@ -191,7 +198,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/page/?([0-9]{1,})/?$',
 					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&paged=\$matches[3]",
 				),
-				// monthnum
+				// monthnum.
 				array(
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/?$',
 					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]",
@@ -200,7 +207,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/page/?([0-9]{1,})/?$',
 					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&paged=\$matches[4]",
 				),
-				// day
+				// day.
 				array(
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/?$',
 					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&day=\$matches[4]",
@@ -209,7 +216,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 					'regex'    => '%s/(.+?)/date/([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})/page/?([0-9]{1,})/?$',
 					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&year=\$matches[2]&monthnum=\$matches[3]&day=\$matches[4]&paged=\$matches[5]",
 				),
-				// paging
+				// paging.
 				array(
 					'regex'    => '%s/(.+?)/page/?([0-9]{1,})/?$',
 					'redirect' => "index.php?{$taxonomy_key}=\$matches[1]&paged=\$matches[2]",
@@ -254,12 +261,12 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 *
 	 * @since 0.9.3
 	 *
-	 * @param WP $obj
+	 * @param WP $obj WP instance.
 	 */
 	public function parse_request( $obj ) {
 		$taxes = CPTP_Util::get_taxonomies();
 		foreach ( $taxes as $key => $tax ) {
-			if ( isset( $obj->query_vars[ $tax ] ) and is_string( $obj->query_vars[ $tax ] ) ) {
+			if ( isset( $obj->query_vars[ $tax ] ) && is_string( $obj->query_vars[ $tax ] ) ) {
 				if ( false !== strpos( $obj->query_vars[ $tax ], '/' ) ) {
 					$query_vars = explode( '/', $obj->query_vars[ $tax ] );
 					if ( is_array( $query_vars ) ) {

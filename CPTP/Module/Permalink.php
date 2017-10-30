@@ -1,13 +1,13 @@
 <?php
-
-
 /**
- *
- * CPTP_Permalink
- *
- * Override Permalinks
+ * Override Output Permalinks
  *
  * @package Custom_Post_Type_Permalinks
+ */
+
+/**
+ * CPTP_Module_Permalink
+ *
  * @since 0.9.4
  * */
 class CPTP_Module_Permalink extends CPTP_Module {
@@ -45,28 +45,32 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 *
 	 * Fix permalinks output.
 	 *
-	 * @param String  $post_link
-	 * @param WP_Post $post
-	 * @param String  $leavename for edit.php
+	 * @param String  $post_link link url.
+	 * @param WP_Post $post post object.
+	 * @param String  $leavename for edit.php.
 	 *
 	 * @version 2.0
 	 *
 	 * @return string
 	 */
 	public function post_type_link( $post_link, $post, $leavename ) {
-		global /** @var WP_Rewrite $wp_rewrite */
-		$wp_rewrite;
+		/**
+		 * WP_Rewrite.
+		 *
+		 * @var WP_Rewrite $wp_rewrite
+		 */
+		global $wp_rewrite;
 
 		if ( ! $wp_rewrite->permalink_structure ) {
 			return $post_link;
 		}
 
 		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array(
-				'draft',
-				'pending',
-				'auto-draft',
-		) );
-		if ( $draft_or_pending and ! $leavename ) {
+			'draft',
+			'pending',
+			'auto-draft',
+		), true );
+		if ( $draft_or_pending && ! $leavename ) {
 			return $post_link;
 		}
 
@@ -101,7 +105,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		// %post_id%/attachment/%attachement_name%;
-		if ( isset( $_GET['post'] ) && $_GET['post'] != $post->ID ) {
+		if ( filter_input( INPUT_GET, 'post' ) !== $post->ID ) {
 			$parent_structure = trim( CPTP_Util::get_permalink_structure( $post->post_type ), '/' );
 			$parent_dirs      = explode( '/', $parent_structure );
 			if ( is_array( $parent_dirs ) ) {
@@ -110,7 +114,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 				$last_dir = $parent_dirs;
 			}
 
-			if ( '%post_id%' == $parent_structure or '%post_id%' == $last_dir ) {
+			if ( '%post_id%' === $parent_structure || '%post_id%' === $last_dir ) {
 				$permalink = $permalink . '/attachment/';
 			}
 		}
@@ -132,12 +136,13 @@ class CPTP_Module_Permalink extends CPTP_Module {
 				$category_object = apply_filters( 'post_link_category', $categories[0], $categories, $post );
 				$category_object = get_term( $category_object, 'category' );
 				$category        = $category_object->slug;
-				if ( $parent = $category_object->parent ) {
+				if ( $category_object->parent ) {
+					$parent = $category_object->parent;
 					$category = get_category_parents( $parent, false, '/', true ) . $category;
 				}
 			}
 			// show default category in permalinks, without
-			// having to assign it explicitly
+			// having to assign it explicitly.
 			if ( empty( $category ) ) {
 				$default_category = get_term( get_option( 'default_category' ), 'category' );
 				$category         = is_wp_error( $default_category ) ? '' : $default_category->slug;
@@ -181,11 +186,10 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 
 	/**
+	 * Create %tax% -> term
 	 *
-	 * create %tax% -> term
-	 *
-	 * @param int    $post_id
-	 * @param string $permalink
+	 * @param int    $post_id  post id.
+	 * @param string $permalink permalink uri.
 	 *
 	 * @return array
 	 */
@@ -202,20 +206,19 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			if ( false !== strpos( $permalink, '%' . $taxonomy . '%' ) ) {
 				$terms = get_the_terms( $post_id, $taxonomy );
 
-				if ( $terms and ! is_wp_error( $terms ) ) {
-					$parents  = array_map( array( __CLASS__, 'get_term_parent' ), $terms ); // 親の一覧
+				if ( $terms && ! is_wp_error( $terms ) ) {
+					$parents  = array_map( array( __CLASS__, 'get_term_parent' ), $terms );
 					$newTerms = array();
 					foreach ( $terms as $key => $term ) {
-						if ( ! in_array( $term->term_id, $parents ) ) {
+						if ( ! in_array( $term->term_id, $parents , true ) ) {
 							$newTerms[] = $term;
 						}
 					}
 
-					// このブロックだけで良いはず。
-					$term_obj  = reset( $newTerms ); // 最初のOBjectのみを対象。
+					$term_obj  = reset( $newTerms );
 					$term_slug = $term_obj->slug;
 
-					if ( isset( $term_obj->parent ) and 0 != $term_obj->parent ) {
+					if ( isset( $term_obj->parent ) && $term_obj->parent ) {
 						$term_slug = CPTP_Util::get_taxonomy_parents_slug( $term_obj->parent, $taxonomy, '/', true ) . $term_slug;
 					}
 				}
@@ -227,39 +230,43 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			}
 		}
 
-		return array( 'search' => $search, 'replace' => $replace );
+		return array(
+			'search' => $search,
+			'replace' => $replace,
+		);
 	}
 
 	/**
+	 * Get parent from term Object
 	 *
-	 * get parent from term Object
-	 *
-	 * @param WP_Term|stdClass $term
+	 * @param WP_Term $term Term Object.
 	 *
 	 * @return mixed
 	 */
 	private static function get_term_parent( $term ) {
-		if ( isset( $term->parent ) and $term->parent > 0 ) {
+		if ( isset( $term->parent ) && $term->parent > 0 ) {
 			return $term->parent;
 		}
 	}
 
 
 	/**
-	 *
-	 * fix attachment output
+	 * Fix attachment output
 	 *
 	 * @version 1.0
 	 * @since 0.8.2
 	 *
-	 * @param string $link
-	 * @param int    $post_id
+	 * @param string $link permalink URI.
+	 * @param int    $post_id Post ID.
 	 *
 	 * @return string
 	 */
-
 	public function attachment_link( $link, $post_id ) {
-		/** @var WP_Rewrite $wp_rewrite */
+		/**
+		 * WP_Rewrite.
+		 *
+		 * @var WP_Rewrite $wp_rewrite
+		 */
 		global $wp_rewrite;
 
 		if ( ! $wp_rewrite->permalink_structure ) {
@@ -296,20 +303,23 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	}
 
 	/**
-	 *
 	 * Fix taxonomy link outputs.
 	 *
 	 * @since 0.6
 	 * @version 1.0
 	 *
-	 * @param string $termlink
-	 * @param Object $term
-	 * @param Object $taxonomy
+	 * @param string $termlink link URI.
+	 * @param Object $term Term Object.
+	 * @param Object $taxonomy Taxonomy Object.
 	 *
 	 * @return string
 	 */
 	public function term_link( $termlink, $term, $taxonomy ) {
-		/** @var WP_Rewrite $wp_rewrite */
+		/**
+		 * WP_Rewrite.
+		 *
+		 * @var WP_Rewrite $wp_rewrite
+		 */
 		global $wp_rewrite;
 
 		if ( ! $wp_rewrite->permalink_structure ) {
@@ -331,7 +341,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		$wp_home = rtrim( home_url(), '/' );
 
-		if ( in_array( get_post_type(), $taxonomy->object_type ) ) {
+		if ( in_array( get_post_type(), $taxonomy->object_type, true ) ) {
 			$post_type = get_post_type();
 		} else {
 			$post_type = $taxonomy->object_type[0];

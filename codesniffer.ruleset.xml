@@ -6,9 +6,7 @@
     <rule ref="WordPress">
         <exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact" />
         <exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
-        <exclude name="WordPress.VIP" />
-        <exclude name="Squiz.Commenting" />
-        <exclude name="Generic.Commenting" />
+        <exclude name="WordPress.VIP.RestrictedFunctions" />
         <exclude name="Generic.Files.LowercasedFilename" />
         <exclude name="WordPress.NamingConventions" />
     </rule>

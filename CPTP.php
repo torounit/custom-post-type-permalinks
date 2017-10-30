@@ -1,20 +1,34 @@
 <?php
+/**
+ * CPTP core.
+ *
+ * @package Custom_Post_Type_Permalinks
+ */
 
 /**
  * CPTP
  *
- * Facade.
- *
- * @package Custom_Post_Type_Permalinks
  * @since 0.9.4
  * */
 class CPTP {
 
+	/**
+	 * CPTP instance.
+	 *
+	 * @var CPTP
+	 */
 	private static $_instance;
 
-	/** @var  CPTP_Module[] */
+	/**
+	 * Module instances.
+	 *
+	 * @var  CPTP_Module[]
+	 */
 	public $modules;
 
+	/**
+	 * CPTP constructor.
+	 */
 	private function __construct() {
 		$this->load_modules();
 	}
@@ -39,7 +53,7 @@ class CPTP {
 	}
 
 	/**
-	 * initialize modules.
+	 * Initialize modules.
 	 *
 	 * @since 2.0.0
 	 */
@@ -52,12 +66,12 @@ class CPTP {
 	}
 
 	/**
-	 * set module.
+	 * Set module instance.
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param $name
-	 * @param CPTP_Module $module
+	 * @param String      $name Module Name.
+	 * @param CPTP_Module $module Module instance.
 	 */
 	public function set_module( $name, CPTP_Module $module ) {
 
@@ -65,7 +79,7 @@ class CPTP {
 	}
 
 	/**
-	 * init
+	 * Init
 	 *
 	 * Fire Module::add_hook
 	 *
@@ -84,7 +98,7 @@ class CPTP {
 	public static function get_instance() {
 
 		if ( ! isset( self::$_instance ) ) {
-			self::$_instance = new CPTP;
+			self::$_instance = new CPTP();
 		}
 
 		return self::$_instance;
@@ -92,7 +106,6 @@ class CPTP {
 
 
 	/**
-	 *
 	 * Activation Hooks
 	 * This function will browse initialized modules and execute their activation_hook methods.
 	 * It will also set the uninstall_hook to the cptp_uninstall function which behaves the same way as this one.
@@ -108,7 +121,6 @@ class CPTP {
 	}
 
 	/**
-	 *
 	 * Uninstall Hooks
 	 * This function will browse initialized modules and execute their uninstall_hook methods.
 	 *

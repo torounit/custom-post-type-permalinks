@@ -38,6 +38,8 @@ define( 'CPTP_TEXT_DOMAIN', $cptp_data['TextDomain'] );
  * Autoloader for CPTP.
  *
  * @since 1.0.0
+ *
+ * @param string $class_name class name.
  */
 function cptp_class_loader( $class_name ) {
 	$dir       = dirname( __FILE__ );

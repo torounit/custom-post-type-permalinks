@@ -1,29 +1,46 @@
 <?php
-
 /**
- *
- * Utilty Class
+ * Utility
  *
  * @package Custom_Post_Type_Permalinks
+ */
+
+/**
+ * Utility methods.
+ *
  * @since 0.9.4
  * */
 class CPTP_Util {
 
+	/**
+	 * CPTP_Util constructor.
+	 *
+	 * @private
+	 */
 	private function __construct() {
 	}
 
 	/**
+	 * Get filtered post type.
+	 *
 	 * @return array
 	 */
 	public static function get_post_types() {
-		$post_type = get_post_types( array( '_builtin' => false, 'publicly_queryable' => true, 'show_ui' => true ) );
+		$param     = array(
+			'_builtin'           => false,
+			'publicly_queryable' => true,
+			'show_ui'            => true,
+		);
+		$post_type = get_post_types( $param );
 
 		return array_filter( $post_type, array( __CLASS__, 'is_post_type_support_rewrite' ) );
 
 	}
 
 	/**
-	 * @param string $post_type
+	 * Check post type support rewrite.
+	 *
+	 * @param string $post_type post_type name.
 	 *
 	 * @return bool
 	 */
@@ -37,7 +54,9 @@ class CPTP_Util {
 	}
 
 	/**
-	 * @param bool $objects
+	 * Get taxonomies.
+	 *
+	 * @param bool $objects object or name.
 	 *
 	 * @return array
 	 */
@@ -48,21 +67,22 @@ class CPTP_Util {
 			$output = 'names';
 		}
 
-		return get_taxonomies( array( 'show_ui' => true, '_builtin' => false ), $output );
+		return get_taxonomies( array(
+			'show_ui'  => true,
+			'_builtin' => false,
+		), $output );
 	}
 
-
 	/**
-	 *
 	 * Get Custom Taxonomies parents slug.
 	 *
 	 * @version 1.0
 	 *
-	 * @param int|WP_Term|object $term
-	 * @param string $taxonomy
-	 * @param string $separator
-	 * @param bool $nicename
-	 * @param array $visited
+	 * @param int|WP_Term|object $term Target term.
+	 * @param string             $taxonomy Taxonomy name.
+	 * @param string             $separator separater string.
+	 * @param bool               $nicename use slug or name.
+	 * @param array              $visited visited parent slug.
 	 *
 	 * @return string
 	 */
@@ -79,9 +99,9 @@ class CPTP_Util {
 			$name = $parent->name;
 		}
 
-		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && ! in_array( $parent->parent, $visited ) ) {
+		if ( $parent->parent && ( $parent->parent !== $parent->term_id ) && ! in_array( $parent->parent, $visited, true ) ) {
 			$visited[] = $parent->parent;
-			$chain .= CPTP_Util::get_taxonomy_parents_slug( $parent->parent, $taxonomy, $separator, $nicename, $visited );
+			$chain     .= CPTP_Util::get_taxonomy_parents_slug( $parent->parent, $taxonomy, $separator, $nicename, $visited );
 		}
 		$chain .= $name . $separator;
 
@@ -89,17 +109,16 @@ class CPTP_Util {
 	}
 
 	/**
-	 *
 	 * Get Custom Taxonomies parents.
 	 *
 	 * @deprecated
 	 *
-	 * @param int|WP_Term|object $term
-	 * @param string $taxonomy
-	 * @param bool $link
-	 * @param string $separator
-	 * @param bool $nicename
-	 * @param array $visited
+	 * @param int|WP_Term|object $term term.
+	 * @param string             $taxonomy taxonomy.
+	 * @param bool               $link show link html.
+	 * @param string             $separator separator string.
+	 * @param bool               $nicename use slug or name.
+	 * @param array              $visited visited term.
 	 *
 	 * @return string
 	 */
@@ -118,7 +137,7 @@ class CPTP_Util {
 
 		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && ! in_array( $parent->parent, $visited ) ) {
 			$visited[] = $parent->parent;
-			$chain .= CPTP_Util::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
+			$chain     .= CPTP_Util::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
 		}
 		if ( $link ) {
 			$chain .= '<a href="' . get_term_link( $parent->term_id, $taxonomy ) . '" title="' . esc_attr( sprintf( __( 'View all posts in %s' ), $parent->name ) ) . '">' . esc_html( $name ) . '</a>' . esc_html( $separator );
@@ -173,7 +192,7 @@ class CPTP_Util {
 		preg_match_all( '/%.+?%/', $structure, $tokens );
 		$tok_index = 1;
 		foreach ( (array) $tokens[0] as $token ) {
-			if ( '%post_id%' == $token && ( $tok_index <= 3 ) ) {
+			if ( '%post_id%' === $token && ( $tok_index <= 3 ) ) {
 				$front = '/date';
 				break;
 			}
@@ -198,9 +217,9 @@ class CPTP_Util {
 	 *
 	 * @since 3.1.0
 	 *
-	 * @param WP_Term[] $terms
-	 * @param string|array $orderby
-	 * @param string $order
+	 * @param WP_Term[]    $terms Terms array.
+	 * @param string|array $orderby term object key.
+	 * @param string       $order ASC or DESC.
 	 *
 	 * @return WP_Term[]
 	 */
@@ -210,13 +229,13 @@ class CPTP_Util {
 			$terms = wp_list_sort( $terms, 'term_id', 'ASC' );
 		} else {
 
-			if ( 'name' == $orderby ) {
+			if ( 'name' === $orderby ) {
 				usort( $terms, '_usort_terms_by_name' );
 			} else {
 				usort( $terms, '_usort_terms_by_ID' );
 			}
 
-			if ( 'DESC' == $order ) {
+			if ( 'DESC' === $order ) {
 				$terms = array_reverse( $terms );
 			}
 		}
