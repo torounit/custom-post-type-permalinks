@@ -1,0 +1,25 @@
+{
+  "name": "custom-post-type-permalinks",
+  "version": "3.1.3",
+  "description": "Custom Post Type Permalinks allow you edit the permalink structure of custom post type.",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "release-it": "node -r dotenv/config node_modules/.bin/release-it"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/torounit/custom-post-type-permalinks.git"
+  },
+  "author": "",
+  "license": "GPL-2.0+",
+  "bugs": {
+    "url": "https://github.com/torounit/custom-post-type-permalinks/issues"
+  },
+  "homepage": "https://github.com/torounit/custom-post-type-permalinks#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "release-it": "^4.4.0"
+  }
+}

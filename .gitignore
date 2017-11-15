@@ -7,4 +7,5 @@ vendor/
 *.sql
 *.tar.gz
 *.zip
+.env
 
