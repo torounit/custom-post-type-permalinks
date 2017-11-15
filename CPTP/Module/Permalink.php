@@ -85,7 +85,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $post_link;
 		}
 
-
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
 
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
@@ -352,7 +351,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		if ( ! $taxonomy->public ) {
 			return $termlink;
 		}
-
 
 		$wp_home = rtrim( home_url(), '/' );
 
