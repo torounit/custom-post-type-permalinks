@@ -32,7 +32,7 @@ class CPTP_Util {
 		);
 		$post_type = get_post_types( $param );
 
-		return array_filter( $post_type, array( __CLASS__, 'is_post_type_support_rewrite' ) );
+		return array_filter( $post_type, array( __CLASS__, 'is_rewrite_supported_by' ) );
 
 	}
 
@@ -43,13 +43,32 @@ class CPTP_Util {
 	 *
 	 * @return bool
 	 */
-	private static function is_post_type_support_rewrite( $post_type ) {
+	private static function is_rewrite_supported_by( $post_type ) {
 		$post_type_object = get_post_type_object( $post_type );
 		if ( false === $post_type_object->rewrite ) {
-			return false;
+			$support = false;
+		} else {
+			$support = true;
 		}
 
-		return true;
+		/**
+		 * Filters support CPTP for custom post type.
+		 *
+		 * @since 3.2.0
+		 *
+		 * @param bool $support support CPTP.
+		 */
+		$support = apply_filters( "CPTP_is_rewrite_supported_by_${post_type}", $support );
+
+		/**
+		 * Filters support CPTP for custom post type.
+		 *
+		 * @since 3.2.0
+		 *
+		 * @param bool $support support CPTP.
+		 * @param string $post_type post type name.
+		 */
+		return apply_filters( 'CPTP_is_rewrite_supported', $support, $post_type );
 	}
 
 	/**
@@ -67,7 +86,7 @@ class CPTP_Util {
 		}
 
 		return get_taxonomies( array(
-			'public'  => true,
+			'public'   => true,
 			'_builtin' => false,
 		), $output );
 	}
@@ -134,7 +153,7 @@ class CPTP_Util {
 			$name = $parent->name;
 		}
 
-		if ( $parent->parent && ( $parent->parent != $parent->term_id ) && ! in_array( $parent->parent, $visited ) ) {
+		if ( $parent->parent && ( $parent->parent !== $parent->term_id ) && ! in_array( $parent->parent, $visited, true ) ) {
 			$visited[] = $parent->parent;
 			$chain     .= CPTP_Util::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
 		}
@@ -216,9 +235,9 @@ class CPTP_Util {
 	 *
 	 * @since 3.1.0
 	 *
-	 * @param WP_Term[] $terms Terms array.
+	 * @param WP_Term[]    $terms Terms array.
 	 * @param string|array $orderby term object key.
-	 * @param string $order ASC or DESC.
+	 * @param string       $order ASC or DESC.
 	 *
 	 * @return WP_Term[]
 	 */

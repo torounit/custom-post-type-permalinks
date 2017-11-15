@@ -276,6 +276,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 *
 	 * @test
 	 * @group permalink
+	 * @group #81
 	 * @issue #81
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
@@ -328,10 +329,85 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules();
 		$permastruct = $wp_rewrite->get_extra_permastruct( $this->post_type );
+		$this->assertEquals( '/cpt/%cpt%', $permastruct );
 		$post_link   = home_url( user_trailingslashit( str_replace( '%' . $this->post_type . '%', get_post( $id )->post_name, $permastruct ) ) );
 		$this->assertEquals( $post_link, get_permalink( $id ) );
 		$this->go_to( get_permalink( $id ) );
 		$this->assertFalse( is_single() );
+
+		$attachment_link = user_trailingslashit( trailingslashit( $post_link ) . get_post( $attachment_id )->post_name );
+		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
+		$this->assertEquals( $attachment_link, get_attachment_link( $attachment_id ) );
+		$this->go_to( get_attachment_link( $attachment_id ) );
+		$this->assertTrue( is_attachment() );
+
+	}
+
+	/**
+	 * Test Private Post Type
+	 *
+	 * @test
+	 * @group permalink
+	 * @group #76
+	 * @issue #76
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 * @dataProvider structure_provider
+	 *
+	 * @param string $structure permalink structure.
+	 */
+	public function test_to_disable_post_type( $structure ) {
+
+		update_option( $this->post_type . '_structure', $structure );
+
+		add_filter( 'CPTP_is_rewrite_supported_by_' . $this->post_type, '__return_false' );
+
+		register_taxonomy( $this->taxonomy, $this->post_type, array(
+			'public'  => true,
+			'rewrite' => array(
+				'slug' => rand_str( 12 ),
+			),
+		) );
+
+		register_post_type( $this->post_type, array(
+			'public'     => true,
+			'taxonomies' => array( 'category' ),
+		) );
+
+		$user_id = $this->factory->user->create();
+
+		$id = 0;
+		$id = $this->factory->post->create( array(
+			'post_type'   => $this->post_type,
+			'post_author' => $user_id,
+			'post_parent' => $id,
+		) );
+
+		$term_id = $this->factory->term->create( array(
+			'taxonomy' => $this->taxonomy,
+		) );
+		wp_set_post_terms( $id, array( $term_id ), $this->taxonomy );
+
+		$cat_id = $this->factory->category->create();
+		wp_set_post_categories( $id, array( $cat_id ) );
+
+		$file          = DIR_TESTDATA . '/images/canola.jpg';
+		$attachment_id = $this->factory->attachment->create_object( $file, $id, array(
+			'post_mime_type' => 'image/jpeg',
+			'menu_order'     => rand( 1, 100 ),
+			'post_title'     => 'canola',
+		) );
+
+		do_action( 'wp_loaded' );
+		/* @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+		$permastruct = $wp_rewrite->get_extra_permastruct( $this->post_type );
+		$this->assertEquals( '/cpt/%cpt%', $permastruct );
+		$post_link   = home_url( user_trailingslashit( str_replace( '%' . $this->post_type . '%', get_post( $id )->post_name, $permastruct ) ) );
+		$this->assertEquals( $post_link, get_permalink( $id ) );
+		$this->go_to( get_permalink( $id ) );
+		$this->assertTrue( is_single() );
 
 		$attachment_link = user_trailingslashit( trailingslashit( $post_link ) . get_post( $attachment_id )->post_name );
 		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
