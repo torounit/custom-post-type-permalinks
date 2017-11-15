@@ -15,6 +15,7 @@ composer.json
 composer.lock
 Gruntfile.js
 package.json
+package-lock.json
 phpunit.xml
 phpunit.xml.dist
 multisite.xml
