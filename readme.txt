@@ -67,6 +67,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
+= 3.1.4 =
+* Test for WordPress 4.9.
+* PHPCS fix.
+
 = 3.1.3 =
 * Test for WordPress 4.8.
 * Bug fix for attachment link.
