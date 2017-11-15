@@ -201,7 +201,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$taxonomies = CPTP_Util::get_taxonomies( true );
 
 		// %taxnomomy% -> parent/child
-		// 運用でケアすべきかも。
 		foreach ( $taxonomies as $taxonomy => $objects ) {
 
 			if ( false !== strpos( $permalink, '%' . $taxonomy . '%' ) ) {

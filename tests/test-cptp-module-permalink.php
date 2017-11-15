@@ -33,6 +33,11 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	}
 
 
+	/**
+	 * Permalink structure provider.
+	 *
+	 * @return array
+	 */
 	public function structure_provider() {
 		return array(
 			array("/%post_id%/"),
