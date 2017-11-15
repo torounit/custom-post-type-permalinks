@@ -78,10 +78,10 @@ class CPTP_Util {
 	 * @version 1.0
 	 *
 	 * @param int|WP_Term|object $term Target term.
-	 * @param string $taxonomy Taxonomy name.
-	 * @param string $separator separater string.
-	 * @param bool $nicename use slug or name.
-	 * @param array $visited visited parent slug.
+	 * @param string             $taxonomy Taxonomy name.
+	 * @param string             $separator separater string.
+	 * @param bool               $nicename use slug or name.
+	 * @param array              $visited visited parent slug.
 	 *
 	 * @return string
 	 */
@@ -113,11 +113,11 @@ class CPTP_Util {
 	 * @deprecated
 	 *
 	 * @param int|WP_Term|object $term term.
-	 * @param string $taxonomy taxonomy.
-	 * @param bool $link show link html.
-	 * @param string $separator separator string.
-	 * @param bool $nicename use slug or name.
-	 * @param array $visited visited term.
+	 * @param string             $taxonomy taxonomy.
+	 * @param bool               $link show link html.
+	 * @param string             $separator separator string.
+	 * @param bool               $nicename use slug or name.
+	 * @param array              $visited visited term.
 	 *
 	 * @return string
 	 */
