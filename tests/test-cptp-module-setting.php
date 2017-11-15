@@ -12,7 +12,7 @@ class CPTP_Module_Setting_Test extends WP_UnitTestCase {
 		create_initial_taxonomies();
 		$wp_rewrite->flush_rules();
 
-		do_action("plugins_loaded");
+		do_action( 'plugins_loaded' );
 		delete_option( 'rewrite_rules' );
 
 	}
