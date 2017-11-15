@@ -160,6 +160,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			}
 
 			$ret_link = str_replace( '%link_dir%', $link_dir, $ret_link );
+			$ret_link = str_replace( '?post_type=' . $this->get_archives_where_r['post_type'], '', $ret_link );
 		} else {
 			$ret_link = $html;
 		}
