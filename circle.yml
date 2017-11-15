@@ -1,8 +1,8 @@
 ## Customize the test machine
 machine:
   php:
-    version: 7.0.4
-  # Override /etc/hosts
+    version: 7.1.9
+
 
   # Add some environment variables
   environment:
