@@ -48,6 +48,15 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 				return $where;
 			}
 
+			$post_type = get_post_type_object( $r['post_type'] );
+			if ( ! $post_type ) {
+				return $where;
+			}
+
+			if ( ! $post_type->has_archive ) {
+				return $where;
+			}
+
 			$where = str_replace( '\'post\'', '\'' . $r['post_type'] . '\'', $where );
 		}
 
@@ -106,6 +115,16 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			return $html;
 		}
 
+
+		$post_type = get_post_type_object( $this->get_archives_where_r['post_type'] );
+		if ( ! $post_type ) {
+			return $html;
+		}
+
+		if ( ! $post_type->has_archive ) {
+			return $html;
+		}
+
 		$c = isset( $this->get_archives_where_r['taxonomy'] ) && is_array( $this->get_archives_where_r['taxonomy'] ) ? $this->get_archives_where_r['taxonomy'] : '';
 		$t = $this->get_archives_where_r['post_type'];
 
@@ -121,7 +140,6 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			$blog_url = preg_replace( '/https?:\/\//', '', $blog_url );
 			$ret_link = str_replace( $blog_url, $blog_url . '/%link_dir%', $html );
 
-			$post_type = get_post_type_object( $this->get_archives_where_r['post_type'] );
 			if ( empty( $c ) ) {
 				if ( isset( $post_type->rewrite['slug'] ) ) {
 					$link_dir = $post_type->rewrite['slug'];
