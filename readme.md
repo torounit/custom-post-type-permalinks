@@ -73,6 +73,15 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 3.2.0
+* Support only public post type.
+* Add `CPTP_is_rewrite_supported_by_${post_type}` and `CPTP_is_rewrite_supported` filter.
+* Remove post_type query wp_get_archives.
+
+### 3.1.4
+* Test for WordPress 4.9.
+* PHPCS fix.
+
 ### 3.1.3
 
 * Test for WordPress 4.8.
