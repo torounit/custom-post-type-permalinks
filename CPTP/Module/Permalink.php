@@ -81,9 +81,10 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $post_link;
 		}
 
-		if ( ! $pt_object->public ) {
+		if ( ! in_array( $post->post_type, CPTP_Util::get_post_types(), true ) ) {
 			return $post_link;
 		}
+
 
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
 
@@ -293,7 +294,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $link;
 		}
 
-		if ( ! $pt_object->public ) {
+		if ( ! in_array( $post->post_type, CPTP_Util::get_post_types(), true ) ) {
 			return $link;
 		}
 

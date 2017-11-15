@@ -49,7 +49,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			return;
 		}
 
-		if ( ! $args->public ) {
+		if ( ! in_array( $post_type, CPTP_Util::get_post_types(), true ) ) {
 			return;
 		}
 
