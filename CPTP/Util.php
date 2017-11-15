@@ -27,9 +27,8 @@ class CPTP_Util {
 	 */
 	public static function get_post_types() {
 		$param     = array(
-			'_builtin'           => false,
-			'publicly_queryable' => true,
-			'show_ui'            => true,
+			'_builtin' => false,
+			'public'   => true,
 		);
 		$post_type = get_post_types( $param );
 
@@ -68,7 +67,7 @@ class CPTP_Util {
 		}
 
 		return get_taxonomies( array(
-			'show_ui'  => true,
+			'public'  => true,
 			'_builtin' => false,
 		), $output );
 	}
@@ -79,10 +78,10 @@ class CPTP_Util {
 	 * @version 1.0
 	 *
 	 * @param int|WP_Term|object $term Target term.
-	 * @param string             $taxonomy Taxonomy name.
-	 * @param string             $separator separater string.
-	 * @param bool               $nicename use slug or name.
-	 * @param array              $visited visited parent slug.
+	 * @param string $taxonomy Taxonomy name.
+	 * @param string $separator separater string.
+	 * @param bool $nicename use slug or name.
+	 * @param array $visited visited parent slug.
 	 *
 	 * @return string
 	 */
@@ -114,11 +113,11 @@ class CPTP_Util {
 	 * @deprecated
 	 *
 	 * @param int|WP_Term|object $term term.
-	 * @param string             $taxonomy taxonomy.
-	 * @param bool               $link show link html.
-	 * @param string             $separator separator string.
-	 * @param bool               $nicename use slug or name.
-	 * @param array              $visited visited term.
+	 * @param string $taxonomy taxonomy.
+	 * @param bool $link show link html.
+	 * @param string $separator separator string.
+	 * @param bool $nicename use slug or name.
+	 * @param array $visited visited term.
 	 *
 	 * @return string
 	 */
@@ -217,9 +216,9 @@ class CPTP_Util {
 	 *
 	 * @since 3.1.0
 	 *
-	 * @param WP_Term[]    $terms Terms array.
+	 * @param WP_Term[] $terms Terms array.
 	 * @param string|array $orderby term object key.
-	 * @param string       $order ASC or DESC.
+	 * @param string $order ASC or DESC.
 	 *
 	 * @return WP_Term[]
 	 */

@@ -81,6 +81,10 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $post_link;
 		}
 
+		if ( ! $pt_object->public ) {
+			return $post_link;
+		}
+
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
 
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
@@ -289,6 +293,10 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $link;
 		}
 
+		if ( ! $pt_object->public ) {
+			return $link;
+		}
+
 		$permalink   = CPTP_Util::get_permalink_structure( $post_parent->post_type );
 		$post_type   = get_post_type_object( $post_parent->post_type );
 
@@ -331,13 +339,19 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		$taxonomy = get_taxonomy( $taxonomy );
-		if ( $taxonomy->_builtin ) {
-			return $termlink;
-		}
 
 		if ( empty( $taxonomy ) ) {
 			return $termlink;
 		}
+
+		if ( $taxonomy->_builtin ) {
+			return $termlink;
+		}
+
+		if ( ! $taxonomy->public ) {
+			return $termlink;
+		}
+
 
 		$wp_home = rtrim( home_url(), '/' );
 
