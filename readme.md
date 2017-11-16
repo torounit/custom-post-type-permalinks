@@ -1,8 +1,6 @@
 # Custom Post Type Permalinks
-Donate link:       https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX
 
 Edit the permalink of custom post type.
-
 
 [![Latest Stable Version](https://poser.pugx.org/torounit/custom-post-type-permalinks/v/stable)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
 [![License](https://poser.pugx.org/torounit/custom-post-type-permalinks/license)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
@@ -24,7 +22,7 @@ And support wp_get_archives( "post_type=foo" ).
 
 [This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
-Donation: Please send [bitcoin](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX) or [My Wishlist](http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV)
+Donation: Please send [My Wishlist](http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV)
 
 
 ### Translators
@@ -42,7 +40,7 @@ Donation: Please send [bitcoin](https://blockchain.info/ja/address/3HwkojX2pd9wc
 
 Example:
 
-`
+```
 register_post_type( 'foo',
 	array(
 		"public" => true,
@@ -53,7 +51,7 @@ register_post_type( 'foo',
 		"cptp_permalink_structure" => "%post_id%"
 	)
 );
-`
+```
 
 
 ## Installation
