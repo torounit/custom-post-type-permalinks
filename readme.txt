@@ -4,7 +4,7 @@ Donate link:       https://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
 Tested up to:      4.9
-Stable tag: 3.1.4
+Stable tag: 3.1.5
 License: GPLv2 or Later
 
 Edit the permalink of custom post type.
