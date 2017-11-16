@@ -115,7 +115,6 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			return $html;
 		}
 
-
 		$post_type = get_post_type_object( $this->get_archives_where_r['post_type'] );
 		if ( ! $post_type ) {
 			return $html;
