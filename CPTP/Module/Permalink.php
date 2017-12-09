@@ -110,7 +110,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		// %post_id%/attachment/%attachement_name%;
 		$id = filter_input( INPUT_GET, 'post' );
-		if ( null !== $id && $post->ID !== $id ) {
+		if ( null !== $id && intval( $id ) !== $post->ID ) {
 			$parent_structure = trim( CPTP_Util::get_permalink_structure( $post->post_type ), '/' );
 			$parent_dirs      = explode( '/', $parent_structure );
 			if ( is_array( $parent_dirs ) ) {
