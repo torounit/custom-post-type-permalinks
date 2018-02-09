@@ -12,6 +12,12 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		delete_option( 'no_taxonomy_structure' );
 		add_option( 'no_taxonomy_structure', false );
+
+		delete_option( 'category_base' );
+		add_option( 'category_base', rand_str( 12 ) );
+		delete_option( 'tag_base' );
+		add_option( 'tag_base', rand_str( 12 ) );
+
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		create_initial_taxonomies();
