@@ -41,11 +41,15 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		 */
 		global $wp_rewrite;
 
-		if ( $args->_builtin || ! $args->publicly_queryable ) {
+		if ( $args->_builtin ) {
 			return;
 		}
 
 		if ( false === $args->rewrite ) {
+			return;
+		}
+
+		if ( ! in_array( $post_type, CPTP_Util::get_post_types(), true ) ) {
 			return;
 		}
 
