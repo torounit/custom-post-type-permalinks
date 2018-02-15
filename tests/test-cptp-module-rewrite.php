@@ -12,6 +12,12 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		delete_option( 'no_taxonomy_structure' );
 		add_option( 'no_taxonomy_structure', false );
+
+		delete_option( 'category_base' );
+		add_option( 'category_base', rand_str( 12 ) );
+		delete_option( 'tag_base' );
+		add_option( 'tag_base', rand_str( 12 ) );
+
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		create_initial_taxonomies();
@@ -235,8 +241,9 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		do_action( 'wp_loaded' );
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
+		$category_base = get_option( 'category_base', 'category' );
 		$wp_rewrite->flush_rules();
-		$this->go_to( home_url( '/' . $post_type_object->rewrite['slug'] . '/category/' . $category_obj->slug ) );
+		$this->go_to( home_url( '/' . $post_type_object->rewrite['slug'] . '/' . $category_base . '/' . $category_obj->slug ) );
 		$this->assertQueryTrue( 'is_archive', 'is_post_type_archive', 'is_category' );
 
 		$this->go_to( next_posts( 0, false ) );
