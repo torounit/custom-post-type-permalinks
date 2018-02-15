@@ -336,7 +336,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$wp_rewrite->flush_rules();
 		$permastruct = $wp_rewrite->get_extra_permastruct( $this->post_type );
 		$this->assertEquals( '/cpt/%cpt%', $permastruct );
-		$post_link   = home_url( user_trailingslashit( str_replace( '%' . $this->post_type . '%', get_post( $id )->post_name, $permastruct ) ) );
+		$post_link = home_url( user_trailingslashit( str_replace( '%' . $this->post_type . '%', get_post( $id )->post_name, $permastruct ) ) );
 		$this->assertEquals( $post_link, get_permalink( $id ) );
 		$this->go_to( get_permalink( $id ) );
 		$this->assertFalse( is_single() );
@@ -410,7 +410,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$wp_rewrite->flush_rules();
 		$permastruct = $wp_rewrite->get_extra_permastruct( $this->post_type );
 		$this->assertEquals( '/cpt/%cpt%', $permastruct );
-		$post_link   = home_url( user_trailingslashit( str_replace( '%' . $this->post_type . '%', get_post( $id )->post_name, $permastruct ) ) );
+		$post_link = home_url( user_trailingslashit( str_replace( '%' . $this->post_type . '%', get_post( $id )->post_name, $permastruct ) ) );
 		$this->assertEquals( $post_link, get_permalink( $id ) );
 		$this->go_to( get_permalink( $id ) );
 		$this->assertTrue( is_single() );
