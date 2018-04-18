@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/torounit/custom-post-type-permalinks#readme",
   "dependencies": {
-    "dotenv": "^4.0.0",
-    "release-it": "^4.4.0"
+    "dotenv": "^5.0.1",
+    "release-it": "^7.4.1"
   }
 }
