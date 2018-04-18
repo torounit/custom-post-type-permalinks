@@ -1,5 +1,4 @@
 # Custom Post Type Permalinks
-Donate link:       https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX
 
 Edit the permalink of custom post type.
 
@@ -10,8 +9,8 @@ Edit the permalink of custom post type.
 [![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![Build Status](https://travis-ci.org/torounit/custom-post-type-permalinks.svg)](https://travis-ci.org/torounit/custom-post-type-permalinks)
-[![Donation](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX)
-[![Gratipay](https://img.shields.io/gratipay/team/custom-post-type-permalinks.svg)](https://gratipay.com/Custom-Post-Type-Permalinks/)
+[![Donate](https://img.shields.io/badge/donate-paypal-yellow.svg)](https://www.paypal.me/torounit)
+
 [![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png?rev=1044335)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 
 ## Description
@@ -20,11 +19,11 @@ Custom Post Type Permalinks allow you edit the permalink structure of custom pos
 
 Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_name/term_slug". Can disable this fix.
 
-And support wp_get_archives( "post_type=foo" ).
+And support `wp_get_archives( 'post_type=foo' )`.
 
 [This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
-Donation: Please send [bitcoin](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX) or [My Wishlist](http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV)
+Donation: Please send [My Wishlist](http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV) or [Paypal](https://www.paypal.me/torounit)
 
 
 ### Translators
@@ -42,18 +41,18 @@ Donation: Please send [bitcoin](https://blockchain.info/ja/address/3HwkojX2pd9wc
 
 Example:
 
-`
+```php
 register_post_type( 'foo',
 	array(
-		"public" => true,
+		'public' => true,
 		'has_archive' => true,
-		"rewrite" => [
+		'rewrite' => array(
 			"with_front" => true
-		],
-		"cptp_permalink_structure" => "%post_id%"
+		),
+		'cptp_permalink_structure' => '%post_id%'
 	)
 );
-`
+```
 
 
 ## Installation
@@ -73,6 +72,9 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 3.2.2
+* Fix readme.txt
+
 ### 3.2.0
 * Support only public post type.
 * Add `CPTP_is_rewrite_supported_by_${post_type}` and `CPTP_is_rewrite_supported` filter.
@@ -89,11 +91,11 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ### 3.1.1
 
-* Bug fix in CPTP_Module_Setting::upgrader_process_complete.
+* Bug fix in `CPTP_Module_Setting::upgrader_process_complete`.
 
 ### 3.1.0
 
-* Add filter 'CPTP_date_front'.
+* Add filter `CPTP_date_front`.
 * Fix sort term by `wp_list_sort` .
 
 ### 3.0.0
@@ -142,7 +144,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 ### 1.5.0
 
 * Tested for 4.5.
-* Add filter CPTP_set_{$module_name}_module.
+* Add filter `CPTP_set_{$module_name}_module`.
 
 
 ### 1.4.0
@@ -199,7 +201,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ### 0.9.7
 
-* Adding date slug only conflicting %post_id%.
+* Adding date slug only conflicting `%post_id%`.
 * Change taxonomy link rewrite rule. Use post_type.
 * Can change template include custom taxonomy.
 
@@ -234,7 +236,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 ### 0.9.5
 
 * Big change plugin architecture.
-* Show has_archive, with_front.
+* Show `has_archive`, `with_front`.
 
 ### 0.9.4
 
@@ -332,7 +334,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ### 0.7
 
-* Add %{taxonomy}% tag.
+* Add `%{taxonomy}%` tag.
 * A large number of Bug Fix.
 * Change Setting Page. Use Setting API.
 
