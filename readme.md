@@ -111,7 +111,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ### 2.1.3
 
-* Set `no_taxonomy_structure` default true.
+* Set `no_taxonomy_structure` default `true`.
 
 ### 2.1.2
 
@@ -129,9 +129,8 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 ### 2.0.0
 
 * `add_rewrite_rules` on `wp_loaded` priority is changed 10 from 100. [fix issue #53](https://github.com/torounit/custom-post-type-permalinks/issues/53)
-* Replace wp_get_post_terms by get_the_terms. [fix issue #55](https://github.com/torounit/custom-post-type-permalinks/issues/55)
-* Fix bug register_uninstall_hook called twice on each page. [fix issue #56](https://github.com/torounit/custom-post-type-permalinks/issues/56)
-
+* Replace `wp_get_post_terms` by `get_the_terms`. [fix issue #55](https://github.com/torounit/custom-post-type-permalinks/issues/55)
+* Fix bug `register_uninstall_hook` called twice on each page. [fix issue #56](https://github.com/torounit/custom-post-type-permalinks/issues/56)
 ### 1.5.4
 
 * Fixed removed parent post problem.
@@ -188,12 +187,12 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ### 1.0.0
 
-* Set Permalink enable register_post_type.
+* Set Permalink enable `register_post_type`.
 * Enable add post type query to taxonomy archives.
 * Use Class Autoloader.
 * Create Rewrite Rule on `wp_loaded` action.
 * WordPress Code Format Fix.
-* CPTP_Module_Permalink Bug Fix.
+* `CPTP_Module_Permalink` Bug Fix.
 * Bug Fix.
 * Use Semantic Versioning.
 * Date Structure Fix.
@@ -202,9 +201,8 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 ### 0.9.7
 
 * Adding date slug only conflicting `%post_id%`.
-* Change taxonomy link rewrite rule. Use post_type.
+* Change taxonomy link rewrite rule. Use `post_type`.
 * Can change template include custom taxonomy.
-
 ### 0.9.6
 
 * Category and author.
@@ -244,12 +242,12 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ### 0.9.3.3
 
-* has_archive Bug Fix.
+* `has_archive` Bug Fix.
 * Fixed a bug in the link, including the extension.
 
 ### 0.9.3.2
 
-* wp_get_archives Bug Fix.
+* `wp_get_archives` Bug Fix.
 
 ### 0.9.3.1
 
@@ -266,10 +264,11 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ### 0.9
 
-* Add custom post type archive only has_archive->true
+
+* Add custom post type archive only `has_archive` is `true`.
 * Change method name.
 * Change hook custom post link.
-* Use Slug in wp_get_archive().
+* Use Slug in `wp_get_archive()`.
 * Fix attachment link.
 
 
@@ -341,7 +340,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ### 0.6.2
 
-* Fix %author% tag.
+* Fix `%author%` tag.
 
 ### 0.6
 
