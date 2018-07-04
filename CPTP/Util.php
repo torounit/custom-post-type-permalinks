@@ -185,9 +185,9 @@ class CPTP_Util {
 		if ( ! empty( $pt_object->cptp_permalink_structure ) ) {
 			$structure = $pt_object->cptp_permalink_structure;
 		} else {
-
 			$structure = get_option( $pt_object->name . '_structure' );
 		}
+		$structure = '/' . ltrim( $structure, '/' );
 
 		return apply_filters( 'CPTP_' . $pt_object->name . '_structure', $structure );
 	}
