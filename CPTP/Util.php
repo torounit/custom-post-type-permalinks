@@ -171,25 +171,27 @@ class CPTP_Util {
 	 *
 	 * @since 0.9.6
 	 *
-	 * @param string|object $post_type post type name. / object post type object.
+	 * @param string|WP_Post_Type $post_type post type name. / object post type object.
 	 *
 	 * @return string post type structure.
 	 */
 	public static function get_permalink_structure( $post_type ) {
 		if ( is_string( $post_type ) ) {
-			$pt_object = get_post_type_object( $post_type );
-		} else {
-			$pt_object = $post_type;
+			$post_type = get_post_type_object( $post_type );
 		}
 
-		if ( ! empty( $pt_object->cptp_permalink_structure ) ) {
-			$structure = $pt_object->cptp_permalink_structure;
-		} else {
-			$structure = get_option( $pt_object->name . '_structure' );
+		if ( ! empty( $post_type->cptp ) && ! empty( $post_type->cptp->permalink_structure ) ) {
+			$structure = $post_type->cptp->permalink_structure;
+		}
+		else if ( ! empty( $post_type->cptp_permalink_structure ) ) {
+			$structure = $post_type->cptp_permalink_structure;
+		}
+		else {
+			$structure = get_option( $post_type->name . '_structure' );
 		}
 		$structure = '/' . ltrim( $structure, '/' );
 
-		return apply_filters( 'CPTP_' . $pt_object->name . '_structure', $structure );
+		return apply_filters( 'CPTP_' . $post_type->name . '_structure', $structure );
 	}
 
 
