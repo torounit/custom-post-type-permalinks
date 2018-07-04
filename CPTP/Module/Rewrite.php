@@ -268,16 +268,20 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 * @param WP $obj WP instance.
 	 */
 	public function parse_request( $obj ) {
-		$taxes = CPTP_Util::get_taxonomies();
+		$taxes = CPTP_Util::get_taxonomies( true );
 		foreach ( $taxes as $key => $tax ) {
-			if ( isset( $obj->query_vars[ $tax ] ) && is_string( $obj->query_vars[ $tax ] ) ) {
-				if ( false !== strpos( $obj->query_vars[ $tax ], '/' ) ) {
-					$query_vars = explode( '/', $obj->query_vars[ $tax ] );
-					if ( is_array( $query_vars ) ) {
-						$obj->query_vars[ $tax ] = array_pop( $query_vars );
+			$name = $tax->name;
+			if ( $tax->hierarchical ) {
+				if ( isset( $obj->query_vars[ $name ] ) && is_string( $obj->query_vars[ $name ] ) ) {
+					if ( false !== strpos( $obj->query_vars[ $name ], '/' ) ) {
+						$query_vars = explode( '/', $obj->query_vars[ $name ] );
+						if ( is_array( $query_vars ) ) {
+							$obj->query_vars[ $name ] = array_pop( $query_vars );
+						}
 					}
 				}
 			}
+
 		}
 	}
 }
