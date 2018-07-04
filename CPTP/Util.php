@@ -182,11 +182,9 @@ class CPTP_Util {
 
 		if ( ! empty( $post_type->cptp ) && ! empty( $post_type->cptp->permalink_structure ) ) {
 			$structure = $post_type->cptp->permalink_structure;
-		}
-		else if ( ! empty( $post_type->cptp_permalink_structure ) ) {
+		} else if ( ! empty( $post_type->cptp_permalink_structure ) ) {
 			$structure = $post_type->cptp_permalink_structure;
-		}
-		else {
+		} else {
 			$structure = get_option( $post_type->name . '_structure' );
 		}
 		$structure = '/' . ltrim( $structure, '/' );
