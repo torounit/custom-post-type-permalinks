@@ -29,8 +29,8 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 * @version 1.1
 	 * @since 0.9
 	 *
-	 * @param string       $post_type        Post type.
-	 * @param WP_Post_Type $args Arguments used to register the post type.
+	 * @param string       $post_type Post type.
+	 * @param WP_Post_Type $args      Arguments used to register the post type.
 	 */
 	public function register_post_type_rules( $post_type, $args ) {
 
@@ -169,7 +169,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			}
 
 			if ( 'category' === $taxonomy ) {
-				$cb = get_option( 'category_base' );
+				$cb            = get_option( 'category_base' );
 				$taxonomy_slug = ( $cb ) ? $cb : $taxonomy;
 				$taxonomy_key  = 'category_name';
 			} else {
@@ -281,7 +281,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 					}
 				}
 			}
-
 		}
 	}
 }
