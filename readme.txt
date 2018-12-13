@@ -68,7 +68,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 == Changelog ==
 
-= 3.3.0 =
+= 3.3.1 =
 * Add disable option for date / author and post type archive.
 * Bug fix for `parse_request`.
 
