@@ -29,8 +29,8 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 * @version 1.1
 	 * @since 0.9
 	 *
-	 * @param string       $post_type        Post type.
-	 * @param WP_Post_Type $args Arguments used to register the post type.
+	 * @param string       $post_type Post type.
+	 * @param WP_Post_Type $args      Arguments used to register the post type.
 	 */
 	public function register_post_type_rules( $post_type, $args ) {
 
@@ -166,7 +166,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			}
 
 			if ( 'category' === $taxonomy ) {
-				$cb = get_option( 'category_base' );
+				$cb            = get_option( 'category_base' );
 				$taxonomy_slug = ( $cb ) ? $cb : $taxonomy;
 				$taxonomy_key  = 'category_name';
 			} else {
@@ -265,13 +265,16 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 * @param WP $obj WP instance.
 	 */
 	public function parse_request( $obj ) {
-		$taxes = CPTP_Util::get_taxonomies();
+		$taxes = CPTP_Util::get_taxonomies( true );
 		foreach ( $taxes as $key => $tax ) {
-			if ( isset( $obj->query_vars[ $tax ] ) && is_string( $obj->query_vars[ $tax ] ) ) {
-				if ( false !== strpos( $obj->query_vars[ $tax ], '/' ) ) {
-					$query_vars = explode( '/', $obj->query_vars[ $tax ] );
-					if ( is_array( $query_vars ) ) {
-						$obj->query_vars[ $tax ] = array_pop( $query_vars );
+			$name = $tax->name;
+			if ( $tax->hierarchical ) {
+				if ( isset( $obj->query_vars[ $name ] ) && is_string( $obj->query_vars[ $name ] ) ) {
+					if ( false !== strpos( $obj->query_vars[ $name ], '/' ) ) {
+						$query_vars = explode( '/', $obj->query_vars[ $name ] );
+						if ( is_array( $query_vars ) ) {
+							$obj->query_vars[ $name ] = array_pop( $query_vars );
+						}
 					}
 				}
 			}
