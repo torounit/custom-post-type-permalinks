@@ -21,6 +21,6 @@
   "homepage": "https://github.com/torounit/custom-post-type-permalinks#readme",
   "dependencies": {
     "dotenv": "^5.0.1",
-    "release-it": "^7.4.1"
+    "release-it": "^7.6.3"
   }
 }
