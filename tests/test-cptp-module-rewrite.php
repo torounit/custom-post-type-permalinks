@@ -113,6 +113,42 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 	}
 
+	/**
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_cpt_disable_date_archive() {
+
+		update_option( $this->post_type . '_structure', '/%year%/%monthnum%/%day%/%post_id%/' );
+
+		register_post_type( $this->post_type, array(
+			'public'      => true,
+			'taxonomies'  => array( 'category' ),
+			'has_archive' => true,
+			'cptp'        => array(
+				'date_archive' => false,
+			)
+		) );
+		$post_type_object = get_post_type_object( $this->post_type );
+
+		$this->factory->post->create_many( 10, array(
+			'post_type' => $this->post_type,
+			'post_date' => '2012-12-12',
+		) );
+
+		do_action( 'wp_loaded' );
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+
+		$this->go_to( home_url( '/' . $post_type_object->rewrite['slug'] . '/2012' ) );
+		$this->assertQueryTrue( 'is_404' );
+
+	}
+
 
 	/**
 	 *
@@ -175,6 +211,44 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 			'public'      => true,
 			'taxonomies'  => array( 'category' ),
 			'has_archive' => true,
+			'cptp'        => array(
+				'author_archive' => false,
+			)
+		) );
+		$post_type_object = get_post_type_object( $this->post_type );
+
+		$user_id = $this->factory->user->create();
+		$this->factory->post->create_many( 10, array(
+			'post_type'   => $this->post_type,
+			'post_date'   => '2012-12-12',
+			'post_author' => $user_id,
+		) );
+
+		$user = get_userdata( $user_id );
+		$user->user_nicename;
+
+		do_action( 'wp_loaded' );
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+
+		$this->go_to( home_url( '/' . $post_type_object->rewrite['slug'] . '/author/' . $user->user_nicename ) );
+		$this->assertQueryTrue( 'is_404' );
+
+	}
+
+	/**
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_disable_cpt_author_archive() {
+		register_post_type( $this->post_type, array(
+			'public'      => true,
+			'taxonomies'  => array( 'category' ),
+			'has_archive' => true,
 		) );
 		$post_type_object = get_post_type_object( $this->post_type );
 
@@ -200,6 +274,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		$this->assertQueryTrue( 'is_archive', 'is_post_type_archive', 'is_author', 'is_paged' );
 
 	}
+
 
 
 	/**

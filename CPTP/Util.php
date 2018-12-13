@@ -192,6 +192,49 @@ class CPTP_Util {
 		return apply_filters( 'CPTP_' . $post_type->name . '_structure', $structure );
 	}
 
+	/**
+	 * Check support date archive.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param string|WP_Post_Type $post_type post type name. / object post type object.
+	 *
+	 * @return bool
+	 */
+	public static function get_post_type_date_archive_support( $post_type ) {
+		if ( is_string( $post_type ) ) {
+			$post_type = get_post_type_object( $post_type );
+		}
+
+		if ( ! empty( $post_type->cptp ) && isset( $post_type->cptp['date_archive'] ) ) {
+			return ! ! $post_type->cptp['date_archive'];
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check support author archive.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param string|WP_Post_Type $post_type post type name. / object post type object.
+	 *
+	 * @return bool
+	 */
+	public static function get_post_type_author_archive_support( $post_type ) {
+		if ( is_string( $post_type ) ) {
+			$post_type = get_post_type_object( $post_type );
+		}
+
+		if ( ! empty( $post_type->cptp ) && isset( $post_type->cptp['author_archive'] ) ) {
+			return ! ! $post_type->cptp['author_archive'];
+		}
+
+		return true;
+
+	}
+
 
 	/**
 	 * Get permalink structure front for date archive.
