@@ -20,7 +20,7 @@ And support `wp_get_archives( 'post_type=foo' )`.
 
 [This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
-Donation: Please send [My Wishlist](http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV) or [Paypal] (https://www.paypal.me/torounit)
+Donation: Please send [My Wishlist](http://www.amazon.co.jp/registry/wishlist/COKSXS25MVQV) or [Paypal](https://www.paypal.me/torounit)
 
 
 = Translators =
