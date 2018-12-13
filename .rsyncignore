@@ -33,3 +33,4 @@
 - *.zip
 - .release-it.json
 - .env
+- docker-compose.yml
