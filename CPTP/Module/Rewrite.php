@@ -59,7 +59,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			$permalink = CPTP_DEFAULT_PERMALINK;
 		}
 
-		$permalink = '%' . $post_type . '_slug%' . $permalink;
+		$permalink = $args->rewrite['slug'] . $permalink;
 		$permalink = str_replace( '%postname%', '%' . $post_type . '%', $permalink );
 
 		add_rewrite_tag( '%' . $post_type . '_slug%', '(' . $args->rewrite['slug'] . ')', 'post_type=' . $post_type . '&slug=' );
