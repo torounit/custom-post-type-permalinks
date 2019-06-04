@@ -3,7 +3,7 @@ Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
 Donate link:       https://www.paypal.me/torounit
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
-Tested up to:      5.0
+Tested up to:      5.2
 Requires PHP:      5.3
 Stable tag: 3.3.1
 License: GPLv2 or Later
