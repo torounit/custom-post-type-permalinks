@@ -1,51 +1,61 @@
 language: php
-
-services:
-  - docker
-
-cache:
-  directories:
-    - vendor
-    - $HOME/.composer/cache
+dist: trusty
 
 notifications:
   email:
     on_success: never
     on_failure: change
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 matrix:
   include:
-    - env: PHP_VERSION=5.3 WP_VERSION=4.3
-    - env: PHP_VERSION=5.6 WP_VERSION=latest WP_PULUGIN_DEPLOY=1
-    - env: PHP_VERSION=5.6 WP_VERSION=trunk
-    - env: PHP_VERSION=7.2 WP_VERSION=latest
-    - env: PHP_VERSION=7.2 WP_VERSION=trunk
-
-  allow_failures:
-    - env: PHP_VERSION=5.3 WP_VERSION=trunk
-    - env: PHP_VERSION=7.2 WP_VERSION=trunk
-
+    - php: 7.3
+      env: WP_VERSION=trunk
+    - php: 7.3
+      env: WP_VERSION=latest
+    - php: 7.2
+      env: WP_VERSION=latest
+    - php: 7.1
+      env: WP_VERSION=latest
+    - php: 7.0
+      env: WP_VERSION=latest
+    - php: 5.6
+      env: WP_VERSION=4.3
+    - php: 5.6
+      env: WP_TRAVISCI=phpcs
 before_script:
   - composer install
-  - curl -L https://raw.githubusercontent.com/torounit/wpenv/issue/support-nightly/run.sh | bash -s $PHP_VERSION $WP_VERSION
-  - docker exec -u root wpenv ln -s /home/ubuntu/.phpenv/shims/php /usr/local/bin/
-  - docker exec -u root wpenv ln -s /home/ubuntu/.phpenv/shims/composer /usr/local/bin/
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - |
-    if [[ ! -z "$WP_VERSION" ]] ; then
-      docker exec wpenv composer global remove "phpunit/phpunit"
-      if [[ ${PHP_VERSION:0:2} == "5." ]]; then
-        docker exec wpenv composer global require "phpunit/phpunit=4.8.*"
-      else
-        docker exec wpenv composer global require "phpunit/phpunit=6.*"
-      fi
+    if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
+      phpenv config-rm xdebug.ini
+    else
+      echo "xdebug.ini does not exist"
     fi
   - |
-  - docker exec -u root wpenv ln -s /home/ubuntu/.phpenv/shims/phpunit /usr/local/bin/
+    if [[ ! -z "$WP_VERSION" ]] ; then
+      bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+      composer global require "phpunit/phpunit=4.8.*|5.7.*"
+    fi
+  - |
+    if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
+      composer global require wp-coding-standards/wpcs
+      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
+    fi
 
 script:
-  - docker exec wpenv composer phpcs
-  - docker exec wpenv phpunit
-  - docker exec -e WP_MULTISITE=1 wpenv phpunit
+  - |
+    if [[ ! -z "$WP_VERSION" ]] ; then
+      phpunit
+      WP_MULTISITE=1 phpunit
+    fi
+  - |
+    if [[ "$WP_TRAVISCI" == "phpcs" ]] ; then
+      composer phpcs
+    fi
 
 after_success:
   - curl -L https://raw.githubusercontent.com/miya0001/travis2wpplugin/master/deploy.sh | bash
