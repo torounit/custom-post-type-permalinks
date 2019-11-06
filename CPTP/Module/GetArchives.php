@@ -43,7 +43,6 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 	public function getarchives_where( $where, $r ) {
 		$this->get_archives_where_r = $r;
 		if ( isset( $r['post_type'] ) ) {
-
 			if ( ! in_array( $r['post_type'], CPTP_Util::get_post_types(), true ) ) {
 				return $where;
 			}

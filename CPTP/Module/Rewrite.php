@@ -103,18 +103,15 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			}
 
 			if ( CPTP_Util::get_post_type_author_archive_support( $post_type ) ) {
-
 				add_rewrite_rule( $slug . '/author/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?author_name=$matches[1]&paged=$matches[2]&post_type=' . $post_type, 'top' );
 				add_rewrite_rule( $slug . '/author/([^/]+)/?$', 'index.php?author_name=$matches[1]&post_type=' . $post_type, 'top' );
 			}
 
 			if ( in_array( 'category', $args->taxonomies, true ) ) {
-
 				$category_base = get_option( 'category_base', 'category' );
 
 				add_rewrite_rule( $slug . '/' . $category_base . '/([^/]+)/page/?([0-9]{1,})/?$', 'index.php?category_name=$matches[1]&paged=$matches[2]&post_type=' . $post_type, 'top' );
 				add_rewrite_rule( $slug . '/' . $category_base . '/([^/]+)/?$', 'index.php?category_name=$matches[1]&post_type=' . $post_type, 'top' );
-
 			}
 
 			do_action( 'CPTP_registered_' . $post_type . '_rules', $args, $slug );
@@ -122,7 +119,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 		$rewrite_args['walk_dirs'] = false;
 		add_permastruct( $post_type, $permalink, $rewrite_args );
-
 	}
 
 
@@ -256,7 +252,6 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			}
 
 			do_action( 'CPTP_registered_' . $taxonomy . '_rules', $object_type, $args, $taxonomy_slug );
-
 		endforeach;
 	}
 

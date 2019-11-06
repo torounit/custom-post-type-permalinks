@@ -51,7 +51,6 @@ class CPTP_Module_Option extends CPTP_Module {
 		$post_types = CPTP_Util::get_post_types();
 
 		foreach ( $post_types as $post_type ) :
-
 			$structure = trim( esc_attr( filter_input( INPUT_POST, $post_type . '_structure' ) ) ); // get setting.
 
 			// default permalink structure.

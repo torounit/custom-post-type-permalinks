@@ -33,7 +33,6 @@ class CPTP_Util {
 		$post_type = get_post_types( $param );
 
 		return array_filter( $post_type, array( __CLASS__, 'is_rewrite_supported_by' ) );
-
 	}
 
 	/**
@@ -232,7 +231,6 @@ class CPTP_Util {
 		}
 
 		return true;
-
 	}
 
 
@@ -285,11 +283,9 @@ class CPTP_Util {
 	 * @return WP_Term[]
 	 */
 	public static function sort_terms( $terms, $orderby = 'term_id', $order = 'ASC' ) {
-
 		if ( function_exists( 'wp_list_sort' ) ) {
 			$terms = wp_list_sort( $terms, 'term_id', 'ASC' );
 		} else {
-
 			if ( 'name' === $orderby ) {
 				usort( $terms, '_usort_terms_by_name' );
 			} else {

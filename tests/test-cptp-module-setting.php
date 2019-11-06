@@ -14,7 +14,6 @@ class CPTP_Module_Setting_Test extends WP_UnitTestCase {
 
 		do_action( 'plugins_loaded' );
 		delete_option( 'rewrite_rules' );
-
 	}
 
 	/**

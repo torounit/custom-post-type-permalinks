@@ -1,16 +1,44 @@
 <?xml version="1.0"?>
-<ruleset>
-    <!-- See https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
-    <!-- See https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/blob/develop/WordPress-Core/ruleset.xml -->
-    <!-- Include the WordPress ruleset, with exclusions. -->
-    <rule ref="WordPress">
-        <exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact" />
-        <exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
-        <exclude name="WordPress.VIP.RestrictedFunctions" />
-        <exclude name="Generic.Files.LowercasedFilename" />
-        <exclude name="WordPress.NamingConventions" />
-    </rule>
+<ruleset name="WordPress Coding Standards based custom ruleset for your plugin">
+    <description>Generally-applicable sniffs for WordPress plugins.</description>
 
-    <exclude-pattern>*/vendor/*</exclude-pattern>
-    <exclude-pattern>*/tests/*</exclude-pattern>
+    <!-- What to scan -->
+    <file>.</file>
+    <exclude-pattern>/vendor/</exclude-pattern>
+    <exclude-pattern>/node_modules/</exclude-pattern>
+    <exclude-pattern>/wordpress/</exclude-pattern>
+    <exclude-pattern>/tests/php/bootstrap.php</exclude-pattern>
+    <!-- How to scan -->
+    <!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
+    <!-- Annotated ruleset: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
+    <arg value="sp"/> <!-- Show sniff and progress -->
+    <arg name="basepath" value="./"/><!-- Strip the file paths down to the relevant bit -->
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="8"/><!-- Enables parallel processing when available for faster results. -->
+
+    <!-- Rules: Check PHP version compatibility -->
+    <!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
+    <config name="testVersion" value="5.3-"/>
+    <!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
+    <rule ref="PHPCompatibilityWP"/>
+    <config name="minimum_supported_wp_version" value="4.3"/>
+
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+        <properties>
+            <!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->
+            <property name="prefixes" type="array" value="CPTP"/>
+        </properties>
+    </rule>
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <!-- Value: replace the text domain used. -->
+            <property name="text_domain" type="array" value="custom-post-type-permalinks"/>
+        </properties>
+    </rule>
+    <rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
+        <properties>
+            <property name="blank_line_check" value="true"/>
+        </properties>
+    </rule>
 </ruleset>

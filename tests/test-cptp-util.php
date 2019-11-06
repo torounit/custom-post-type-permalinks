@@ -43,7 +43,6 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 		$post_type_object = get_post_type_object( $post_type );
 
 		$this->assertEquals( CPTP_Util::get_permalink_structure( $post_type_object ), '/%year%/%monthnum%/%day%/%post_id%/' );
-
 	}
 
 	/**
@@ -59,7 +58,6 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 		update_option( $post_type . '_structure', '/%year%/%monthnum%/%day%/%post_id%/' );
 
 		$this->assertEquals( CPTP_Util::get_permalink_structure( $post_type ), '/%year%/%monthnum%/%day%/%post_id%/' );
-
 	}
 
 	/**
@@ -122,7 +120,6 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 			}
 		} );
 		$this->assertEquals( $expected, $categories );
-
 	}
 
 }

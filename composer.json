@@ -11,18 +11,20 @@
     ],
     "require": {},
     "require-dev": {
-        "squizlabs/php_codesniffer": "^2.7",
-        "wp-coding-standards/wpcs": "^0.10"
+        "squizlabs/php_codesniffer": "^3.4.2",
+        "wp-coding-standards/wpcs": "^2.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0"
     },
     "scripts": {
         "post-install-cmd": [
-            "@php vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs/"
+            "phpcs -i"
         ],
-        "post-update-cmd": [
-            "@php vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs/"
+        "fix": [
+            "phpcs -p -s -v -n --standard=./codesniffer.ruleset.xml --extensions=php --report-diff=changes.diff; patch -p0 -ui changes.diff; rm changes.diff"
         ],
         "phpcs": [
-            "@php vendor/bin/phpcs -p -s -v -n . --standard=./codesniffer.ruleset.xml --extensions=php"
+            "phpcs -p -s -v -n . --standard=./codesniffer.ruleset.xml --extensions=php"
         ]
     }
 }

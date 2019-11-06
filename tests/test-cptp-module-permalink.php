@@ -31,10 +31,8 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	}
 
 	public function tearDown() {
-
 		_unregister_post_type( $this->post_type );
 		_unregister_taxonomy( $this->taxonomy );
-
 	}
 
 
@@ -76,7 +74,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @param string $structure permalink structure.
 	 */
 	public function test_url_to_postid_cpt( $structure ) {
-
 		update_option( $this->post_type . '_structure', $structure );
 
 		register_taxonomy( $this->taxonomy, $this->post_type, array(
@@ -132,7 +129,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
 		$this->go_to( get_attachment_link( $attachment_id ) );
 		$this->assertTrue( is_attachment() );
-
 	}
 
 
@@ -147,7 +143,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @param string $structure permalink structure.
 	 */
 	public function test_url_to_postid_hierarchial_cpt( $structure ) {
-
 		update_option( $this->post_type . '_structure', $structure );
 
 		register_taxonomy( $this->taxonomy, $this->post_type, array(
@@ -220,7 +215,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @param string $structure permalink structure.
 	 */
 	public function test_url_to_postid_cpt_hierarchial_term( $structure ) {
-
 		update_option( $this->post_type . '_structure', $structure );
 		register_taxonomy( $this->taxonomy, $this->post_type, array(
 			'public'      => true,
@@ -274,7 +268,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
 		$this->go_to( get_attachment_link( $attachment_id ) );
 		$this->assertTrue( is_attachment() );
-
 	}
 
 	/**
@@ -291,7 +284,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @param string $structure permalink structure.
 	 */
 	public function test_to_private_post_type( $structure ) {
-
 		update_option( $this->post_type . '_structure', $structure );
 
 		register_taxonomy( $this->taxonomy, $this->post_type, array(
@@ -346,7 +338,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->assertEquals( $attachment_link, get_attachment_link( $attachment_id ) );
 		$this->go_to( get_attachment_link( $attachment_id ) );
 		$this->assertTrue( is_attachment() );
-
 	}
 
 	/**
@@ -363,7 +354,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @param string $structure permalink structure.
 	 */
 	public function test_to_disable_post_type( $structure ) {
-
 		update_option( $this->post_type . '_structure', $structure );
 
 		add_filter( 'CPTP_is_rewrite_supported_by_' . $this->post_type, '__return_false' );
@@ -420,7 +410,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->assertEquals( $attachment_link, get_attachment_link( $attachment_id ) );
 		$this->go_to( get_attachment_link( $attachment_id ) );
 		$this->assertTrue( is_attachment() );
-
 	}
 
 

@@ -37,7 +37,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 		$post_types = CPTP_Util::get_post_types();
 
 		foreach ( $post_types as $post_type ) {
-
 			add_settings_field(
 				$post_type . '_structure',
 				$post_type,
@@ -124,7 +123,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 	 * }
 	 */
 	public function setting_structure_callback_function( $option ) {
-
 		$post_type  = $option['post_type'];
 		$name       = $option['label_for'];
 		$pt_object  = get_post_type_object( $post_type );

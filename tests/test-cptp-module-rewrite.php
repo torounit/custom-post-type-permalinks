@@ -27,14 +27,11 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		update_option( 'posts_per_page', 5 );
 		$this->post_type = rand_str( 12 );
 		$this->taxonomy  = rand_str( 12 );
-
 	}
 
 	public function tearDown() {
-
 		_unregister_post_type( $this->post_type );
 		_unregister_taxonomy( $this->taxonomy, $this->post_type );
-
 	}
 
 	/**
@@ -73,7 +70,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_cpt_date_archive() {
-
 		update_option( $this->post_type . '_structure', '/%year%/%monthnum%/%day%/%post_id%/' );
 
 		register_post_type( $this->post_type, array(
@@ -110,7 +106,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		$this->go_to( next_posts( 0, false ) );
 		$this->assertQueryTrue( 'is_archive', 'is_post_type_archive', 'is_date', 'is_day', 'is_paged' );
-
 	}
 
 	/**
@@ -121,7 +116,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_cpt_disable_date_archive() {
-
 		update_option( $this->post_type . '_structure', '/%year%/%monthnum%/%day%/%post_id%/' );
 
 		register_post_type( $this->post_type, array(
@@ -146,7 +140,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		$this->go_to( home_url( '/' . $post_type_object->rewrite['slug'] . '/2012' ) );
 		$this->assertQueryTrue( 'is_404' );
-
 	}
 
 
@@ -158,7 +151,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_cpt_date_archive_with_date_front() {
-
 		update_option( $this->post_type . '_structure', '/%year%/%post_id%/' );
 
 		register_post_type( $this->post_type, array(
@@ -195,7 +187,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		$this->go_to( next_posts( 0, false ) );
 		$this->assertQueryTrue( 'is_archive', 'is_post_type_archive', 'is_date', 'is_day', 'is_paged' );
-
 	}
 
 
@@ -234,7 +225,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		$this->go_to( home_url( '/' . $post_type_object->rewrite['slug'] . '/author/' . $user->user_nicename ) );
 		$this->assertQueryTrue( 'is_404' );
-
 	}
 
 	/**
@@ -272,7 +262,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		$this->go_to( next_posts( 0, false ) );
 		$this->assertQueryTrue( 'is_archive', 'is_post_type_archive', 'is_author', 'is_paged' );
-
 	}
 
 
@@ -323,7 +312,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		$this->go_to( next_posts( 0, false ) );
 		$this->assertQueryTrue( 'is_archive', 'is_post_type_archive', 'is_category', 'is_paged' );
-
 	}
 
 
@@ -335,7 +323,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_term_archive() {
-
 		register_post_type( $this->post_type, array(
 			'public'      => true,
 			'taxonomies'  => array( 'category' ),
@@ -379,7 +366,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		$this->go_to( next_posts( 0, false ) );
 		$this->assertQueryTrue( 'is_archive', 'is_tax', 'is_paged' );
-
 	}
 
 	/**
@@ -390,7 +376,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_term_date_archive() {
-
 		register_post_type( $this->post_type, array(
 			'public'      => true,
 			'taxonomies'  => array( 'category' ),
@@ -433,7 +418,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		$this->go_to( next_posts( 0, false ) );
 		$this->assertQueryTrue( 'is_archive', 'is_tax', 'is_paged', 'is_year', 'is_date' );
-
 	}
 
 	/**
@@ -444,7 +428,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_cpt_query_term_archive() {
-
 		update_option( 'add_post_type_for_tax', true );
 		register_post_type( $this->post_type, array(
 			'public'      => true,
@@ -489,7 +472,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 		$this->go_to( next_posts( 0, false ) );
 		$this->assertQueryTrue( 'is_post_type_archive', 'is_archive', 'is_tax', 'is_paged' );
-
 	}
 
 }

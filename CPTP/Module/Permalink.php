@@ -17,7 +17,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * Add Filter Hooks.
 	 */
 	public function add_hook() {
-
 		add_filter(
 			'post_type_link',
 			array( $this, 'post_type_link' ),
@@ -206,7 +205,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		// %taxnomomy% -> parent/child
 		foreach ( $taxonomies as $taxonomy => $objects ) {
-
 			if ( false !== strpos( $permalink, '%' . $taxonomy . '%' ) ) {
 				$terms = get_the_terms( $post_id, $taxonomy );
 
@@ -302,7 +300,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		if ( empty( $post_type->_builtin ) ) {
 			if ( strpos( $permalink, '%postname%' ) < strrpos( $permalink, '%post_id%' ) && false === strrpos( $link, 'attachment/' ) ) {
-
 				$link = str_replace( $post->post_name, 'attachment/' . $post->post_name, $link );
 			}
 		}
