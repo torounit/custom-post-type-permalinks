@@ -7,7 +7,7 @@
     <exclude-pattern>/vendor/</exclude-pattern>
     <exclude-pattern>/node_modules/</exclude-pattern>
     <exclude-pattern>/wordpress/</exclude-pattern>
-    <exclude-pattern>/tests/php/bootstrap.php</exclude-pattern>
+    <exclude-pattern>/tests/</exclude-pattern>
     <!-- How to scan -->
     <!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->
     <!-- Annotated ruleset: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml -->
