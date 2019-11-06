@@ -61,7 +61,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		 */
 		global $wp_rewrite;
 
-		if ( ! $wp_rewrite->permalink_structure ) {
+		if ( ! $wp_rewrite->using_permalinks() ) {
 			return $post_link;
 		}
 
@@ -273,7 +273,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		 */
 		global $wp_rewrite;
 
-		if ( ! $wp_rewrite->permalink_structure ) {
+		if ( ! $wp_rewrite->using_permalinks() ) {
 			return $link;
 		}
 
@@ -330,7 +330,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		 */
 		global $wp_rewrite;
 
-		if ( ! $wp_rewrite->permalink_structure ) {
+		if ( ! $wp_rewrite->using_permalinks() ) {
 			return $termlink;
 		}
 
