@@ -136,7 +136,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			$categories = get_the_category( $post->ID );
 			if ( $categories ) {
 				$categories = CPTP_Util::sort_terms( $categories );
-
+				// phpcs:ignore
 				$category_object = apply_filters( 'post_link_category', $categories[0], $categories, $post );
 				$category_object = get_term( $category_object, 'category' );
 				$category        = $category_object->slug;
