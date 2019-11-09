@@ -78,7 +78,6 @@ class CPTP {
 		if ( $module instanceof CPTP_Module ) {
 			$this->modules[ $name ] = $module;
 		}
-
 	}
 
 	/**
