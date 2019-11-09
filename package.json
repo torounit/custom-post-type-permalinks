@@ -20,7 +20,18 @@
   },
   "homepage": "https://github.com/torounit/custom-post-type-permalinks#readme",
   "dependencies": {
-    "dotenv": "^5.0.1",
-    "release-it": "^7.6.3"
+    "dotenv": "^8.2.0",
+    "release-it": "^12.4.3"
+  },
+  "release-it": {
+    "hooks": {
+      "before:bump": "bash ./bin/create-release.sh ${version}"
+    },
+    "github": {
+      "release": true
+    },
+    "npm": {
+      "publish": false
+    }
   }
 }

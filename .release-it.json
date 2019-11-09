@@ -1,9 +1,0 @@
-{
-  "buildCommand": "bash ./bin/create-release.sh ${version}",
-  "github": {
-    "release": true
-  },
-  "npm": {
-    "publish": false
-  }
-}

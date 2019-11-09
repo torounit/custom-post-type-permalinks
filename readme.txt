@@ -3,7 +3,7 @@ Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
 Donate link:       https://www.paypal.me/torounit
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
-Tested up to:      5.2
+Tested up to:      5.3
 Requires PHP:      5.3
 Stable tag: 3.3.1
 License: GPLv2 or Later
@@ -16,7 +16,7 @@ Custom Post Type Permalinks allow you edit the permalink structure of custom pos
 
 Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_name/term_slug". Can disable this fix.
 
-And support `wp_get_archives( 'post_type=foo' )`.
+And support `wp_get_archives( 'post_type=foo' )` and post type date archive (ex. `example.com/post_type_slug/date/2010/01/01` ).
 
 [This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
