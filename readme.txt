@@ -5,7 +5,7 @@ Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.3
 Tested up to:      5.3
 Requires PHP:      5.3
-Stable tag: 3.3.1
+Stable tag: 3.3.2
 License: GPLv2 or Later
 
 Edit the permalink of custom post type.
