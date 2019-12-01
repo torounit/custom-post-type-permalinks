@@ -6,9 +6,6 @@
   "directories": {
     "test": "tests"
   },
-  "scripts": {
-    "release-it": "node -r dotenv/config node_modules/.bin/release-it"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/torounit/custom-post-type-permalinks.git"
@@ -19,10 +16,6 @@
     "url": "https://github.com/torounit/custom-post-type-permalinks/issues"
   },
   "homepage": "https://github.com/torounit/custom-post-type-permalinks#readme",
-  "dependencies": {
-    "dotenv": "^8.2.0",
-    "release-it": "^12.4.3"
-  },
   "release-it": {
     "hooks": {
       "before:bump": "bash ./bin/create-release.sh ${version}"
