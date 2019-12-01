@@ -15,7 +15,7 @@ matrix:
     - php: 7.3
       env: WP_VERSION=trunk
     - php: 7.3
-      env: WP_VERSION=latest
+      env: WP_VERSION=latest WP_PULUGIN_DEPLOY=1
     - php: 7.2
       env: WP_VERSION=latest
     - php: 7.1
