@@ -60,7 +60,7 @@ class CPTP_Module_Option extends CPTP_Module {
 
 			$structure = str_replace( '//', '/', '/' . $structure );// first "/"
 			// last "/".
-			$lastString = substr( trim( esc_attr( filter_input( INPUT_POST,'permalink_structure' ) ) ), - 1 );
+			$lastString = substr( trim( esc_attr( filter_input( INPUT_POST, 'permalink_structure' ) ) ), - 1 );
 			$structure  = rtrim( $structure, '/' );
 
 			if ( '/' === $lastString ) {

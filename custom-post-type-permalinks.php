@@ -17,17 +17,20 @@
 define( 'CPTP_PLUGIN_FILE', __FILE__ );
 define( 'CPTP_DEFAULT_PERMALINK', '/%postname%/' );
 
-$cptp_data = get_file_data( __FILE__, array(
-	'Name' => 'Plugin Name',
-	'PluginURI' => 'Plugin URI',
-	'Version' => 'Version',
-	'Description' => 'Description',
-	'Author' => 'Author',
-	'AuthorURI' => 'Author URI',
-	'TextDomain' => 'Text Domain',
-	'DomainPath' => 'Domain Path',
-	'Network' => 'Network',
-) );
+$cptp_data = get_file_data(
+	__FILE__,
+	array(
+		'Name' => 'Plugin Name',
+		'PluginURI' => 'Plugin URI',
+		'Version' => 'Version',
+		'Description' => 'Description',
+		'Author' => 'Author',
+		'AuthorURI' => 'Author URI',
+		'TextDomain' => 'Text Domain',
+		'DomainPath' => 'Domain Path',
+		'Network' => 'Network',
+	)
+);
 
 define( 'CPTP_VERSION', $cptp_data['Version'] );
 define( 'CPTP_DOMAIN_PATH', $cptp_data['DomainPath'] );

@@ -19,7 +19,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 	public function add_hook() {
 		if ( get_option( 'permalink_structure', '' ) !== '' ) {
 			add_filter( 'getarchives_join', array( $this, 'getarchives_join' ), 10, 2 );
-			add_filter( 'getarchives_where', array( $this, 'getarchives_where' ), 10 , 2 );
+			add_filter( 'getarchives_where', array( $this, 'getarchives_where' ), 10, 2 );
 			add_filter( 'get_archives_link', array( $this, 'get_archives_link' ), 20, 1 );
 		}
 	}
@@ -129,7 +129,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 		$this->get_archives_where_r['post_type'] = isset( $this->get_archives_where_r['post_type_slug'] ) ? $this->get_archives_where_r['post_type_slug'] : $t; // [steve] [*** bug fixing]
 
 		if ( isset( $this->get_archives_where_r['post_type'] ) && 'postbypost' !== $this->get_archives_where_r['type'] ) {
-			$blog_url = rtrim( home_url() ,'/' );
+			$blog_url = rtrim( home_url(), '/' );
 
 			// remove front.
 			$front = substr( $wp_rewrite->front, 1 );

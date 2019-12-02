@@ -64,11 +64,15 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $post_link;
 		}
 
-		$draft_or_pending = isset( $post->post_status ) && in_array( $post->post_status, array(
-			'draft',
-			'pending',
-			'auto-draft',
-		), true );
+		$draft_or_pending = isset( $post->post_status ) && in_array(
+			$post->post_status,
+			array(
+				'draft',
+				'pending',
+				'auto-draft',
+			),
+			true
+		);
 		if ( $draft_or_pending && ! $leavename ) {
 			return $post_link;
 		}
@@ -212,7 +216,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 					$parents  = array_map( array( __CLASS__, 'get_term_parent' ), $terms );
 					$newTerms = array();
 					foreach ( $terms as $key => $term ) {
-						if ( ! in_array( $term->term_id, $parents , true ) ) {
+						if ( ! in_array( $term->term_id, $parents, true ) ) {
 							$newTerms[] = $term;
 						}
 					}

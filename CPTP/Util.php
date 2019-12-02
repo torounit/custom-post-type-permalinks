@@ -84,10 +84,13 @@ class CPTP_Util {
 			$output = 'names';
 		}
 
-		return get_taxonomies( array(
-			'public'   => true,
-			'_builtin' => false,
-		), $output );
+		return get_taxonomies(
+			array(
+				'public'   => true,
+				'_builtin' => false,
+			),
+			$output
+		);
 	}
 
 	/**

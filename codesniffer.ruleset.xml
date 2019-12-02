@@ -23,7 +23,12 @@
     <!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
     <rule ref="PHPCompatibilityWP"/>
     <config name="minimum_supported_wp_version" value="4.3"/>
-
+    <rule ref="WordPress-Core">
+        <exclude name="WordPress.Files.FileName" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
+        <exclude name="WordPress.NamingConventions.ValidHookName" />
+    </rule>
+    <rule ref="WordPress-Docs"/>
     <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
         <properties>
             <!-- Value: replace the function, class, and variable prefixes used. Separate multiple prefixes with a comma. -->

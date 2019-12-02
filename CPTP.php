@@ -67,11 +67,10 @@ class CPTP {
 	/**
 	 * Set module instance.
 	 *
-	 * @param String $name Module Name.
+	 * @param String      $name Module Name.
 	 * @param CPTP_Module $module Module instance.
 	 *
 	 * @since 1.5.0
-	 *
 	 */
 	public function set_module( $name, CPTP_Module $module ) {
 		$module = apply_filters( "CPTP_set_{$name}_module", $module );

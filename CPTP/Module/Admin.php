@@ -28,7 +28,8 @@ class CPTP_Module_Admin extends CPTP_Module {
 	 * @since 0.7
 	 */
 	public function settings_api_init() {
-		add_settings_section( 'cptp_setting_section',
+		add_settings_section(
+			'cptp_setting_section',
 			__( 'Permalink Settings for Custom Post Types', 'custom-post-type-permalinks' ),
 			array( $this, 'setting_section_callback_function' ),
 			'permalink'
@@ -193,10 +194,14 @@ class CPTP_Module_Admin extends CPTP_Module {
 				wp_enqueue_script( 'wp-pointer' );
 				wp_enqueue_script( 'custom-post-type-permalinks-pointer', plugins_url( 'assets/settings-pointer.js', CPTP_PLUGIN_FILE ), array( 'wp-pointer' ), CPTP_VERSION );
 
-				wp_localize_script( 'custom-post-type-permalinks-pointer', 'CPTP_Settings_Pointer', array(
-					'content' => $content,
-					'name'    => $pointer_name,
-				) );
+				wp_localize_script(
+					'custom-post-type-permalinks-pointer',
+					'CPTP_Settings_Pointer',
+					array(
+						'content' => $content,
+						'name'    => $pointer_name,
+					)
+				);
 			}
 		}
 	}
