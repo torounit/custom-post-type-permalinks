@@ -44,13 +44,12 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 *
 	 * Fix permalinks output.
 	 *
-	 * @param String $post_link link url.
+	 * @param String  $post_link link url.
 	 * @param WP_Post $post post object.
-	 * @param String $leavename for edit.php.
+	 * @param String  $leavename for edit.php.
 	 *
 	 * @return string
 	 * @version 2.0
-	 *
 	 */
 	public function post_type_link( $post_link, $post, $leavename ) {
 		/**
@@ -65,14 +64,14 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		$draft_or_pending = isset( $post->post_status ) && in_array(
-				$post->post_status,
-				array(
-					'draft',
-					'pending',
-					'auto-draft',
-				),
-				true
-			);
+			$post->post_status,
+			array(
+				'draft',
+				'pending',
+				'auto-draft',
+			),
+			true
+		);
 		if ( $draft_or_pending && ! $leavename ) {
 			return $post_link;
 		}
@@ -128,7 +127,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 				}
 			}
 		}
-
 
 		$search  = array();
 		$replace = array();
@@ -200,7 +198,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	/**
 	 * Create %tax% -> term
 	 *
-	 * @param int $post_id post id.
+	 * @param int    $post_id post id.
 	 * @param string $permalink permalink uri.
 	 *
 	 * @return array
@@ -264,7 +262,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * Fix attachment output
 	 *
 	 * @param string $link permalink URI.
-	 * @param int $post_id Post ID.
+	 * @param int    $post_id Post ID.
 	 *
 	 * @return string
 	 * @since 0.8.2
@@ -325,7 +323,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * @return string
 	 * @since 0.6
 	 * @version 1.0
-	 *
 	 */
 	public function term_link( $termlink, $term, $taxonomy ) {
 		/**
