@@ -112,7 +112,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 
 		// %post_id%/attachment/%attachement_name%;
 		$id = filter_input( INPUT_GET, 'post' );
-		if ( $post->post_type === 'attachment' ) {
+		if ( 'attachment' === $post->post_type ) {
 			if ( null !== $id && intval( $id ) !== $post->ID ) {
 				$parent_structure = trim( CPTP_Util::get_permalink_structure( $post->post_type ), '/' );
 				$parent_dirs      = explode( '/', $parent_structure );
@@ -177,12 +177,12 @@ class CPTP_Module_Permalink extends CPTP_Module {
 				'%author%',
 			),
 			array(
-				date( 'Y', $post_date ),
-				date( 'm', $post_date ),
-				date( 'd', $post_date ),
-				date( 'H', $post_date ),
-				date( 'i', $post_date ),
-				date( 's', $post_date ),
+				gmdate( 'Y', $post_date ),
+				gmdate( 'm', $post_date ),
+				gmdate( 'd', $post_date ),
+				gmdate( 'H', $post_date ),
+				gmdate( 'i', $post_date ),
+				gmdate( 's', $post_date ),
 				$category,
 				$author,
 			),
