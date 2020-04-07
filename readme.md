@@ -1,4 +1,6 @@
 # Custom Post Type Permalinks
+Donate link:       https://www.paypal.me/torounit
+Requires PHP:      5.3
 
 Edit the permalink of custom post type.
 
@@ -9,8 +11,7 @@ Edit the permalink of custom post type.
 [![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![Build Status](https://travis-ci.org/torounit/custom-post-type-permalinks.svg)](https://travis-ci.org/torounit/custom-post-type-permalinks)
-[![Donate](https://img.shields.io/badge/donate-paypal-yellow.svg)](https://www.paypal.me/torounit)
-
+[![Donation](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX)
 [![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png?rev=1044335)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 
 ## Description
@@ -19,7 +20,7 @@ Custom Post Type Permalinks allow you edit the permalink structure of custom pos
 
 Change custom taxonomy archive's permalink to "example.org/post_type/taxonomy_name/term_slug". Can disable this fix.
 
-And support `wp_get_archives( 'post_type=foo' )`.
+And support `wp_get_archives( 'post_type=foo' )` and post type date archive (ex. `example.com/post_type_slug/date/2010/01/01` ).
 
 [This Plugin published on GitHub.](https://github.com/torounit/custom-post-type-permalinks)
 
@@ -41,7 +42,7 @@ Donation: Please send [My Wishlist](http://www.amazon.co.jp/registry/wishlist/CO
 
 Example:
 
-```php
+`
 register_post_type( 'foo',
 	array(
 		'public' => true,
@@ -52,7 +53,7 @@ register_post_type( 'foo',
 		'cptp_permalink_structure' => '%post_id%'
 	)
 );
-```
+`
 
 
 ## Installation
@@ -72,19 +73,28 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 3.3.5
+
+* Tested 5.4
+* fix CPTP_Module_Permalink::post_type_link.
+
 ### 3.3.1
+
 * Add disable option for date / author and post type archive.
 * Bug fix for `parse_request`.
 
 ### 3.2.2
+
 * Fix readme.txt
 
 ### 3.2.0
+
 * Support only public post type.
 * Add `CPTP_is_rewrite_supported_by_${post_type}` and `CPTP_is_rewrite_supported` filter.
 * Remove post_type query wp_get_archives.
 
 ### 3.1.4
+
 * Test for WordPress 4.9.
 * PHPCS fix.
 
@@ -135,6 +145,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 * `add_rewrite_rules` on `wp_loaded` priority is changed 10 from 100. [fix issue #53](https://github.com/torounit/custom-post-type-permalinks/issues/53)
 * Replace `wp_get_post_terms` by `get_the_terms`. [fix issue #55](https://github.com/torounit/custom-post-type-permalinks/issues/55)
 * Fix bug `register_uninstall_hook` called twice on each page. [fix issue #56](https://github.com/torounit/custom-post-type-permalinks/issues/56)
+
 ### 1.5.4
 
 * Fixed removed parent post problem.
@@ -207,6 +218,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 * Adding date slug only conflicting `%post_id%`.
 * Change taxonomy link rewrite rule. Use `post_type`.
 * Can change template include custom taxonomy.
+
 ### 0.9.6
 
 * Category and author.
@@ -267,7 +279,6 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 
 ### 0.9
-
 
 * Add custom post type archive only `has_archive` is `true`.
 * Change method name.
