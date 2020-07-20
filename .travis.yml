@@ -25,7 +25,7 @@ matrix:
     - php: 7.0
       env: WP_VERSION=latest
     - php: 5.6
-      env: WP_VERSION=4.7
+      env: WP_VERSION=4.4
     - php: 5.6
       env: WP_VERSION=4.3
     - php: 5.6
