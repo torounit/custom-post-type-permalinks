@@ -412,25 +412,25 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->assertTrue( is_attachment() );
 	}
 
-	/**
-	 * @test
-	 * @group permalink
-	 */
-	public function test_wpml_st_post_type_link_filter_original_slug() {
-
-		register_post_type( $this->post_type, array(
-			'public'     => true,
-		) );
-		$user_id = $this->factory->user->create();
-		$post = $this->factory->post->create_and_get( array(
-			'post_type'   => $this->post_type,
-			'post_author' => $user_id,
-		) );
-
-		$this->assertEquals(
-			CPTP_Module_Rewrite::get_slug_placeholder( $post->post_type ),
-			apply_filters( 'wpml_st_post_type_link_filter_original_slug', 'ignored', 'ignored', $post )
-		);
-	}
+//	/**
+//	 * @test
+//	 * @group permalink
+//	 */
+//	public function test_wpml_st_post_type_link_filter_original_slug() {
+//
+//		register_post_type( $this->post_type, array(
+//			'public'     => true,
+//		) );
+//		$user_id = $this->factory->user->create();
+//		$post = $this->factory->post->create_and_get( array(
+//			'post_type'   => $this->post_type,
+//			'post_author' => $user_id,
+//		) );
+//
+//		$this->assertEquals(
+//			CPTP_Module_Rewrite::get_slug_placeholder( $post->post_type ),
+//			apply_filters( 'wpml_st_post_type_link_filter_original_slug', 'ignored', 'ignored', $post )
+//		);
+//	}
 }
 
