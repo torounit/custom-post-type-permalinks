@@ -28,6 +28,7 @@ class CPTP_Module_Option extends CPTP_Module {
 	public function set_default_option() {
 		add_option( 'no_taxonomy_structure', true );
 		add_option( 'add_post_type_for_tax', false );
+		add_option( 'cptp_wpml_support', true );
 	}
 
 	/**

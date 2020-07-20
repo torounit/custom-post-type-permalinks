@@ -38,12 +38,15 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			2
 		);
 
-		add_filter(
-			'wpml_st_post_type_link_filter_original_slug',
-			array( $this, 'replace_post_slug_with_placeholder' ),
-			10,
-			3
-		);
+		if ( get_option( 'cptp_wpml_support' ) ) {
+			add_filter(
+				'wpml_st_post_type_link_filter_original_slug',
+				array( $this, 'replace_post_slug_with_placeholder' ),
+				10,
+				3
+			);
+		}
+
 	}
 
 
