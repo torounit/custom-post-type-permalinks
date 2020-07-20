@@ -417,7 +417,14 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @group permalink
 	 */
 	public function test_wpml_st_post_type_link_filter_original_slug() {
-		$post = (object) [ 'post_type' => 'some-type' ];
+
+		register_post_type( $this->post_type, array(
+			'public'     => true,
+		) );
+
+		$post = $this->factory->post->create_and_get( array(
+			'post_type'   => $this->post_type,
+		) );
 
 		$this->assertEquals(
 			CPTP_Module_Rewrite::get_slug_placeholder( $post->post_type ),
