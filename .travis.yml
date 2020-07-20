@@ -25,9 +25,9 @@ matrix:
     - php: 7.0
       env: WP_VERSION=latest
     - php: 5.6
-      env: WP_VERSION=4.4
+      env: WP_VERSION=4.6
     - php: 5.6
-      env: WP_VERSION=4.3
+      env: WP_VERSION=4.5
     - php: 5.6
       env: WP_TRAVISCI=phpcs
 before_script:
