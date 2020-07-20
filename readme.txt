@@ -2,9 +2,9 @@
 Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
 Donate link:       https://www.paypal.me/torounit
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
-Requires at least: 4.3
+Requires at least: 4.7
 Tested up to:      5.4
-Requires PHP:      5.3
+Requires PHP:      5.6
 Stable tag: 3.3.5
 License: GPLv2 or Later
 
