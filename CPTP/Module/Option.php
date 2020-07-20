@@ -72,9 +72,11 @@ class CPTP_Module_Option extends CPTP_Module {
 		endforeach;
 		$no_taxonomy_structure = ! filter_input( INPUT_POST, 'no_taxonomy_structure' );
 		$add_post_type_for_tax = filter_input( INPUT_POST, 'add_post_type_for_tax' );
+		$cptp_wpml_support     = filter_input( INPUT_POST, 'cptp_wpml_support' );
 
-		update_option( 'no_taxonomy_structure', $no_taxonomy_structure );
-		update_option( 'add_post_type_for_tax', $add_post_type_for_tax );
+		update_option( 'no_taxonomy_structure', ! ! $no_taxonomy_structure );
+		update_option( 'add_post_type_for_tax', ! ! $add_post_type_for_tax );
+		update_option( 'cptp_wpml_support', ! ! $cptp_wpml_support );
 		update_option( 'cptp_permalink_checked', CPTP_VERSION );
 	}
 

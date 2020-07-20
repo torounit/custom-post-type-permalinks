@@ -76,7 +76,21 @@ class CPTP_Module_Admin extends CPTP_Module {
 			)
 		);
 
-		register_setting( 'permalink', 'no_taxonomy_structure' );
+		register_setting( 'permalink', 'add_post_type_for_tax' );
+
+
+		add_settings_field(
+			'cptp_wpml_support',
+			__( 'WPML Support (experimental)', 'custom-post-type-permalinks' ),
+			array( $this, 'cptp_wpml_support_callback_function' ),
+			'permalink',
+			'cptp_setting_section',
+			array(
+				'label_for' => 'cptp_wpml_support',
+			)
+		);
+
+		register_setting( 'permalink', 'cptp_wpml_support' );
 	}
 
 	/**
@@ -175,6 +189,13 @@ class CPTP_Module_Admin extends CPTP_Module {
 		esc_html_e( 'There are cases when the template to be loaded is changed.', 'custom-post-type-permalinks' );
 	}
 
+	/**
+	 * Show checkbox for post type query.
+	 */
+	public function cptp_wpml_support_callback_function() {
+		echo '<input name="cptp_wpml_support" id="cptp_wpml_support" type="checkbox" value="1" class="code" ' . checked( true, get_option( 'cptp_wpml_support' ), false ) . ' /> ';
+		esc_html_e( 'WPML Support.', 'custom-post-type-permalinks' );
+	}
 
 	/**
 	 * Enqueue css and js
