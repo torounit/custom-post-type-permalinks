@@ -421,9 +421,10 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		register_post_type( $this->post_type, array(
 			'public'     => true,
 		) );
-
+		$user_id = $this->factory->user->create();
 		$post = $this->factory->post->create_and_get( array(
 			'post_type'   => $this->post_type,
+			'post_author' => $user_id,
 		) );
 
 		$this->assertEquals(
