@@ -419,7 +419,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_wpml_st_post_type_link_filter_original_slug() {
-		cptp_init();
 		register_post_type( $this->post_type, array(
 			'public'     => true,
 		) );
