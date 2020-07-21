@@ -76,7 +76,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 			)
 		);
 
-		register_setting( 'permalink', 'no_taxonomy_structure' );
+		register_setting( 'permalink', 'add_post_type_for_tax' );
 	}
 
 	/**
@@ -174,7 +174,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 		esc_html_e( 'Custom taxonomy archive also works as post type archive. ', 'custom-post-type-permalinks' );
 		esc_html_e( 'There are cases when the template to be loaded is changed.', 'custom-post-type-permalinks' );
 	}
-
 
 	/**
 	 * Enqueue css and js

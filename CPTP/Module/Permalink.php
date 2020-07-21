@@ -37,6 +37,13 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			apply_filters( 'cptp_attachment_link_priority', 20 ),
 			2
 		);
+
+		add_filter(
+			'wpml_st_post_type_link_filter_original_slug',
+			array( $this, 'replace_post_slug_with_placeholder' ),
+			10,
+			3
+		);
 	}
 
 
@@ -90,7 +97,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$permalink = $wp_rewrite->get_extra_permastruct( $post_type );
 
 		$permalink = str_replace( '%post_id%', $post->ID, $permalink );
-		$permalink = str_replace( '%' . $post_type . '_slug%', $pt_object->rewrite['slug'], $permalink );
+		$permalink = str_replace( CPTP_Module_Rewrite::get_slug_placeholder( $post_type ), $pt_object->rewrite['slug'], $permalink );
 
 		// has parent.
 		$parentsDirs = '';
@@ -387,5 +394,19 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		}
 
 		return $termlink;
+	}
+
+	/**
+	 * This filter is needed for WPML's compatibility. It will return
+	 * the slug placeholder instead of the original CPT slug.
+	 *
+	 * @param string  $original_slug The original CPT slug.
+	 * @param string  $post_link     The post link.
+	 * @param WP_Post $post          The post.
+	 *
+	 * @return string
+	 */
+	public function replace_post_slug_with_placeholder( $original_slug, $post_link, $post ) {
+		return CPTP_Module_Rewrite::get_slug_placeholder( $post->post_type );
 	}
 }
