@@ -121,7 +121,7 @@ class CPTP_Util {
 
 		if ( $parent->parent && ( $parent->parent !== $parent->term_id ) && ! in_array( $parent->parent, $visited, true ) ) {
 			$visited[] = $parent->parent;
-			$chain     .= CPTP_Util::get_taxonomy_parents_slug( $parent->parent, $taxonomy, $separator, $nicename, $visited );
+			$chain    .= CPTP_Util::get_taxonomy_parents_slug( $parent->parent, $taxonomy, $separator, $nicename, $visited );
 		}
 		$chain .= $name . $separator;
 
@@ -157,7 +157,7 @@ class CPTP_Util {
 
 		if ( $parent->parent && ( $parent->parent !== $parent->term_id ) && ! in_array( $parent->parent, $visited, true ) ) {
 			$visited[] = $parent->parent;
-			$chain     .= CPTP_Util::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
+			$chain    .= CPTP_Util::get_taxonomy_parents( $parent->parent, $taxonomy, $link, $separator, $nicename, $visited );
 		}
 		if ( $link ) {
 			// phpcs:ignore
@@ -185,7 +185,7 @@ class CPTP_Util {
 
 		if ( ! empty( $post_type->cptp ) && ! empty( $post_type->cptp['permalink_structure'] ) ) {
 			$structure = $post_type->cptp->permalink_structure;
-		} else if ( ! empty( $post_type->cptp_permalink_structure ) ) {
+		} elseif ( ! empty( $post_type->cptp_permalink_structure ) ) {
 			$structure = $post_type->cptp_permalink_structure;
 		} else {
 			$structure = get_option( $post_type->name . '_structure', '%postname%' );

@@ -185,7 +185,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 		if ( ! is_network_admin() ) {
 			$dismissed = explode( ',', get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
 			if ( false === array_search( $pointer_name, $dismissed, true ) ) {
-				$content = '';
+				$content  = '';
 				$content .= '<h3>' . __( 'Custom Post Type Permalinks', 'custom-post-type-permalinks' ) . '</h3>';
 				$content .= '<p>' . __( 'You can setting permalink for post type in <a href="options-permalink.php">Permalinks</a>.', 'custom-post-type-permalinks' ) . '</p>';
 

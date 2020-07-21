@@ -133,7 +133,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 
 			// remove front.
 			$front = substr( $wp_rewrite->front, 1 );
-			$html = str_replace( $front, '', $html );
+			$html  = str_replace( $front, '', $html );
 
 			$blog_url = preg_replace( '/https?:\/\//', '', $blog_url );
 			$ret_link = str_replace( $blog_url, $blog_url . '/%link_dir%', $html );
@@ -146,7 +146,7 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 				}
 			} else {
 				$c['name'] = ( 'category' === $c['name'] && get_option( 'category_base' ) ) ? get_option( 'category_base' ) : $c['name'];
-				$link_dir = $post_type->rewrite['slug'] . '/' . $c['name'] . '/' . $c['termslug'];
+				$link_dir  = $post_type->rewrite['slug'] . '/' . $c['name'] . '/' . $c['termslug'];
 			}
 
 			if ( ! strstr( $html, '/date/' ) ) {

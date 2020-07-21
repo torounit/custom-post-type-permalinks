@@ -17,14 +17,11 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0"
     },
     "scripts": {
-        "post-install-cmd": [
-            "phpcs -i"
-        ],
-        "fix": [
-            "phpcs -p -s -v -n --standard=./codesniffer.ruleset.xml --extensions=php --report-diff=changes.diff; patch -p0 -ui changes.diff; rm changes.diff"
-        ],
         "phpcs": [
-            "phpcs -p -s -v -n . --standard=./codesniffer.ruleset.xml --extensions=php"
+            "@php vendor/bin/phpcs -p -s -v -n --standard=./.phpcs.xml.dist --extensions=php"
+        ],
+        "autofix": [
+            "@php vendor/bin/phpcbf --standard=./.phpcs.xml.dist --report-summary --report-source"
         ]
     }
 }
