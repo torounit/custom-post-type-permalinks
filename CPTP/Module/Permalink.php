@@ -37,7 +37,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			apply_filters( 'cptp_attachment_link_priority', 20 ),
 			2
 		);
-
 		if ( get_option( 'cptp_wpml_support' ) ) {
 			add_filter(
 				'wpml_st_post_type_link_filter_original_slug',
@@ -46,7 +45,6 @@ class CPTP_Module_Permalink extends CPTP_Module {
 				3
 			);
 		}
-
 	}
 
 

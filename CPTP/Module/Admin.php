@@ -78,7 +78,6 @@ class CPTP_Module_Admin extends CPTP_Module {
 
 		register_setting( 'permalink', 'add_post_type_for_tax' );
 
-
 		add_settings_field(
 			'cptp_wpml_support',
 			__( 'WPML Support (experimental)', 'custom-post-type-permalinks' ),

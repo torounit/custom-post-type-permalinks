@@ -14,8 +14,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		add_option( 'category_base', rand_str( 12 ) );
 		delete_option( 'tag_base' );
 		add_option( 'tag_base', rand_str( 12 ) );
-		add_option( 'cptp_wpml_support', true );
-
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		delete_option( 'no_taxonomy_structure' );
@@ -416,11 +414,16 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	/**
 	 * @test
 	 * @group permalink
+	 * @group wpml
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_wpml_st_post_type_link_filter_original_slug() {
+		cptp_init();
 		register_post_type( $this->post_type, array(
 			'public'     => true,
 		) );
+
 		$user_id = $this->factory->user->create();
 		$post = $this->factory->post->create_and_get( array(
 			'post_type'   => $this->post_type,
