@@ -8,4 +8,4 @@ vendor/
 *.tar.gz
 *.zip
 .env
-
+.wp-env.override.json
