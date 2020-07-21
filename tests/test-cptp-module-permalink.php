@@ -21,7 +21,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 
 		create_initial_taxonomies();
 
-
 		update_option( 'page_comments', true );
 		update_option( 'comments_per_page', 5 );
 		update_option( 'posts_per_page', 5 );
@@ -75,42 +74,57 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	public function test_url_to_postid_cpt( $structure ) {
 		update_option( $this->post_type . '_structure', $structure );
 
-		register_taxonomy( $this->taxonomy, $this->post_type, array(
-			'public'  => true,
-			'rewrite' => array(
-				'slug' => rand_str( 12 ),
-			),
-		) );
+		register_taxonomy(
+			$this->taxonomy,
+			$this->post_type,
+			array(
+				'public'  => true,
+				'rewrite' => array(
+					'slug' => rand_str( 12 ),
+				),
+			)
+		);
 
-		register_post_type( $this->post_type, array(
-			'public'     => true,
-			'taxonomies' => array( 'category' ),
-		) );
+		register_post_type(
+			$this->post_type,
+			array(
+				'public'     => true,
+				'taxonomies' => array( 'category' ),
+			)
+		);
 
 		$user_id = $this->factory->user->create();
 
 		$id = 0;
 		for ( $i = 0; $i < 4; $i ++ ) {
-			$id = $this->factory->post->create( array(
-				'post_type'   => $this->post_type,
-				'post_author' => $user_id,
-				'post_parent' => $id,
-			) );
+			$id = $this->factory->post->create(
+				array(
+					'post_type'   => $this->post_type,
+					'post_author' => $user_id,
+					'post_parent' => $id,
+				)
+			);
 		}
 
-		$term_id = $this->factory->term->create( array(
-			'taxonomy' => $this->taxonomy,
-		) );
+		$term_id = $this->factory->term->create(
+			array(
+				'taxonomy' => $this->taxonomy,
+			)
+		);
 		wp_set_post_terms( $id, array( $term_id ), $this->taxonomy );
 
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
 		$file          = DIR_TESTDATA . '/images/canola.jpg';
-		$attachment_id = $this->factory->attachment->create_object( $file, $id, array(
-			'post_mime_type' => 'image/jpeg',
-			'menu_order'     => rand( 1, 100 ),
-		) );
+		$attachment_id = $this->factory->attachment->create_object(
+			$file,
+			$id,
+			array(
+				'post_mime_type' => 'image/jpeg',
+				'menu_order'     => rand( 1, 100 ),
+			)
+		);
 
 		do_action( 'wp_loaded' );
 		/* @var WP_Rewrite $wp_rewrite */
@@ -144,44 +158,59 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	public function test_url_to_postid_hierarchial_cpt( $structure ) {
 		update_option( $this->post_type . '_structure', $structure );
 
-		register_taxonomy( $this->taxonomy, $this->post_type, array(
-			'public'  => true,
-			'rewrite' => array(
-				'slug' => rand_str( 12 ),
-			),
-		) );
-		register_post_type( $this->post_type, array(
-			'public'       => true,
-			'hierarchical' => true,
-			'taxonomies'   => array(
-				'category',
-			),
-		) );
+		register_taxonomy(
+			$this->taxonomy,
+			$this->post_type,
+			array(
+				'public'  => true,
+				'rewrite' => array(
+					'slug' => rand_str( 12 ),
+				),
+			)
+		);
+		register_post_type(
+			$this->post_type,
+			array(
+				'public'       => true,
+				'hierarchical' => true,
+				'taxonomies'   => array(
+					'category',
+				),
+			)
+		);
 
 		$user_id = $this->factory->user->create();
 
 		$id = 0;
 		for ( $i = 0; $i < 4; $i ++ ) {
-			$id = $this->factory->post->create( array(
-				'post_type'   => $this->post_type,
-				'post_author' => $user_id,
-				'post_parent' => $id,
-			) );
+			$id = $this->factory->post->create(
+				array(
+					'post_type'   => $this->post_type,
+					'post_author' => $user_id,
+					'post_parent' => $id,
+				)
+			);
 		}
 
-		$term_id = $this->factory->term->create( array(
-			'taxonomy' => $this->taxonomy,
-		) );
+		$term_id = $this->factory->term->create(
+			array(
+				'taxonomy' => $this->taxonomy,
+			)
+		);
 		wp_set_post_terms( $id, array( $term_id ), $this->taxonomy );
 
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
 		$file          = DIR_TESTDATA . '/images/canola.jpg';
-		$attachment_id = $this->factory->attachment->create_object( $file, $id, array(
-			'post_mime_type' => 'image/jpeg',
-			'menu_order'     => rand( 1, 100 ),
-		) );
+		$attachment_id = $this->factory->attachment->create_object(
+			$file,
+			$id,
+			array(
+				'post_mime_type' => 'image/jpeg',
+				'menu_order'     => rand( 1, 100 ),
+			)
+		);
 
 		do_action( 'wp_loaded' );
 		/* @var WP_Rewrite $wp_rewrite */
@@ -215,37 +244,52 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 */
 	public function test_url_to_postid_cpt_hierarchial_term( $structure ) {
 		update_option( $this->post_type . '_structure', $structure );
-		register_taxonomy( $this->taxonomy, $this->post_type, array(
-			'public'      => true,
-			'hierarchial' => true,
-		) );
-		register_post_type( $this->post_type, array(
-			'public' => true,
-		) );
+		register_taxonomy(
+			$this->taxonomy,
+			$this->post_type,
+			array(
+				'public'      => true,
+				'hierarchial' => true,
+			)
+		);
+		register_post_type(
+			$this->post_type,
+			array(
+				'public' => true,
+			)
+		);
 
 		$user_id = $this->factory->user->create();
-		$id      = $this->factory->post->create( array(
-			'post_type'   => $this->post_type,
-			'post_name'   => rand_str( 12 ),
-			'post_author' => $user_id,
-		) );
+		$id      = $this->factory->post->create(
+			array(
+				'post_type'   => $this->post_type,
+				'post_name'   => rand_str( 12 ),
+				'post_author' => $user_id,
+			)
+		);
 
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
 		$file          = DIR_TESTDATA . '/images/canola.jpg';
-		$attachment_id = $this->factory->attachment->create_object( $file, $id, array(
-			'post_mime_type' => 'image/jpeg',
-			'menu_order'     => rand( 1, 100 ),
-		) );
+		$attachment_id = $this->factory->attachment->create_object(
+			$file,
+			$id,
+			array(
+				'post_mime_type' => 'image/jpeg',
+				'menu_order'     => rand( 1, 100 ),
+			)
+		);
 
 		$term_id   = 0;
 		$slug_list = array();
 		for ( $i = 0; $i < 4; $i ++ ) {
-			$term_id     = $this->factory->term->create( array(
-				'taxonomy' => $this->taxonomy,
-				'parent'   => $term_id,
-			) );
+			$term_id     = $this->factory->term->create(
+				array(
+					'taxonomy' => $this->taxonomy,
+					'parent'   => $term_id,
+				)
+			);
 			$slug_list[] = get_term( $term_id, $this->taxonomy )->slug;
 		}
 
@@ -285,41 +329,56 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	public function test_to_private_post_type( $structure ) {
 		update_option( $this->post_type . '_structure', $structure );
 
-		register_taxonomy( $this->taxonomy, $this->post_type, array(
-			'public'  => true,
-			'rewrite' => array(
-				'slug' => rand_str( 12 ),
-			),
-		) );
+		register_taxonomy(
+			$this->taxonomy,
+			$this->post_type,
+			array(
+				'public'  => true,
+				'rewrite' => array(
+					'slug' => rand_str( 12 ),
+				),
+			)
+		);
 
-		register_post_type( $this->post_type, array(
-			'public'     => false,
-			'taxonomies' => array( 'category' ),
-		) );
+		register_post_type(
+			$this->post_type,
+			array(
+				'public'     => false,
+				'taxonomies' => array( 'category' ),
+			)
+		);
 
 		$user_id = $this->factory->user->create();
 
 		$id = 0;
-		$id = $this->factory->post->create( array(
-			'post_type'   => $this->post_type,
-			'post_author' => $user_id,
-			'post_parent' => $id,
-		) );
+		$id = $this->factory->post->create(
+			array(
+				'post_type'   => $this->post_type,
+				'post_author' => $user_id,
+				'post_parent' => $id,
+			)
+		);
 
-		$term_id = $this->factory->term->create( array(
-			'taxonomy' => $this->taxonomy,
-		) );
+		$term_id = $this->factory->term->create(
+			array(
+				'taxonomy' => $this->taxonomy,
+			)
+		);
 		wp_set_post_terms( $id, array( $term_id ), $this->taxonomy );
 
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
 		$file          = DIR_TESTDATA . '/images/canola.jpg';
-		$attachment_id = $this->factory->attachment->create_object( $file, $id, array(
-			'post_mime_type' => 'image/jpeg',
-			'menu_order'     => rand( 1, 100 ),
-			'post_title'     => 'canola',
-		) );
+		$attachment_id = $this->factory->attachment->create_object(
+			$file,
+			$id,
+			array(
+				'post_mime_type' => 'image/jpeg',
+				'menu_order'     => rand( 1, 100 ),
+				'post_title'     => 'canola',
+			)
+		);
 
 		do_action( 'wp_loaded' );
 		/* @var WP_Rewrite $wp_rewrite */
@@ -357,41 +416,56 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 
 		add_filter( 'CPTP_is_rewrite_supported_by_' . $this->post_type, '__return_false' );
 
-		register_taxonomy( $this->taxonomy, $this->post_type, array(
-			'public'  => true,
-			'rewrite' => array(
-				'slug' => rand_str( 12 ),
-			),
-		) );
+		register_taxonomy(
+			$this->taxonomy,
+			$this->post_type,
+			array(
+				'public'  => true,
+				'rewrite' => array(
+					'slug' => rand_str( 12 ),
+				),
+			)
+		);
 
-		register_post_type( $this->post_type, array(
-			'public'     => true,
-			'taxonomies' => array( 'category' ),
-		) );
+		register_post_type(
+			$this->post_type,
+			array(
+				'public'     => true,
+				'taxonomies' => array( 'category' ),
+			)
+		);
 
 		$user_id = $this->factory->user->create();
 
 		$id = 0;
-		$id = $this->factory->post->create( array(
-			'post_type'   => $this->post_type,
-			'post_author' => $user_id,
-			'post_parent' => $id,
-		) );
+		$id = $this->factory->post->create(
+			array(
+				'post_type'   => $this->post_type,
+				'post_author' => $user_id,
+				'post_parent' => $id,
+			)
+		);
 
-		$term_id = $this->factory->term->create( array(
-			'taxonomy' => $this->taxonomy,
-		) );
+		$term_id = $this->factory->term->create(
+			array(
+				'taxonomy' => $this->taxonomy,
+			)
+		);
 		wp_set_post_terms( $id, array( $term_id ), $this->taxonomy );
 
 		$cat_id = $this->factory->category->create();
 		wp_set_post_categories( $id, array( $cat_id ) );
 
 		$file          = DIR_TESTDATA . '/images/canola.jpg';
-		$attachment_id = $this->factory->attachment->create_object( $file, $id, array(
-			'post_mime_type' => 'image/jpeg',
-			'menu_order'     => rand( 1, 100 ),
-			'post_title'     => 'canola',
-		) );
+		$attachment_id = $this->factory->attachment->create_object(
+			$file,
+			$id,
+			array(
+				'post_mime_type' => 'image/jpeg',
+				'menu_order'     => rand( 1, 100 ),
+				'post_title'     => 'canola',
+			)
+		);
 
 		do_action( 'wp_loaded' );
 		/* @var WP_Rewrite $wp_rewrite */
@@ -417,15 +491,20 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @group wpml
 	 */
 	public function test_wpml_st_post_type_link_filter_original_slug() {
-		register_post_type( $this->post_type, array(
-			'public'     => true,
-		) );
+		register_post_type(
+			$this->post_type,
+			array(
+				'public' => true,
+			)
+		);
 
 		$user_id = $this->factory->user->create();
-		$post = $this->factory->post->create_and_get( array(
-			'post_type'   => $this->post_type,
-			'post_author' => $user_id,
-		) );
+		$post    = $this->factory->post->create_and_get(
+			array(
+				'post_type'   => $this->post_type,
+				'post_author' => $user_id,
+			)
+		);
 
 		$actual = apply_filters( 'wpml_st_post_type_link_filter_original_slug', 'ignored', 'ignored', $post );
 
