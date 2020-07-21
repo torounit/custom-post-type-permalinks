@@ -415,8 +415,6 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @test
 	 * @group permalink
 	 * @group wpml
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
 	 */
 	public function test_wpml_st_post_type_link_filter_original_slug() {
 		register_post_type( $this->post_type, array(
