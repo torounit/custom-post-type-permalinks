@@ -105,8 +105,17 @@ class CPTP_Module_Admin extends CPTP_Module {
 		);
 		?>
 
-		<p><?php echo wp_kses( __( 'The tags you can use are WordPress Structure Tags and <code>%"custom_taxonomy_slug"%</code> (e.g. <code>%actors%</code> or <code>%movie_actors%</code>).', 'custom-post-type-permalinks' ), $allowed_html_code_tag ); ?>
-			<?php echo wp_kses( __( '<code>%"custom_taxonomy_slug"%</code> is replaced by the term of taxonomy.', 'custom-post-type-permalinks' ), $allowed_html_code_tag ); ?></p>
+		<?php
+		$taxonomies = CPTP_Util::get_taxonomies();
+		?>
+		<p><?php esc_html_e( 'The tags you can use are WordPress structure tags and taxonomy tags.', 'custom-post-type-permalinks' ); ?></p>
+		<p><?php esc_html_e( 'Available taxonomy tags:', 'custom-post-type-permalinks' ); ?>
+			<?php
+			foreach ( $taxonomies as $taxonomy ) {
+				echo sprintf( '<code>%%%s%%</code>', esc_html( $taxonomy ) );
+			}
+			?>
+		</p>
 
 		<p><?php esc_html_e( "Presence of the trailing '/' is unified into a standard permalink structure setting.", 'custom-post-type-permalinks' ); ?>
 		<p><?php echo wp_kses( __( 'If <code>has_archive</code> is true, add permalinks for custom post type archive.', 'custom-post-type-permalinks' ), $allowed_html_code_tag ); ?></p>
@@ -119,8 +128,9 @@ class CPTP_Module_Admin extends CPTP_Module {
 	 *
 	 * @param array $option {
 	 *     Callback option.
-	 *     @type string 'post_type' post type name.
-	 *     @type string 'label_for' post type label.
+	 *
+	 * @type string 'post_type' post type name.
+	 * @type string 'label_for' post type label.
 	 * }
 	 */
 	public function setting_structure_callback_function( $option ) {
@@ -162,6 +172,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 	public function setting_no_tax_structure_callback_function() {
 		$no_taxonomy_structure = CPTP_Util::get_no_taxonomy_structure();
 		echo '<input name="no_taxonomy_structure" id="no_taxonomy_structure" type="checkbox" value="1" class="code" ' . checked( false, $no_taxonomy_structure, false ) . ' /> ';
+		/* translators: %s site url */
 		$txt = __( "If you check this, the custom taxonomy's permalinks will be <code>%s/post_type/taxonomy/term</code>.", 'custom-post-type-permalinks' );
 		echo sprintf( wp_kses( $txt, array( 'code' => array() ) ), esc_html( home_url() ) );
 	}
