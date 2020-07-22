@@ -1,6 +1,6 @@
 # Custom Post Type Permalinks
 
-Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
+Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi,strategio
 Donate link:       https://www.paypal.me/torounit
 Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
 Requires at least: 4.7
@@ -79,6 +79,11 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 * screenshot-1.png
 
 ## Changelog
+
+### 3.4.0
+
+* Tested 5.5 beta3
+* WPML support: custom post type slug translation. ( Props @strategio )
 
 ### 3.3.5
 
