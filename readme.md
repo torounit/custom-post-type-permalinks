@@ -1,10 +1,17 @@
 # Custom Post Type Permalinks
+
+Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi
 Donate link:       https://www.paypal.me/torounit
-Requires PHP:      5.3
+Tags:              permalink,permalinks,custom post type,custom taxonomy,cms
+Requires at least: 4.7
+Tested up to:      5.4
+Requires PHP:      5.6
+Stable tag: 3.3.5
+License: GPLv2 or Later
 
 Edit the permalink of custom post type.
 
-
+<!-- only:github/ -->
 [![Latest Stable Version](https://poser.pugx.org/torounit/custom-post-type-permalinks/v/stable)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
 [![License](https://poser.pugx.org/torounit/custom-post-type-permalinks/license)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
 [![Downloads](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
@@ -13,6 +20,7 @@ Edit the permalink of custom post type.
 [![Build Status](https://travis-ci.org/torounit/custom-post-type-permalinks.svg)](https://travis-ci.org/torounit/custom-post-type-permalinks)
 [![Donation](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX)
 [![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png?rev=1044335)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+<!-- /only:github -->
 
 ## Description
 
@@ -42,7 +50,7 @@ Donation: Please send [My Wishlist](http://www.amazon.co.jp/registry/wishlist/CO
 
 Example:
 
-`
+```
 register_post_type( 'foo',
 	array(
 		'public' => true,
@@ -53,7 +61,7 @@ register_post_type( 'foo',
 		'cptp_permalink_structure' => '%post_id%'
 	)
 );
-`
+```
 
 
 ## Installation
@@ -69,7 +77,6 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 ## Screenshots
 
 * screenshot-1.png
-
 
 ## Changelog
 
