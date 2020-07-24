@@ -1,13 +1,13 @@
 # Custom Post Type Permalinks
 
-Contributors:      Toro_Unit,inc2734,ixkaito,keita_kobayashi,strategio  
+Contributors:      Toro_Unit, inc2734, ixkaito, keita_kobayashi, strategio  
 Donate link:       https://www.paypal.me/torounit  
-Tags:              permalink,permalinks,custom post type,custom taxonomy,cms  
+Tags:              permalink, url, link, address, custom post type  
 Requires at least: 4.7  
 Tested up to:      5.5  
 Requires PHP:      5.6  
-License: GPLv2 or Later  
-License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
+License:           GPLv2 or Later  
+License URI:       http://www.gnu.org/licenses/gpl-2.0.txt  
 Stable tag:        3.3.5
 
 
