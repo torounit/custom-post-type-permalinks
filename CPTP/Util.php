@@ -58,6 +58,7 @@ class CPTP_Util {
 		 * @param bool $support support CPTP.
 		 */
 		$support = apply_filters( "CPTP_is_rewrite_supported_by_${post_type}", $support );
+		$support = apply_filters( "cptp_is_rewrite_supported_by_${post_type}", $support );
 
 		/**
 		 * Filters support CPTP for custom post type.
@@ -67,7 +68,8 @@ class CPTP_Util {
 		 * @param bool $support support CPTP.
 		 * @param string $post_type post type name.
 		 */
-		return apply_filters( 'CPTP_is_rewrite_supported', $support, $post_type );
+		$support = apply_filters( 'CPTP_is_rewrite_supported', $support, $post_type );
+		return apply_filters( 'cptp_is_rewrite_supported', $support, $post_type );
 	}
 
 	/**
@@ -192,7 +194,8 @@ class CPTP_Util {
 		}
 		$structure = '/' . ltrim( $structure, '/' );
 
-		return apply_filters( 'CPTP_' . $post_type->name . '_structure', $structure );
+		$structure = apply_filters( 'CPTP_' . $post_type->name . '_structure', $structure );
+		return apply_filters( 'cptp_' . $post_type->name . '_structure', $structure );
 	}
 
 	/**
@@ -262,7 +265,10 @@ class CPTP_Util {
 			$tok_index ++;
 		}
 
-		return apply_filters( 'CPTP_date_front', $front, $post_type, $structure );
+		$front = apply_filters( 'CPTP_date_front', $front, $post_type, $structure );
+		$front = apply_filters( 'cptp_date_front', $front, $post_type, $structure );
+
+		return $front;
 	}
 
 	/**

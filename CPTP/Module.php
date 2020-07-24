@@ -21,7 +21,7 @@ abstract class CPTP_Module {
 	 * Register hook on CPTP_init.
 	 */
 	public function register() {
-		add_action( 'CPTP_init', array( $this, 'add_hook' ) );
+		add_action( 'cptp_init', array( $this, 'add_hook' ) );
 	}
 
 	/**

@@ -414,7 +414,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	public function test_to_disable_post_type( $structure ) {
 		update_option( $this->post_type . '_structure', $structure );
 
-		add_filter( 'CPTP_is_rewrite_supported_by_' . $this->post_type, '__return_false' );
+		add_filter( 'cptp_is_rewrite_supported_by_' . $this->post_type, '__return_false' );
 
 		register_taxonomy(
 			$this->taxonomy,

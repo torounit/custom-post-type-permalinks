@@ -49,6 +49,7 @@ class CPTP {
 		$this->set_module( 'flush_rules', new CPTP_Module_FlushRules() );
 
 		do_action( 'CPTP_load_modules', $this );
+		do_action( 'cptp_load_modules', $this );
 	}
 
 	/**
@@ -62,6 +63,7 @@ class CPTP {
 		}
 
 		do_action( 'CPTP_registered_modules', $this );
+		do_action( 'cptp_registered_modules', $this );
 	}
 
 	/**
@@ -74,6 +76,7 @@ class CPTP {
 	 */
 	public function set_module( $name, CPTP_Module $module ) {
 		$module = apply_filters( "CPTP_set_{$name}_module", $module );
+		$module = apply_filters( "cptp_set_{$name}_module", $module );
 		if ( $module instanceof CPTP_Module ) {
 			$this->modules[ $name ] = $module;
 		}
@@ -89,6 +92,7 @@ class CPTP {
 	public function init() {
 		$this->init_modules();
 		do_action( 'CPTP_init' );
+		do_action( 'cptp_init' );
 	}
 
 	/**
