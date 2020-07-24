@@ -50,7 +50,7 @@ Donation: Please send [My Wishlist](http://www.amazon.co.jp/registry/wishlist/CO
 
 Example:
 
-```
+```php
 register_post_type( 'foo',
 	array(
 		'public' => true,
@@ -63,6 +63,20 @@ register_post_type( 'foo',
 );
 ```
 
+### Exclude specific post type
+
+```php
+add_filter(  'CPTP_is_rewrite_supported_by_foo',  '__return_false' );
+
+// or
+
+add_filter(  'CPTP_is_rewrite_supported', function ( $support , $post_type ) {
+    if ( 'foo' === $post_type ) {
+        return false;
+    }
+    return $support;
+}, 10, 2);
+```
 
 ## Installation
 
