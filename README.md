@@ -101,6 +101,7 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 * Tested 5.5 beta3
 * WPML support: custom post type slug translation. ( Props @strategio )
 * Add new filter `cptp_post_link_category` and `cptp_post_link_term` .
+* Use Lowercase prefix for action and filter.
 
 ### 3.3.5
 
