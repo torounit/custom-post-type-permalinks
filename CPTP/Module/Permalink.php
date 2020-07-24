@@ -157,9 +157,9 @@ class CPTP_Module_Permalink extends CPTP_Module {
 				 *
 				 * @since 3.4.0
 				 *
-				 * @param WP_Term  $category_object Selected category.
-				 * @param WP_Term[] $categories     Categories set in post.
-				 * @param WP_Post    $post  Post object.
+				 * @param WP_Term   $category_object Selected category.
+				 * @param WP_Term[] $categories      Categories set in post.
+				 * @param WP_Post   $post            Post object.
 				 */
 				$category_object = apply_filters( 'cptp_post_link_category', $category_object, $categories, $post );
 				$category_object = get_term( $category_object, 'category' );
@@ -246,7 +246,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 					$term_obj = reset( $newTerms );
 
 					/**
-					 * Filters the category for a post of a custom post type.
+					 * Filters the term for a post of a custom post type.
 					 *
 					 * @since 3.4.0
 					 *
