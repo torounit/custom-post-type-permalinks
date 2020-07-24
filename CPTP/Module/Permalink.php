@@ -147,9 +147,21 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		if ( false !== strpos( $permalink, '%category%' ) ) {
 			$categories = get_the_category( $post->ID );
 			if ( $categories ) {
-				$categories = CPTP_Util::sort_terms( $categories );
+				$categories      = CPTP_Util::sort_terms( $categories );
+				$category_object = reset( $categories );
 				// phpcs:ignore
-				$category_object = apply_filters( 'post_link_category', $categories[0], $categories, $post );
+				$category_object = apply_filters( 'post_link_category', $category_object, $categories, $post );
+
+				/**
+				 * Filters the category for a post of a custom post type.
+				 *
+				 * @since 3.4.0
+				 *
+				 * @param WP_Term  $category_object Selected category.
+				 * @param WP_Term[] $categories     Categories set in post.
+				 * @param WP_Post    $post  Post object.
+				 */
+				$category_object = apply_filters( 'cptp_post_link_category', $category_object, $categories, $post );
 				$category_object = get_term( $category_object, 'category' );
 				$category        = $category_object->slug;
 				if ( $category_object->parent ) {
@@ -214,6 +226,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$search  = array();
 		$replace = array();
 
+		$post       = get_post( $post_id );
 		$taxonomies = CPTP_Util::get_taxonomies( true );
 
 		// %taxnomomy% -> parent/child
@@ -230,7 +243,19 @@ class CPTP_Module_Permalink extends CPTP_Module {
 						}
 					}
 
-					$term_obj  = reset( $newTerms );
+					$term_obj = reset( $newTerms );
+
+					/**
+					 * Filters the category for a post of a custom post type.
+					 *
+					 * @since 3.4.0
+					 *
+					 * @param WP_Term     $term_obj Selected term.
+					 * @param WP_Term[]   $terms    Terms set in post.
+					 * @param WP_Taxonomy $taxonomy Taxonomy object.
+					 * @param WP_Post     $post     Post object.
+					 */
+					$term_obj  = apply_filters( 'cptp_post_link_term', $term_obj, $terms, $taxonomy, $post );
 					$term_slug = $term_obj->slug;
 
 					if ( isset( $term_obj->parent ) && $term_obj->parent ) {
