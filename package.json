@@ -18,7 +18,9 @@
   "homepage": "https://github.com/torounit/custom-post-type-permalinks#readme",
   "release-it": {
     "hooks": {
-      "before:bump": "bash ./bin/create-release.sh ${version}"
+      "before:bump": "bash ./bin/create-release.sh custom-post-type-permalinks ${version}",
+      "after:bump": "bash ./bin/create-zip.sh custom-post-type-permalinks",
+      "after:release": "bash ./bin/cleanup.sh custom-post-type-permalinks"
     },
     "github": {
       "release": true

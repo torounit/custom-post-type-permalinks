@@ -17,6 +17,11 @@ if [[ ! $SVN_REPO ]]; then
 	exit
 fi
 
+if [ `echo $TRAVIS_TAG | grep -e 'alpha' -e 'beta' -e 'RC' -e 'rc'` ] ; then
+	echo "Development version. Not deploying."
+	exit
+fi
+
 # Untrailing slash of SVN_REPO path
 SVN_REPO=`echo $SVN_REPO | sed -e "s/\/$//"`
 # Git repository
