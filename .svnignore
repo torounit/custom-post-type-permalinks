@@ -32,3 +32,4 @@ node_modules
 *.zip
 .release-it.json
 .env
+.wp-env.json
