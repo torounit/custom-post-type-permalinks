@@ -68,11 +68,11 @@ register_post_type( 'foo',
 ### Exclude specific post type
 
 ```php
-add_filter(  'CPTP_is_rewrite_supported_by_foo',  '__return_false' );
+add_filter(  'cptp_is_rewrite_supported_by_foo',  '__return_false' );
 
 // or
 
-add_filter(  'CPTP_is_rewrite_supported', function ( $support , $post_type ) {
+add_filter(  'cptp_is_rewrite_supported', function ( $support , $post_type ) {
     if ( 'foo' === $post_type ) {
         return false;
     }
