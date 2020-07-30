@@ -96,6 +96,9 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 3.4.1
+* Fix readme.
+
 ### 3.4.0
 
 * Tested 5.5 beta3
