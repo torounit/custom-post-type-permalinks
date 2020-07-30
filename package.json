@@ -1,6 +1,6 @@
 {
   "name": "custom-post-type-permalinks",
-  "version": "3.4.0-rc.1",
+  "version": "3.4.0",
   "description": "Custom Post Type Permalinks allow you edit the permalink structure of custom post type.",
   "private": true,
   "directories": {
