@@ -4,7 +4,7 @@ Contributors:      Toro_Unit, inc2734, ixkaito, keita_kobayashi, strategio
 Donate link:       https://www.paypal.me/torounit  
 Tags:              permalink, url, link, address, custom post type  
 Requires at least: 4.7  
-Tested up to:      5.5  
+Tested up to:      5.6  
 Requires PHP:      5.6  
 License:           GPLv2 or Later  
 License URI:       http://www.gnu.org/licenses/gpl-2.0.txt  
@@ -95,6 +95,9 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 * screenshot-1.png
 
 ## Changelog
+
+### 3.4.2
+* Tested WP 5.6.
 
 ### 3.4.1
 * Fix readme.

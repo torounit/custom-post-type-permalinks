@@ -11,16 +11,16 @@
     ],
     "require": {},
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.4.2",
-        "wp-coding-standards/wpcs": "^2.0",
-        "phpcompatibility/phpcompatibility-wp": "^2.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0"
+        "dealerdirect/phpcodesniffer-composer-installer": "*",
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "squizlabs/php_codesniffer": "*",
+        "wp-coding-standards/wpcs": "*"
     },
     "scripts": {
         "phpcs": [
             "@php vendor/bin/phpcs -p -s -v -n --standard=./.phpcs.xml.dist --extensions=php"
         ],
-        "autofix": [
+        "format": [
             "@php vendor/bin/phpcbf --standard=./.phpcs.xml.dist --report-summary --report-source"
         ]
     }
