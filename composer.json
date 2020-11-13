@@ -14,9 +14,11 @@
         "dealerdirect/phpcodesniffer-composer-installer": "*",
         "phpcompatibility/phpcompatibility-wp": "*",
         "squizlabs/php_codesniffer": "*",
-        "wp-coding-standards/wpcs": "*"
+        "wp-coding-standards/wpcs": "*",
+        "phpunit/phpunit":"4.8.*|5.7.*|6.*.*|7.*.*"
     },
     "scripts": {
+        "test": "phpunit",
         "phpcs": [
             "@php vendor/bin/phpcs -p -s -v -n --standard=./.phpcs.xml.dist --extensions=php"
         ],
