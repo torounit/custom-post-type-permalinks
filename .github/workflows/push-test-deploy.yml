@@ -29,7 +29,7 @@ jobs:
           - php: 7.2
             wp: latest
           - php: 7.1
-            wp: latest
+            wp: 5.1
           - php: 5.6
             wp: 4.7
 
@@ -57,8 +57,11 @@ jobs:
         run: |
           bash ./bin/build.sh
 
+      - name: Install composer
+        run: composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
+
       - name: phpunit tests
-        run: composer test
+        run: phpunit
 
   lint:
     runs-on:  ubuntu-latest
