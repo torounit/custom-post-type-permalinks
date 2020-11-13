@@ -29,9 +29,7 @@ jobs:
           - php: 7.2
             wp: latest
           - php: 7.1
-            wp: 5.1
-          - php: 5.6
-            wp: 4.7
+            wp: '5.0'
 
     name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }} Test
     steps:
