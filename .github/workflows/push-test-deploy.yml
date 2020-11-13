@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
 
   test:
-    runs-on: ${{ matrix.operating-system }}
+    runs-on: ubuntu-latest
     services:
       mysql:
         image: mysql:5.7
@@ -18,16 +18,30 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       matrix:
-        operating-system: [ ubuntu-latest ]
-        php-versions: [ '7.0', '7.3', '7.4' ]
-        wp-versions: [ '4.7', 'latest', 'trunk' ]
-    name: PHP ${{ matrix.php-versions }} / WP ${{ matrix.wp-versions }} Test on ${{ matrix.operating-system }}
+        include:
+          - php: 7.4
+            wp: trunk
+            experimental: true
+          - php: 7.4
+            wp: latest
+          - php: 7.3
+            wp: latest
+          - php: 7.2
+            wp: latest
+          - php: 7.2
+            wp: latest
+          - php: 7.1
+            wp: 5.0
+          - php: 5.6
+            wp: 4.7
+
+    name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }} Test
     steps:
       - uses: actions/checkout@v2
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php }}
           extensions: mbstring, intl #optional, setup extensions
           ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
           coverage: xdebug #optional, setup coverage driver
@@ -39,7 +53,7 @@ jobs:
         run: composer install --optimize-autoloader --prefer-dist
 
       - name: Install WP Tests
-        run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ matrix.wp-versions }} true
+        run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ matrix.wp }} true
 
       - name: Build
         run: |
