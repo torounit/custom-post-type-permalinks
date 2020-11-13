@@ -28,10 +28,8 @@ jobs:
             wp: latest
           - php: 7.2
             wp: latest
-          - php: 7.2
-            wp: latest
           - php: 7.1
-            wp: 5.0
+            wp: latest
           - php: 5.6
             wp: 4.7
 
