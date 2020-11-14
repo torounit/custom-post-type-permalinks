@@ -28,6 +28,8 @@ jobs:
             wp: latest
           - php: 7.2
             wp: latest
+          - php: 7.2
+            wp: 5.1
 
     name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }} Test
     steps:
@@ -53,7 +55,7 @@ jobs:
         run: |
           bash ./bin/build.sh
 
-      - name: Install composer
+      - name: Install phpunit global
         run: composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
 
       - name: phpunit tests
