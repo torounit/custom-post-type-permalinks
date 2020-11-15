@@ -50,10 +50,9 @@ jobs:
         run: php -v
 
       - name: Install phpunit global
-        run: composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
-
-      - name: Check phpunit version
-        run: phpunit --version
+        run: |
+          composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
+          phpunit --version
 
       - name: Composer install
         run: composer install --optimize-autoloader --prefer-dist
@@ -66,7 +65,9 @@ jobs:
           bash ./bin/build.sh
 
       - name: phpunit tests
-        run: phpunit
+        run: |
+          phpunit
+          WP_MULTISITE=1 phpunit
 
   lint:
     runs-on:  ubuntu-latest
@@ -96,6 +97,10 @@ jobs:
     needs: [test,lint]
     steps:
       - uses: actions/checkout@v2
+      - name: Build
+        if: contains(github.ref, 'tags/')
+        run: |
+          bash ./bin/build.sh
       - name: WordPress Plugin Deploy
         if: contains(github.ref, 'tags/')
         uses: 10up/action-wordpress-plugin-deploy@master
