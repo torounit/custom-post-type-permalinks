@@ -58,7 +58,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: vendor
-          key: composer-${{ hashFiles('**/composer.lock.json') }}
+          key: composer-${{ hashFiles('composer.lock') }}
 
       - name: Composer install
         run: composer install --optimize-autoloader --prefer-dist
@@ -95,7 +95,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: vendor
-          key: composer-${{ hashFiles('**/composer.lock.json') }}
+          key: composer-${{ hashFiles('composer.lock') }}
 
       - name: Composer install
         run: composer install --optimize-autoloader --prefer-dist
