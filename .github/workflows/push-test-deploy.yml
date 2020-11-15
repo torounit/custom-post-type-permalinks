@@ -43,9 +43,13 @@ jobs:
           extensions: mbstring, intl , mysqli
           ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
           coverage: xdebug #optional, setup coverage driver
+          tools: phpunit, composer
 
       - name: Check PHP Version
         run: php -v
+
+      - name: Check phpunit version
+        run: phpunit --version
 
       - name: Composer install
         run: composer install --optimize-autoloader --prefer-dist
@@ -57,10 +61,6 @@ jobs:
         run: |
           bash ./bin/build.sh
 
-      - name: Install phpunit global
-        run: composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
-      - name: phpunit version
-        run: phpunit --version
       - name: phpunit tests
         run: phpunit
 
