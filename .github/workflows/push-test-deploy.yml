@@ -54,6 +54,12 @@ jobs:
           composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
           phpunit --version
 
+      - name: Cache composer packages
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('**/composer.lock.json') }}
+
       - name: Composer install
         run: composer install --optimize-autoloader --prefer-dist
 
@@ -84,6 +90,12 @@ jobs:
 
       - name: Check PHP Version
         run: php -v
+
+      - name: Cache composer packages
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('**/composer.lock.json') }}
 
       - name: Composer install
         run: composer install --optimize-autoloader --prefer-dist
