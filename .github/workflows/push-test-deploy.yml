@@ -32,6 +32,8 @@ jobs:
             wp: 5.1
           - php: 7.0
             wp: '5.0'
+          - php: 5.6
+            wp: 4.7
 
     name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }} Test
     steps:
@@ -43,10 +45,12 @@ jobs:
           extensions: mbstring, intl , mysqli
           ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
           coverage: xdebug #optional, setup coverage driver
-          tools: phpunit, composer
 
       - name: Check PHP Version
         run: php -v
+
+      - name: Install phpunit global
+        run: composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
 
       - name: Check phpunit version
         run: phpunit --version
