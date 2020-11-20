@@ -391,12 +391,11 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->go_to( get_permalink( $id ) );
 		$this->assertFalse( is_single() );
 
-		// comment out in wp 5.6 beta 4
-//		$attachment_link = user_trailingslashit( trailingslashit( $post_link ) . get_post( $attachment_id )->post_name );
-//		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
-//		$this->assertEquals( $attachment_link, get_attachment_link( $attachment_id ) );
-//		$this->go_to( get_attachment_link( $attachment_id ) );
-//		$this->assertTrue( is_attachment() );
+		$attachment_link = user_trailingslashit( trailingslashit( $post_link ) . get_post( $attachment_id )->post_name );
+		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
+		$this->assertEquals( $attachment_link, get_attachment_link( $attachment_id ) );
+		$this->go_to( get_attachment_link( $attachment_id ) );
+		$this->assertTrue( is_attachment() );
 	}
 
 	/**
