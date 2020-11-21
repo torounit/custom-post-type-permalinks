@@ -432,6 +432,10 @@ class CPTP_Module_Permalink extends CPTP_Module {
 	 * @return string
 	 */
 	public function replace_post_slug_with_placeholder( $original_slug, $post_link, $post ) {
+		if ( ! in_array( $post->post_type, CPTP_Util::get_post_types(), true ) ) {
+			return $original_slug;
+		}
+
 		return CPTP_Module_Rewrite::get_slug_placeholder( $post->post_type );
 	}
 }
