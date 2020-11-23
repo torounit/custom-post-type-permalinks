@@ -20,7 +20,6 @@ Edit the permalink of custom post type.
 [![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![Build Status](https://img.shields.io/github/workflow/status/torounit/custom-post-type-permalinks/Test)](https://github.com/torounit/custom-post-type-permalinks/actions)
-[![Donation](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX)
 [![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png?rev=1044335)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 <!-- /only:github -->
 
