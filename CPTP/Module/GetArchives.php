@@ -149,6 +149,8 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 				$link_dir  = $post_type->rewrite['slug'] . '/' . $c['name'] . '/' . $c['termslug'];
 			}
 
+			$ret_link = str_replace( '%link_dir%/date/', '%link_dir%/', $ret_link );
+
 			if ( ! strstr( $html, '/date/' ) ) {
 				$link_dir = $link_dir . CPTP_Util::get_date_front( $post_type );
 			}
