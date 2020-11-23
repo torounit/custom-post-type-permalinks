@@ -14,12 +14,12 @@ Stable tag:        3.4.2
 Edit the permalink of custom post type.
 
 <!-- only:github/ -->
-[![Latest Stable Version](https://poser.pugx.org/torounit/custom-post-type-permalinks/v/stable)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
-[![License](https://poser.pugx.org/torounit/custom-post-type-permalinks/license)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
-[![Downloads](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![Build Status](https://img.shields.io/github/workflow/status/torounit/custom-post-type-permalinks/Test)](https://github.com/torounit/custom-post-type-permalinks/actions)
+[![Latest Stable Version](https://img.shields.io/wordpress/plugin/v/custom-post-type-permalinks?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![License](https://img.shields.io/github/license/torounit/custom-post-type-permalinks?style=for-the-badge)](https://github.com/torounit/custom-post-type-permalinks/blob/master/LICENSE)
+[![Downloads](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![Build Status](https://img.shields.io/github/workflow/status/torounit/custom-post-type-permalinks/Test?style=for-the-badge)](https://github.com/torounit/custom-post-type-permalinks/actions)
 [![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png?rev=1044335)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 <!-- /only:github -->
 
