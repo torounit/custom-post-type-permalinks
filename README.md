@@ -8,7 +8,7 @@ Tested up to:      5.6
 Requires PHP:      5.6  
 License:           GPLv2 or Later  
 License URI:       http://www.gnu.org/licenses/gpl-2.0.txt  
-Stable tag:        3.4.2
+Stable tag:        3.4.3
 
 
 Edit the permalink of custom post type.
