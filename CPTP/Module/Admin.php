@@ -147,6 +147,10 @@ class CPTP_Module_Admin extends CPTP_Module {
 			$disabled = true;
 		}
 
+		if ( isset( $pt_object->cptp ) && ! empty( $pt_object->cptp['permalink_structure'] ) ) {
+			$disabled = true;
+		}
+
 		if ( ! $value ) {
 			$value = CPTP_DEFAULT_PERMALINK;
 		}
@@ -159,7 +163,10 @@ class CPTP_Module_Admin extends CPTP_Module {
 		?>
 		<p>
 			<code><?php echo esc_html( home_url() . ( $slug ? '/' : '' ) . $slug ); ?></code>
-			<input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" type="text" class="regular-text code " value="<?php echo esc_attr( $value ); ?>" <?php disabled( $disabled, true, true ); ?> />
+			<input
+				name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" type="text"
+				class="regular-text code "
+				value="<?php echo esc_attr( $value ); ?>" <?php disabled( $disabled, true, true ); ?> />
 		</p>
 		<p>has_archive: <code><?php echo esc_html( $pt_object->has_archive ? 'true' : 'false' ); ?></code> / with_front:
 			<code><?php echo esc_html( $pt_object->rewrite['with_front'] ? 'true' : 'false' ); ?></code></p>

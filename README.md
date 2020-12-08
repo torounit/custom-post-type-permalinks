@@ -8,19 +8,18 @@ Tested up to:      5.6
 Requires PHP:      5.6  
 License:           GPLv2 or Later  
 License URI:       http://www.gnu.org/licenses/gpl-2.0.txt  
-Stable tag:        3.4.2
+Stable tag:        3.4.3
 
 
 Edit the permalink of custom post type.
 
 <!-- only:github/ -->
-[![Latest Stable Version](https://poser.pugx.org/torounit/custom-post-type-permalinks/v/stable)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
-[![License](https://poser.pugx.org/torounit/custom-post-type-permalinks/license)](https://packagist.org/packages/torounit/custom-post-type-permalinks)
-[![Downloads](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![Build Status](https://travis-ci.org/torounit/custom-post-type-permalinks.svg)](https://travis-ci.org/torounit/custom-post-type-permalinks)
-[![Donation](https://img.shields.io/badge/bitcoin-donate-yellow.svg)](https://blockchain.info/ja/address/3HwkojX2pd9wc5kPFdXnDXMTNbgBmPRygX)
+[![Latest Stable Version](https://img.shields.io/wordpress/plugin/v/custom-post-type-permalinks?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![License](https://img.shields.io/github/license/torounit/custom-post-type-permalinks?style=for-the-badge)](https://github.com/torounit/custom-post-type-permalinks/blob/master/LICENSE)
+[![Downloads](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
+[![Build Status](https://img.shields.io/github/workflow/status/torounit/custom-post-type-permalinks/Test?style=for-the-badge)](https://github.com/torounit/custom-post-type-permalinks/actions)
 [![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png?rev=1044335)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 <!-- /only:github -->
 
@@ -95,6 +94,9 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 * screenshot-1.png
 
 ## Changelog
+
+### 3.4.3
+* Fix archive link bug fix.
 
 ### 3.4.2
 * Tested WP 5.6.
