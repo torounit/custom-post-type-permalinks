@@ -95,6 +95,9 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 
 ## Changelog
 
+### 3.4.4
+* WPML support: Only apply slug translation if post type is supported. (Props @ffauvel)
+
 ### 3.4.3
 * Fix archive link bug fix.
 
