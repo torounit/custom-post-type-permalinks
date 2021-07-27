@@ -327,6 +327,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	 * @param string $structure permalink structure.
 	 */
 	public function test_to_private_post_type( $structure ) {
+		global $wp_version;
 		update_option( $this->post_type . '_structure', $structure );
 
 		register_taxonomy(
@@ -391,9 +392,15 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->go_to( get_permalink( $id ) );
 		$this->assertFalse( is_single() );
 
-		$attachment_link = user_trailingslashit( trailingslashit( $post_link ) . get_post( $attachment_id )->post_name );
 		$this->assertEquals( $attachment_id, url_to_postid( get_attachment_link( $attachment_id ) ) );
-		$this->assertEquals( home_url( '?attachment_id=' . $attachment_id ), get_attachment_link( $attachment_id ) );
+
+		if ( version_compare( $wp_version, '5.7', '>=' ) ) {
+			$this->assertEquals( home_url( '?attachment_id='. $attachment_id ), get_attachment_link( $attachment_id ) );
+		}
+		else {
+			$attachment_link = user_trailingslashit( trailingslashit( $post_link ) . get_post( $attachment_id )->post_name );
+			$this->assertEquals( $attachment_link, get_attachment_link( $attachment_id ) );
+		}
 		$this->go_to( get_attachment_link( $attachment_id ) );
 		$this->assertTrue( is_attachment() );
 	}
