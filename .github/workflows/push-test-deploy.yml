@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - php: 8.0
+          - php: '8.0'
             wp: trunk
             experimental: true
           - php: 7.4
