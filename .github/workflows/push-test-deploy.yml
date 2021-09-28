@@ -19,8 +19,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - php: 8.0
+          - php: '8.0'
             wp: trunk
+          - php: 7.4
+            wp: latest
+          - php: 7.2
+            wp: 5.7
+          - php: 7.0
+            wp: '5.0'
+          - php: 5.6
+            wp: 4.7
 
     name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }} Test
     steps:
@@ -37,6 +45,12 @@ jobs:
 
       - name: Check PHP Version
         run: php -v
+
+      - name: Install phpunit global
+        if: ${{ matrix.php < 8.0 }}
+        run: |
+          composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
+          phpunit --version
 
       - name: Cache composer packages
         uses: actions/cache@v2
@@ -67,7 +81,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.3
+          php-version: 7.4
           extensions: mbstring, intl #optional, setup extensions
           ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
           coverage: xdebug #optional, setup coverage driver
