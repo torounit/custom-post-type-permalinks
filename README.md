@@ -3,7 +3,7 @@
 Contributors:      Toro_Unit, inc2734, ixkaito, keita_kobayashi, strategio  
 Donate link:       https://www.paypal.me/torounit  
 Tags:              permalink, url, link, address, custom post type  
-Requires at least: 4.7  
+Requires at least: 5.2  
 Tested up to:      5.8  
 Requires PHP:      5.6  
 License:           GPLv2 or Later  

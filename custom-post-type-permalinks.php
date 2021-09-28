@@ -9,6 +9,8 @@
  * Text Domain: custom-post-type-permalinks
  * License: GPL2 or later
  * Domain Path: /language/
+ * Requires at least: 5.2
+ * Requires PHP: 5.6
  *
  * @package Custom_Post_Type_Permalinks
  * @version 3.4.5
