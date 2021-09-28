@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - php: 7.4
+          - php: 8.0
             wp: latest
           - php: 7.3
             wp: latest
@@ -38,6 +38,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
+          tools: phpunit-polyfills
           php-version: ${{ matrix.php }}
           extensions: mbstring, intl , mysqli
           ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
