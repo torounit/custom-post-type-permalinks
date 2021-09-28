@@ -2,10 +2,10 @@
 
 class CPTP_Module_Setting_Test extends WP_UnitTestCase {
 
-	public function setUp() {
+	public function set_up() {
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
-		parent::setUp();
+		parent::set_up();
 
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );

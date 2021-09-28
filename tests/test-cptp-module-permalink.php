@@ -5,10 +5,10 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 	public $post_type;
 	public $taxonomy;
 
-	public function setUp() {
+	public function set_up() {
 		/* @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
-		parent::setUp();
+		parent::set_up();
 
 		delete_option( 'category_base' );
 		add_option( 'category_base', rand_str( 12 ) );
@@ -28,7 +28,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		$this->taxonomy  = 'ctax';
 	}
 
-	public function tearDown() {
+	public function tear_down() {
 		_unregister_post_type( $this->post_type );
 		_unregister_taxonomy( $this->taxonomy );
 	}
