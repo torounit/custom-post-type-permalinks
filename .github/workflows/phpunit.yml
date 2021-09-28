@@ -56,8 +56,8 @@ jobs:
 
       - name: phpunit tests
         run: |
-          phpunit
-          WP_MULTISITE=1 phpunit
+          composer test
+          WP_MULTISITE=1 composer test
 
   lint:
     runs-on:  ubuntu-latest

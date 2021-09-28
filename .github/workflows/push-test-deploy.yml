@@ -57,45 +57,5 @@ jobs:
 
       - name: phpunit tests
         run: |
-          phpunit
-          WP_MULTISITE=1 phpunit
-
-  lint:
-    runs-on:  ubuntu-latest
-    name: PHP lint
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.3
-          extensions: mbstring, intl #optional, setup extensions
-          ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
-          coverage: xdebug #optional, setup coverage driver
-
-      - name: Check PHP Version
-        run: php -v
-
-      - name: Composer install
-        run: composer install --optimize-autoloader --prefer-dist
-
-      - name: phpcs tests
-        run: composer phpcs
-
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    needs: [test,lint]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build
-        if: contains(github.ref, 'tags/')
-        run: |
-          bash ./bin/build.sh
-      - name: WordPress Plugin Deploy
-        if: contains(github.ref, 'tags/')
-        uses: 10up/action-wordpress-plugin-deploy@master
-        env:
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SLUG: custom-post-type-permalinks
+          composer test
+          WP_MULTISITE=1 composer test
