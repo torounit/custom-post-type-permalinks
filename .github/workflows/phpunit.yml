@@ -1,0 +1,106 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    strategy:
+      matrix:
+        include:
+          - php: 8.0
+            wp: trunk
+
+    name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }} Test
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@master
+        with:
+          tools: phpunit-polyfills, phpunit
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl , mysqli
+          ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
+          coverage: xdebug #optional, setup coverage driver
+
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Cache composer packages
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Composer install
+        run: composer update --optimize-autoloader --prefer-dist
+
+      - name: Install WP Tests
+        run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ matrix.wp }} true
+
+      - name: Build
+        run: |
+          bash ./bin/build.sh
+
+      - name: phpunit tests
+        run: |
+          composer test
+          WP_MULTISITE=1 composer test
+
+  lint:
+    runs-on:  ubuntu-latest
+    name: PHP lint
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.3
+          extensions: mbstring, intl #optional, setup extensions
+          ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
+          coverage: xdebug #optional, setup coverage driver
+
+      - name: Check PHP Version
+        run: php -v
+
+      - name: Cache composer packages
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Composer install
+        run: composer install --optimize-autoloader --prefer-dist
+
+      - name: phpcs tests
+        run: composer phpcs
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [test,lint]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        if: contains(github.ref, 'tags/')
+        run: |
+          bash ./bin/build.sh
+      - name: WordPress Plugin Deploy
+        if: contains(github.ref, 'tags/')
+        uses: 10up/action-wordpress-plugin-deploy@master
+        env:
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: custom-post-type-permalinks

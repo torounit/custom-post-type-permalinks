@@ -13,14 +13,14 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 	/**
 	 * Setup.
 	 */
-	public function setUp() {
+	public function set_up() {
 		/**
 		 * WP_Rewrite
 		 *
 		 * @var WP_Rewrite $wp_rewrite
 		 */
 		global $wp_rewrite;
-		parent::setUp();
+		parent::set_up();
 
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
