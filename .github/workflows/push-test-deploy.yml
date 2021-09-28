@@ -33,10 +33,11 @@ jobs:
     name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }} Test
     steps:
       - uses: actions/checkout@v2
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          tools: phpunit-polyfills
+          tools: phpunit-polyfills, phpunit
           php-version: ${{ matrix.php }}
           extensions: mbstring, intl , mysqli
           ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
@@ -44,11 +45,6 @@ jobs:
 
       - name: Check PHP Version
         run: php -v
-
-      - name: Install phpunit global
-        run: |
-          composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
-          phpunit --version
 
       - name: Cache composer packages
         uses: actions/cache@v2
