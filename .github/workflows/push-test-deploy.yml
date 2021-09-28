@@ -20,10 +20,8 @@ jobs:
       matrix:
         include:
           - php: 8.0
-            wp: latest
-          - php: 7.3
-            wp: latest
-          - php: 7.2
+            wp: trunk
+          - php: 7.4
             wp: latest
           - php: 7.2
             wp: 5.7
