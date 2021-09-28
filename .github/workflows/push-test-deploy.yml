@@ -23,7 +23,7 @@ jobs:
             wp: latest
           - php: 7.3
             wp: 5.7
-          - php: 7.3
+          - php: 7.2
             wp: 5.2
 
     name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }} Test
@@ -40,20 +40,17 @@ jobs:
       - name: Check PHP Version
         run: php -v
 
-      - name: Install phpunit global
-        run: |
-          composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
-          phpunit --version
-
-      - name: Composer install
-        run: composer install --optimize-autoloader --prefer-dist
-
       - name: Install WP Tests
         run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ matrix.wp }} true
 
       - name: Build
         run: |
           bash ./bin/build.sh
+
+      - name: Install phpunit global
+        run: |
+          composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
+          phpunit --version
 
       - name: phpunit tests
         run: |
