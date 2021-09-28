@@ -49,7 +49,7 @@ jobs:
       - name: Install phpunit global
         if: ${{ matrix.php < 8.0 }}
         run: |
-          composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*"
+          composer global require "phpunit/phpunit=5.7.*|6.*.*|7.*.*" --with-all-dependencies
           phpunit --version
 
       - name: Cache composer packages
