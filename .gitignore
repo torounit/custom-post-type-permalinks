@@ -9,3 +9,4 @@ vendor/
 *.zip
 .env
 .wp-env.override.json
+/composer.lock
