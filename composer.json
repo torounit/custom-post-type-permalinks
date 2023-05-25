@@ -27,5 +27,10 @@
             "@php vendor/bin/phpcbf --standard=./.phpcs.xml.dist --report-summary --report-source"
         ],
         "test": "@php ./vendor/phpunit/phpunit/phpunit"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
