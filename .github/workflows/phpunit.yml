@@ -19,8 +19,12 @@ jobs:
     strategy:
       matrix:
         include:
-          - php: 8.0
+          - php: 8.2
             wp: trunk
+          - php: 8.0
+            wp: 6.2
+          - php: 8.0
+            wp: 6.1
 
     name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }} Test
     steps:
@@ -67,7 +71,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.3
+          php-version: 8.2
           extensions: mbstring, intl #optional, setup extensions
           ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
           coverage: xdebug #optional, setup coverage driver
