@@ -3,9 +3,9 @@
 Contributors:      Toro_Unit, inc2734, ixkaito, keita_kobayashi, strategio  
 Donate link:       https://www.paypal.me/torounit  
 Tags:              permalink, url, link, address, custom post type  
-Requires at least: 5.2  
-Tested up to:      5.8  
-Requires PHP:      5.6  
+Requires at least: 6.1  
+Tested up to:      6.3  
+Requires PHP:      7.4  
 License:           GPLv2 or Later  
 License URI:       http://www.gnu.org/licenses/gpl-2.0.txt  
 Stable tag:        3.4.5
@@ -20,6 +20,8 @@ Edit the permalink of custom post type.
 [![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![Build Status](https://img.shields.io/github/workflow/status/torounit/custom-post-type-permalinks/Test?style=for-the-badge)](https://github.com/torounit/custom-post-type-permalinks/actions)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/torounit/custom-post-type-permalinks/test-and-release.yml?branch=master&style=for-the-badge)](https://github.com/torounit/custom-post-type-permalinks/actions)
+
 [![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png?rev=1044335)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 <!-- /only:github -->
 
@@ -94,6 +96,10 @@ That's it. You can access the permalinks setting by going to *Settings -> Permal
 * screenshot-1.png
 
 ## Changelog
+
+### 3.5.0
+* Tested WP 6.1 / 6.2 / 6.3
+* Tested PHP 8.0 / 8.2
 
 ### 3.4.5
 * Update test for WP 5.7
