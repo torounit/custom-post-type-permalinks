@@ -19,7 +19,6 @@ Edit the permalink of custom post type.
 [![Downloads](https://img.shields.io/wordpress/plugin/dt/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![Tested up](https://img.shields.io/wordpress/v/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
 [![wp.org rating](https://img.shields.io/wordpress/plugin/r/custom-post-type-permalinks.svg?style=for-the-badge)](https://wordpress.org/plugins/custom-post-type-permalinks/)
-[![Build Status](https://img.shields.io/github/workflow/status/torounit/custom-post-type-permalinks/Test?style=for-the-badge)](https://github.com/torounit/custom-post-type-permalinks/actions)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/torounit/custom-post-type-permalinks/test-and-release.yml?branch=master&style=for-the-badge)](https://github.com/torounit/custom-post-type-permalinks/actions)
 
 [![](https://ps.w.org/custom-post-type-permalinks/assets/banner-1544x500.png?rev=1044335)](https://wordpress.org/plugins/custom-post-type-permalinks/)

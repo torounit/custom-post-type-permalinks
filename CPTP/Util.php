@@ -262,7 +262,7 @@ class CPTP_Util {
 				$front = '/date';
 				break;
 			}
-			$tok_index ++;
+			++$tok_index;
 		}
 
 		$front = apply_filters( 'CPTP_date_front', $front, $post_type, $structure );
