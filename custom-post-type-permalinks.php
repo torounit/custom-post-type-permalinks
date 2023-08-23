@@ -5,7 +5,7 @@
  * Description:  Add post archives of custom post type and customizable permalinks.
  * Author: Toro_Unit
  * Author URI: https://torounit.com/
- * Version: 3.4.5
+ * Version: 3.5.0
  * Text Domain: custom-post-type-permalinks
  * License: GPL2 or later
  * Domain Path: /language/
@@ -13,7 +13,7 @@
  * Requires PHP: 5.6
  *
  * @package Custom_Post_Type_Permalinks
- * @version 3.4.5
+ * @version 3.5.0
  */
 
 define( 'CPTP_PLUGIN_FILE', __FILE__ );
