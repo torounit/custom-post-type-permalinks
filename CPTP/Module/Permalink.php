@@ -403,6 +403,10 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			return $termlink;
 		}
 
+		if ( ! isset( $post_type_obj->rewrite['slug'] ) || ! isset( $post_type_obj->rewrite['with_front'] ) ) {
+			return $termlink;
+		}
+
 		$slug       = $post_type_obj->rewrite['slug'];
 		$with_front = $post_type_obj->rewrite['with_front'];
 
