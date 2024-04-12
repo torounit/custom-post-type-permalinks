@@ -1,16 +1,10 @@
 name: Test and Release
 
 on:
-  push:
-    tags:
-      - '*'
-    branches:
-      - master
-      - main
   pull_request:
-    branches:
-      - master
-      - main
+  push:
+    branches: [ master ]
+    tags: ['*']
 
 jobs:
 
