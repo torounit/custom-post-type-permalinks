@@ -418,7 +418,7 @@ class CPTP_Module_Permalink extends CPTP_Module {
 			$termlink = str_replace( $wp_home, $wp_home . '/' . $slug, $termlink );
 		}
 
-		if ( ! $taxonomy->rewrite['hierarchical'] ) {
+		if ( $taxonomy->rewrite !== false && ! $taxonomy->rewrite['hierarchical'] ) {
 			$termlink = str_replace( $term->slug . '/', CPTP_Util::get_taxonomy_parents_slug( $term->term_id, $taxonomy->name, '/', true ), $termlink );
 		}
 
