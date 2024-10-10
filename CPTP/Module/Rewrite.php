@@ -81,7 +81,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		if ( $args->has_archive ) {
 			if ( is_string( $args->has_archive ) ) {
 				$slug = $args->has_archive;
-			};
+			}
 
 			if ( $args->rewrite['with_front'] ) {
 				$slug = substr( $wp_rewrite->front, 1 ) . $slug;
@@ -161,7 +161,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 			if ( ! empty( $post_type_obj->has_archive ) && is_string( $post_type_obj->has_archive ) ) {
 				$slug = $post_type_obj->has_archive;
-			};
+			}
 
 			if ( ! empty( $post_type_obj->rewrite['with_front'] ) ) {
 				$slug = substr( $wp_rewrite->front, 1 ) . $slug;
