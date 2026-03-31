@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_ROOT_PASSWORD: root
@@ -20,6 +20,7 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
+      fail-fast: false
       matrix:
         include:
           - php: 8.4
@@ -40,35 +41,38 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@master
+        uses: shivammathur/setup-php@v2
         with:
-          tools: phpunit-polyfills, phpunit
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl , mysqli
-          ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
-          coverage: xdebug #optional, setup coverage driver
-
-      - name: Check PHP Version
-        run: php -v
+          extensions: mbstring, intl, mysqli
+          coverage: none
 
       - name: Cache composer packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
+          key: composer-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          restore-keys: composer-${{ matrix.php }}-
 
       - name: Composer install
         run: composer update --optimize-autoloader --prefer-dist
 
+      - name: Cache WordPress test library
+        uses: actions/cache@v4
+        with:
+          path: |
+            /tmp/wordpress
+            /tmp/wordpress-tests-lib
+          key: wp-test-lib-${{ matrix.wp }}
+
       - name: Install subversion
-        run: sudo apt-get update && sudo apt-get install -y subversion
+        run: |
+          if [ ! -d /tmp/wordpress-tests-lib ]; then
+            sudo apt-get update && sudo apt-get install -y subversion
+          fi
 
       - name: Install WP Tests
         run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ matrix.wp }} true
-
-      - name: Build
-        run: |
-          bash ./bin/build.sh
 
       - name: phpunit tests
         run: |
@@ -80,22 +84,20 @@ jobs:
     name: PHP lint
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
-          extensions: mbstring, intl #optional, setup extensions
-          ini-values: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
-          coverage: xdebug #optional, setup coverage driver
-
-      - name: Check PHP Version
-        run: php -v
+          php-version: 8.4
+          extensions: mbstring, intl
+          coverage: none
 
       - name: Cache composer packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
+          key: composer-lint-${{ hashFiles('composer.json') }}
+          restore-keys: composer-lint-
 
       - name: Composer install
         run: composer install --optimize-autoloader --prefer-dist
@@ -111,11 +113,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build
         if: contains(github.ref, 'tags/')
-        run: |
-          bash ./bin/build.sh
+        run: bash ./bin/build.sh
       - name: WordPress Plugin Deploy
         if: contains(github.ref, 'tags/')
-        uses: 10up/action-wordpress-plugin-deploy@master
+        uses: 10up/action-wordpress-plugin-deploy@2.3.0
         env:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
