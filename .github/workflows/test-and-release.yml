@@ -51,17 +51,21 @@ jobs:
       - name: Composer install
         run: composer update --optimize-autoloader --prefer-dist
 
+      - name: Get cache key suffix
+        id: cache-date
+        run: echo "week=$(date +'%Y-W%V')" >> $GITHUB_OUTPUT
+
       - name: Cache WordPress test library
         uses: actions/cache@v4
         with:
           path: |
             /tmp/wordpress
             /tmp/wordpress-tests-lib
-          key: wp-test-lib-${{ matrix.wp }}
+          key: wp-test-lib-${{ matrix.wp }}-${{ matrix.wp == 'trunk' && steps.cache-date.outputs.week || 'stable' }}
 
       - name: Install subversion
         run: |
-          if [ ! -d /tmp/wordpress-tests-lib ]; then
+          if ! command -v svn > /dev/null 2>&1 || [ ! -f /tmp/wordpress-tests-lib/includes/functions.php ]; then
             sudo apt-get update && sudo apt-get install -y subversion
           fi
 
