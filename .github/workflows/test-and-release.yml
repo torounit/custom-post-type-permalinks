@@ -2,9 +2,13 @@ name: Test and Release
 
 on:
   pull_request:
+    paths-ignore:
+      - "**.md"
   push:
     branches: [master]
     tags: ["*"]
+    paths-ignore:
+      - "**.md"
 
 jobs:
   test:

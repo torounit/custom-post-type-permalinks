@@ -60,6 +60,16 @@ The plugin uses a **singleton + modular architecture**:
 
 To add or modify modules, use the `CPTP_load_modules` / `cptp_load_modules` hooks.
 
+### Backward Compatibility Policy
+
+This plugin directly controls the URL structure of WordPress sites. **A plugin update must never cause existing published URLs to stop resolving.** Breaking a URL means real visitors get 404 errors, which damages SEO and user experience in a way that is hard to recover from.
+
+Concretely:
+- Do not change the default permalink structure in a way that alters already-saved URLs.
+- Do not remove or rename rewrite rules that active sites may depend on.
+- Do not change how saved option values are interpreted without a migration path.
+- When a behavior change is unavoidable, provide a deprecation path and document it clearly.
+
 ### Coding Standards
 
 - Prefix: `CPTP`
