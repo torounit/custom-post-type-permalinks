@@ -18,10 +18,10 @@
 
     <!-- Rules: Check PHP version compatibility -->
     <!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
-    <config name="testVersion" value="5.3-"/>
+    <config name="testVersion" value="8.0-"/>
     <!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
     <rule ref="PHPCompatibilityWP"/>
-    <config name="minimum_supported_wp_version" value="4.7"/>
+    <config name="minimum_supported_wp_version" value="6.7"/>
     <rule ref="WordPress-Core">
         <exclude name="WordPress.Files.FileName" />
         <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />

@@ -48,15 +48,15 @@ The plugin uses a **singleton + modular architecture**:
 
 ### Modules (`CPTP/Module/`)
 
-| Module | Responsibility |
-|--------|---------------|
-| `Setting` | Text domain loading, version management |
-| `Rewrite` | Registers rewrite rules for custom post types and taxonomies |
-| `Admin` | Settings UI (Settings → Permalinks) |
-| `Option` | Saves permalink structure options |
-| `Permalink` | Generates permalinks for posts, terms, and archives |
-| `GetArchives` | Supports `wp_get_archives()` |
-| `FlushRules` | Handles rewrite rule flushing |
+| Module        | Responsibility                                               |
+| ------------- | ------------------------------------------------------------ |
+| `Setting`     | Text domain loading, version management                      |
+| `Rewrite`     | Registers rewrite rules for custom post types and taxonomies |
+| `Admin`       | Settings UI (Settings → Permalinks)                          |
+| `Option`      | Saves permalink structure options                            |
+| `Permalink`   | Generates permalinks for posts, terms, and archives          |
+| `GetArchives` | Supports `wp_get_archives()`                                 |
+| `FlushRules`  | Handles rewrite rule flushing                                |
 
 To add or modify modules, use the `CPTP_load_modules` / `cptp_load_modules` hooks.
 
@@ -65,7 +65,7 @@ To add or modify modules, use the `CPTP_load_modules` / `cptp_load_modules` hook
 - Prefix: `CPTP`
 - Text domain: `custom-post-type-permalinks`
 - WordPress Coding Standards (including Yoda conditions)
-- PHP 7.4+
+- PHP 8.0+
 
 ### Tests
 
@@ -73,4 +73,4 @@ PHPUnit tests under `tests/`. `tests/bootstrap.php` initializes the WordPress te
 
 ### CI/CD
 
-`.github/workflows/test-and-release.yml` runs tests across PHP 7.4/8.0/8.2 and WP trunk/6.5/6.1. Automatically deploys to WordPress.org on tag creation.
+`.github/workflows/test-and-release.yml` runs tests across PHP 8.0/8.4 and WP trunk/6.9/6.7. Automatically deploys to WordPress.org on tag creation.
