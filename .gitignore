@@ -10,3 +10,4 @@ vendor/
 .env
 .wp-env.override.json
 /composer.lock
+.phpunit.result.cache

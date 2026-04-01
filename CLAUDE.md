@@ -10,19 +10,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Testing
 
-WordPress test environment setup is required before running tests:
-
-```bash
-bash bin/install-wp-tests.sh <db-name> <db-user> <db-pass> [db-host] [wp-version]
-# Example: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 trunk
-```
-
 ```bash
 # Run tests
-composer test
+npx @wordpress/env run --env-cwd='wp-content/plugins/custom-post-type-permalinks' tests-wordpress composer test
 
 # Run tests in multisite mode
-WP_MULTISITE=1 composer test
+npx @wordpress/env run --env-cwd='wp-content/plugins/custom-post-type-permalinks' tests-wordpress bash -c 'WP_MULTISITE=1 composer test'
 ```
 
 ### Lint / Code Quality
