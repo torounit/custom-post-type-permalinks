@@ -83,9 +83,9 @@ class CPTP_Module_Admin extends CPTP_Module {
 	 * Setting section view.
 	 */
 	public function setting_section_callback_function() {
-		$sptp_link = admin_url( 'plugin-install.php?s=simple-post-type-permalinks&tab=search&type=term' );
-		// translators: %s simple post type permalinks install page.
-		$sptp_template = __( 'If you need post type permalink only, you should use <a href="%s">Simple Post Type Permalinks</a>.', 'custom-post-type-permalinks' );
+		$slug_automator_link = admin_url( 'plugin-install.php?s=slug-automator&tab=search&type=term' );
+		// translators: %s slug-automator plugin install page.
+		$slug_automator_template = __( 'If you want URLs without percent-encoding, try <a href="%s">Slug Automator</a>.', 'custom-post-type-permalinks' );
 		?>
 		<p>
 			<strong>
@@ -95,7 +95,7 @@ class CPTP_Module_Admin extends CPTP_Module {
 						'href' => true,
 					),
 				);
-				echo wp_kses( sprintf( $sptp_template, esc_url( $sptp_link ) ), $allowed_html );
+				echo wp_kses( sprintf( $slug_automator_template, esc_url( $slug_automator_link ) ), $allowed_html );
 				?>
 			</strong>
 		</p>
