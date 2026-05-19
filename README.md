@@ -4,11 +4,11 @@ Contributors: Toro_Unit, inc2734, ixkaito, keita_kobayashi, strategio
 Donate link: https://www.paypal.me/torounit  
 Tags: permalink, url, link, address, custom post type  
 Requires at least: 6.7  
-Tested up to: 6.9  
+Tested up to: 7.0  
 Requires PHP: 8.0  
 License: GPLv2 or Later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
-Stable tag:        3.5.4
+Stable tag: 3.5.4
 
 Edit the permalink of custom post type.
 
@@ -94,7 +94,12 @@ That's it. You can access the permalinks setting by going to _Settings -> Permal
 
 ## Changelog
 
+### 3.5.5
+
+- Tested WP 7.0
+
 ### 3.5.4
+
 - Tested WP 6.9
 
 ### 3.5.3
