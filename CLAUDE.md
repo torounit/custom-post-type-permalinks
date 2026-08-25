@@ -76,4 +76,4 @@ PHPUnit tests under `tests/`. `tests/bootstrap.php` initializes the WordPress te
 
 ### CI/CD
 
-`.github/workflows/test-and-release.yml` runs tests across PHP 8.0/8.4 and WP trunk/6.9/6.7. Automatically deploys to WordPress.org on tag creation.
+`.github/workflows/test-and-release.yml` runs tests across PHP 8.0/8.4 and WP trunk/7.1/6.7. Automatically deploys to WordPress.org on tag creation.
