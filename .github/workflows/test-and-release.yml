@@ -32,7 +32,7 @@ jobs:
 
     name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }}${{ matrix.multisite && ' (multisite)' || '' }} Test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -42,7 +42,7 @@ jobs:
           coverage: none
 
       - name: Cache composer packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: vendor
           key: composer-${{ matrix.php }}-${{ hashFiles('composer.json') }}
@@ -56,7 +56,7 @@ jobs:
         run: echo "week=$(date +'%Y-W%V')" >> $GITHUB_OUTPUT
 
       - name: Cache WordPress test library
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             /tmp/wordpress
@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     name: PHP lint
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -91,7 +91,7 @@ jobs:
           coverage: none
 
       - name: Cache composer packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: vendor
           key: composer-lint-${{ hashFiles('composer.json') }}
@@ -108,7 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test, lint]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build
         if: contains(github.ref, 'tags/')
         run: bash ./bin/build.sh
