@@ -94,7 +94,7 @@ That's it. You can access the permalinks setting by going to _Settings -> Permal
 
 ## Changelog
 
-### 3.5.6
+### Unreleased
 
 - Tested WP 7.1
 
