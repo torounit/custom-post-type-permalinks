@@ -361,6 +361,53 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Category archive of a post type works when the category base is empty (WordPress default).
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_cpt_category_archive_with_empty_category_base() {
+		update_option( 'category_base', '' );
+
+		register_post_type(
+			$this->post_type,
+			array(
+				'public'      => true,
+				'taxonomies'  => array( 'category' ),
+				'has_archive' => true,
+			)
+		);
+		$post_type_object = get_post_type_object( $this->post_type );
+
+		$post_ids = $this->factory->post->create_many(
+			10,
+			array(
+				'post_type' => $this->post_type,
+				'post_date' => '2012-12-12',
+			)
+		);
+
+		$cat_id = $this->factory->category->create();
+		foreach ( $post_ids as $post_id ) {
+			wp_set_post_categories( $post_id, array( $cat_id ) );
+		}
+
+		$category_obj = get_category( $cat_id );
+
+		do_action( 'wp_loaded' );
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+		$this->go_to( home_url( '/' . $post_type_object->rewrite['slug'] . '/category/' . $category_obj->slug ) );
+		$this->assertQueryTrue( 'is_archive', 'is_post_type_archive', 'is_category' );
+
+		$this->go_to( next_posts( 0, false ) );
+		$this->assertQueryTrue( 'is_archive', 'is_post_type_archive', 'is_category', 'is_paged' );
+	}
+
+	/**
 	 * A post type whose `taxonomies` is a string must not cause a TypeError.
 	 *
 	 * @see https://github.com/torounit/custom-post-type-permalinks/issues/119
