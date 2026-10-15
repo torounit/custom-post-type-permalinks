@@ -30,6 +30,8 @@ node_modules
 *.sql
 *.tar.gz
 *.zip
-.release-it.json
 .env
 .wp-env.json
+.claude
+.github
+CLAUDE.md
