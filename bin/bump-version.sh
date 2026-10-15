@@ -10,7 +10,8 @@ fi
 version=$1
 
 # Stable tag should only track stable releases, not prereleases.
-if ! echo "${version}" | grep -qE "alpha|beta|RC|rc"; then
+# A SemVer prerelease has a "-" suffix (e.g. 3.6.0-beta.1).
+if ! echo "${version}" | grep -qE -- "-|alpha|beta|RC|rc"; then
 	# Preserve the existing alignment, only replace the value.
 	sed -i.bak -E "s/^(Stable tag: *).*/\1${version}/" README.md
 	rm README.md.bak

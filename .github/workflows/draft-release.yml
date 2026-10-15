@@ -30,7 +30,12 @@ jobs:
               $0 == heading { found = 1; next }
               found && /^#/ { exit }
               found { print }
-          ' README.md > release-notes.md
+              END { if (!found) exit 1 }
+          ' README.md > release-notes.md || { echo "::error::No '### ${VERSION}' section in README.md."; exit 1; }
+          if ! grep -q '[^[:space:]]' release-notes.md; then
+              echo "::error::The '### ${VERSION}' section in README.md is empty."
+              exit 1
+          fi
 
       # The tag is created on the merge commit when the draft is published in the web UI.
       - name: Create draft release
