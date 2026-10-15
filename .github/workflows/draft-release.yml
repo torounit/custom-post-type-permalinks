@@ -1,0 +1,41 @@
+name: Draft Release
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  draft-release:
+    name: Create Draft Release
+    # Only for merged release PRs (release/<version> branches).
+    if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Get version
+        id: version
+        run: echo "version=$(node -p 'require("./package.json").version')" >> $GITHUB_OUTPUT
+
+      - name: Extract release notes from the changelog
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          awk -v heading="### ${VERSION}" '
+              $0 == heading { found = 1; next }
+              found && /^#/ { exit }
+              found { print }
+          ' README.md > release-notes.md
+
+      # The tag is created on the merge commit when the draft is published in the web UI.
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+          TARGET: ${{ github.event.pull_request.merge_commit_sha }}
+        run: gh release create "$VERSION" --draft --target "$TARGET" --title "$VERSION" --notes-file release-notes.md

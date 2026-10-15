@@ -1,17 +1,16 @@
-name: Test and Release
-
+name: Test
 on:
   pull_request:
     paths-ignore:
-      - "**.md"
+      - '**.md'
   push:
     branches: [main]
-    tags: ["*"]
     paths-ignore:
-      - "**.md"
+      - '**.md'
+  workflow_call:
 
 jobs:
-  test:
+  phpunit:
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -76,46 +75,3 @@ jobs:
         run: composer test
         env:
           WP_MULTISITE: ${{ matrix.multisite && '1' || '' }}
-
-  lint:
-    runs-on: ubuntu-latest
-    name: PHP lint
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.4
-          extensions: mbstring, intl
-          coverage: none
-
-      - name: Cache composer packages
-        uses: actions/cache@v6
-        with:
-          path: vendor
-          key: composer-lint-${{ hashFiles('composer.json') }}
-          restore-keys: composer-lint-
-
-      - name: Composer install
-        run: composer install --optimize-autoloader --prefer-dist
-
-      - name: phpcs tests
-        run: composer phpcs
-
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    needs: [test, lint]
-    steps:
-      - uses: actions/checkout@v7
-      - name: Build
-        if: contains(github.ref, 'tags/')
-        run: bash ./bin/build.sh
-      - name: WordPress Plugin Deploy
-        if: contains(github.ref, 'tags/')
-        uses: 10up/action-wordpress-plugin-deploy@2.3.0
-        env:
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SLUG: custom-post-type-permalinks

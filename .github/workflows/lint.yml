@@ -1,0 +1,37 @@
+name: Lint
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+  workflow_call:
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    name: PHP lint
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          extensions: mbstring, intl
+          coverage: none
+
+      - name: Cache composer packages
+        uses: actions/cache@v6
+        with:
+          path: vendor
+          key: composer-lint-${{ hashFiles('composer.json') }}
+          restore-keys: composer-lint-
+
+      - name: Composer install
+        run: composer install --optimize-autoloader --prefer-dist
+
+      - name: phpcs tests
+        run: composer phpcs
