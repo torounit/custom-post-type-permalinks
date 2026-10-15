@@ -97,6 +97,7 @@ That's it. You can access the permalinks setting by going to _Settings -> Permal
 ### Unreleased
 
 - Tested WP 7.1
+- Fix a fatal error when a custom post type registers `taxonomies` as a string.
 
 ### 3.5.5
 
