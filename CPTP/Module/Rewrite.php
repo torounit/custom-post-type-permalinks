@@ -108,7 +108,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				add_rewrite_rule( $slug . '/author/([^/]+)/?$', 'index.php?author_name=$matches[1]&post_type=' . $post_type, 'top' );
 			}
 
-			if ( in_array( 'category', $args->taxonomies, true ) ) {
+			if ( in_array( 'category', (array) $args->taxonomies, true ) ) {
 				$category_base = get_option( 'category_base' );
 				if ( ! $category_base ) {
 					$category_base = 'category';

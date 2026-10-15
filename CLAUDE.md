@@ -76,7 +76,7 @@ PHPUnit tests under `tests/`. `tests/bootstrap.php` initializes the WordPress te
 
 ### CI/CD
 
-- `.github/workflows/test.yml` — PHPUnit across PHP 8.0/8.4 and WP trunk/6.9/6.7 (single site and multisite).
+- `.github/workflows/test.yml` — PHPUnit across PHP 8.0/8.4 and WP trunk/7.1/6.7 (single site and multisite).
 - `.github/workflows/lint.yml` — PHPCS.
 - `.github/workflows/draft-release.yml` — When a `release/<version>` PR is merged, creates a draft GitHub release with the changelog section as its notes.
 - `.github/workflows/release.yml` — When the draft release is published in the GitHub web UI, runs lint and tests, deploys to WordPress.org, and attaches the plugin zip to the release.

@@ -407,6 +407,40 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		$this->assertQueryTrue( 'is_archive', 'is_post_type_archive', 'is_category', 'is_paged' );
 	}
 
+	/**
+	 * A post type whose `taxonomies` is a string must not cause a TypeError.
+	 *
+	 * @see https://github.com/torounit/custom-post-type-permalinks/issues/119
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_cpt_category_archive_with_string_taxonomies() {
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+
+		register_post_type(
+			$this->post_type,
+			array(
+				'public'      => true,
+				'has_archive' => true,
+			)
+		);
+		$post_type_object = get_post_type_object( $this->post_type );
+
+		// WordPress core does not normalize `taxonomies`, so a string reaches the hook as is.
+		$post_type_object->taxonomies = 'category';
+		do_action( 'registered_post_type', $this->post_type, $post_type_object );
+
+		$category_base = get_option( 'category_base', 'category' );
+		$this->assertArrayHasKey(
+			$post_type_object->rewrite['slug'] . '/' . $category_base . '/([^/]+)/?$',
+			$wp_rewrite->extra_rules_top
+		);
+	}
+
 
 	/**
 	 *
