@@ -17,7 +17,8 @@
         "phpcompatibility/phpcompatibility-wp": "*",
         "squizlabs/php_codesniffer": "*",
         "wp-coding-standards/wpcs": "*",
-        "yoast/phpunit-polyfills": "^1.0.1"
+        "yoast/phpunit-polyfills": "^4.0",
+        "phpunit/phpunit": "^9.6"
     },
     "scripts": {
         "phpcs": [
