@@ -260,10 +260,17 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		);
 
 		$user_id = $this->factory->user->create();
-		$id      = $this->factory->post->create(
+		/*
+		 * Use a fixed, non-numeric slug. rand_str() returns hex characters,
+		 * so it is occasionally all digits. With a multi-level term path such as
+		 * cpt/parent/child/123456789012/, the rule (.+?)/([^/]+)(?:/([0-9]+))?
+		 * then reads the last term as the post slug and the digits as the page
+		 * number, and url_to_postid() returns 0 (#129).
+		 */
+		$id = $this->factory->post->create(
 			array(
 				'post_type'   => $this->post_type,
-				'post_name'   => rand_str( 12 ),
+				'post_name'   => 'cptp-hierarchical-term-post',
 				'post_author' => $user_id,
 			)
 		);
