@@ -12,6 +12,11 @@ on:
 
 jobs:
   claude-review:
+    # Authenticates with workload identity federation, which needs a GitHub OIDC token.
+    # Pull requests from forks cannot request one, so the review is skipped there.
+    if: >-
+      vars.ANTHROPIC_FEDERATION_RULE_ID != '' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     # Optional: Filter by PR author
     # if: |
     #   github.event.pull_request.user.login == 'external-contributor' ||
@@ -35,7 +40,11 @@ jobs:
         id: claude-review
         uses: anthropics/claude-code-action@v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Exchanges the workflow's GitHub OIDC token for a short-lived Claude API token.
+          anthropic_federation_rule_id: ${{ vars.ANTHROPIC_FEDERATION_RULE_ID }}
+          anthropic_organization_id: ${{ vars.ANTHROPIC_ORGANIZATION_ID }}
+          anthropic_service_account_id: ${{ vars.ANTHROPIC_SERVICE_ACCOUNT_ID }}
+          anthropic_workspace_id: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
           plugins: 'code-review@claude-code-plugins'
           prompt: '/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
