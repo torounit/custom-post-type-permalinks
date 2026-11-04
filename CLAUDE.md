@@ -68,7 +68,7 @@ Concretely:
 - Prefix: `CPTP`
 - Text domain: `custom-post-type-permalinks`
 - WordPress Coding Standards (including Yoda conditions)
-- PHP 8.0+
+- PHP 8.2+
 
 ### Tests
 
@@ -76,7 +76,7 @@ PHPUnit tests under `tests/`. `tests/bootstrap.php` initializes the WordPress te
 
 ### CI/CD
 
-- `.github/workflows/test.yml` — PHPUnit across PHP 8.0/8.4 and WP trunk/7.1/6.7 (single site and multisite).
+- `.github/workflows/test.yml` — PHPUnit across PHP 8.2/8.4 and WP trunk/7.1/6.8 (single site and multisite).
 - `.github/workflows/lint.yml` — PHPCS.
 - `.github/workflows/release-check.yml` — On `release/<version>` PRs, runs `bin/check-version.sh` to check that the versions and the changelog are ready and the tag does not exist yet.
 - `.github/workflows/draft-release.yml` — When a `release/<version>` PR is merged, checks the versions again and creates a draft GitHub release with the changelog section as its notes.

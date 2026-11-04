@@ -25,8 +25,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.4', '8.0']
-        wp: ['trunk', '7.1', '6.7']
+        php: ['8.4', '8.2']
+        wp: ['trunk', '7.1', '6.8']
         multisite: [false, true]
 
     name: PHP ${{ matrix.php }} / WP ${{ matrix.wp }}${{ matrix.multisite && ' (multisite)' || '' }} Test
