@@ -1,0 +1,23 @@
+name: Release Check
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-version:
+    name: Check Release Version
+    # Release PRs only (release/<version> branches); skipped, and so passing, for other PRs.
+    if: startsWith(github.head_ref, 'release/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # Catches a release branch where bin/bump-version.sh was not run, or whose version
+      # was already released, before it is merged.
+      - name: Check the versions and the changelog
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: bin/check-version.sh "${BRANCH#release/}" --untagged
