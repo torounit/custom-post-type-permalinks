@@ -11,9 +11,9 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		parent::set_up();
 
 		delete_option( 'category_base' );
-		add_option( 'category_base', rand_str( 12 ) );
+		add_option( 'category_base', cptp_rand_str() );
 		delete_option( 'tag_base' );
-		add_option( 'tag_base', rand_str( 12 ) );
+		add_option( 'tag_base', cptp_rand_str() );
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
 		delete_option( 'no_taxonomy_structure' );
@@ -80,7 +80,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 			array(
 				'public'  => true,
 				'rewrite' => array(
-					'slug' => rand_str( 12 ),
+					'slug' => cptp_rand_str(),
 				),
 			)
 		);
@@ -164,7 +164,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 			array(
 				'public'  => true,
 				'rewrite' => array(
-					'slug' => rand_str( 12 ),
+					'slug' => cptp_rand_str(),
 				),
 			)
 		);
@@ -260,17 +260,10 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 		);
 
 		$user_id = $this->factory->user->create();
-		/*
-		 * Use a fixed, non-numeric slug. rand_str() returns hex characters,
-		 * so it is occasionally all digits. With a multi-level term path such as
-		 * cpt/parent/child/123456789012/, the rule (.+?)/([^/]+)(?:/([0-9]+))?
-		 * then reads the last term as the post slug and the digits as the page
-		 * number, and url_to_postid() returns 0 (#129).
-		 */
-		$id = $this->factory->post->create(
+		$id      = $this->factory->post->create(
 			array(
 				'post_type'   => $this->post_type,
-				'post_name'   => 'cptp-hierarchical-term-post',
+				'post_name'   => cptp_rand_str(),
 				'post_author' => $user_id,
 			)
 		);
@@ -343,7 +336,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 			array(
 				'public'  => true,
 				'rewrite' => array(
-					'slug' => rand_str( 12 ),
+					'slug' => cptp_rand_str(),
 				),
 			)
 		);
@@ -436,7 +429,7 @@ class CPTP_Module_Permalink_Test extends WP_UnitTestCase {
 			array(
 				'public'  => true,
 				'rewrite' => array(
-					'slug' => rand_str( 12 ),
+					'slug' => cptp_rand_str(),
 				),
 			)
 		);
