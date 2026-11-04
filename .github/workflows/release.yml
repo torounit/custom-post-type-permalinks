@@ -4,17 +4,32 @@ on:
     types: [published]
 
 jobs:
+  # Catches a release created by hand, or a draft whose tag was edited.
+  check-version:
+    name: Check Version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Check the tag matches the versions in the files
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: bin/check-version.sh "$TAG"
+
   lint:
     name: Lint
+    needs: check-version
     uses: ./.github/workflows/lint.yml
 
   test:
     name: Test
+    needs: check-version
     uses: ./.github/workflows/test.yml
 
   release:
     name: Deploy to WordPress.org
-    needs: [lint, test]
+    needs: [check-version, lint, test]
     runs-on: ubuntu-latest
     permissions:
       contents: write
