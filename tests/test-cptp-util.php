@@ -35,7 +35,7 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 	 * @test
 	 */
 	public function test_get_permalink_structure_pass_object() {
-		$post_type = rand_str( 12 );
+		$post_type = cptp_rand_str();
 		update_option( $post_type . '_structure', '/%year%/%monthnum%/%day%/%post_id%/' );
 		register_post_type(
 			$post_type,
@@ -54,7 +54,7 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 	 * @test
 	 */
 	public function test_get_permalink_structure_from_option() {
-		$post_type = rand_str( 12 );
+		$post_type = cptp_rand_str();
 		register_post_type(
 			$post_type,
 			array(
@@ -72,7 +72,7 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 	 * @test
 	 */
 	public function test_get_permalink_structure_from_arguments() {
-		$post_type = rand_str( 12 );
+		$post_type = cptp_rand_str();
 		register_post_type(
 			$post_type,
 			array(
@@ -91,7 +91,7 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 	 * @test
 	 */
 	public function test_get_date_front() {
-		$post_type = rand_str( 12 );
+		$post_type = cptp_rand_str();
 		register_post_type(
 			$post_type,
 			array(
@@ -114,7 +114,7 @@ class CPTP_Util_Test extends WP_UnitTestCase {
 		for ( $i = 0; $i < 10; $i ++ ) {
 			$this->factory->category->create(
 				array(
-					'name' => rand_str( 12 ),
+					'name' => cptp_rand_str(),
 				)
 			);
 		}

@@ -15,9 +15,9 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		add_option( 'no_taxonomy_structure', false );
 
 		delete_option( 'category_base' );
-		add_option( 'category_base', rand_str( 12 ) );
+		add_option( 'category_base', cptp_rand_str() );
 		delete_option( 'tag_base' );
-		add_option( 'tag_base', rand_str( 12 ) );
+		add_option( 'tag_base', cptp_rand_str() );
 
 		$wp_rewrite->init();
 		$wp_rewrite->set_permalink_structure( '/%year%/%monthnum%/%day%/%postname%/' );
@@ -25,8 +25,8 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		update_option( 'page_comments', true );
 		update_option( 'comments_per_page', 5 );
 		update_option( 'posts_per_page', 5 );
-		$this->post_type = rand_str( 12 );
-		$this->taxonomy  = rand_str( 12 );
+		$this->post_type = cptp_rand_str();
+		$this->taxonomy  = cptp_rand_str();
 	}
 
 	public function tear_down() {
@@ -316,7 +316,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 			array(
 				'public'  => true,
 				'rewrite' => array(
-					'slug' => rand_str( 12 ),
+					'slug' => cptp_rand_str(),
 				),
 			)
 		);
@@ -464,7 +464,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 			array(
 				'public'  => true,
 				'rewrite' => array(
-					'slug' => rand_str( 12 ),
+					'slug' => cptp_rand_str(),
 				),
 			)
 		);
@@ -529,7 +529,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 			array(
 				'public'  => true,
 				'rewrite' => array(
-					'slug' => rand_str( 12 ),
+					'slug' => cptp_rand_str(),
 				),
 			)
 		);
@@ -594,7 +594,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 			array(
 				'public'  => true,
 				'rewrite' => array(
-					'slug' => rand_str( 12 ),
+					'slug' => cptp_rand_str(),
 				),
 			)
 		);

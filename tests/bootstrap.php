@@ -31,3 +31,19 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
 require $_tests_dir . '/includes/bootstrap.php';
+
+/**
+ * Returns a random string that is never all digits.
+ *
+ * rand_str() returns hex characters, so it is all digits about 0.36% of the
+ * time. An all-digit slug matches the page number groups in rewrite rules
+ * (#129), and an all-digit post type or taxonomy name turns into an integer
+ * array key. Either way, tests fail at random.
+ *
+ * @param int $length Length of the random part.
+ *
+ * @return string
+ */
+function cptp_rand_str( $length = 12 ) {
+	return 'cptp' . rand_str( $length );
+}
