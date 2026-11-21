@@ -14,11 +14,18 @@
 class CPTP_Module_Rewrite extends CPTP_Module {
 
 	/**
-	 * Taxonomy rules added under the rewrite slug of a post type whose has_archive is another slug.
+	 * Taxonomy rules added under the rewrite slug of a post type, next to the rules under another slug.
 	 *
 	 * @var string[] Taxonomy names, keyed by the regex of the rule.
 	 */
 	private $rewrite_slug_rules = array();
+
+	/**
+	 * Taxonomy rules to add under the rewrite slug of a post type, once the post type is registered.
+	 *
+	 * @var array[] Arguments of add_rewrite_slug_rules(), keyed by post type, then by taxonomy.
+	 */
+	private $pending_taxonomy_rules = array();
 
 	/**
 	 * Whether the request is being parsed again without the rules in $rewrite_slug_rules.
@@ -34,6 +41,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		add_action( 'parse_request', array( $this, 'reparse_request_without_rewrite_slug_rules' ), 1 );
 		add_action( 'parse_request', array( $this, 'parse_request' ) );
 		add_action( 'registered_post_type', array( $this, 'register_post_type_rules' ), 10, 2 );
+		add_action( 'registered_post_type', array( $this, 'register_pending_taxonomy_rules' ), 10, 2 );
 		add_action( 'registered_taxonomy', array( $this, 'register_taxonomy_rules' ), 10, 3 );
 	}
 
@@ -275,27 +283,92 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				$regex    = sprintf( $rule['regex'], "{$slug}/{$taxonomy_slug}" );
 				$redirect = $rule['redirect'] . $post_type_query;
 				add_rewrite_rule( $regex, $redirect, 'top' );
+
+				// This regex is no longer one that was only added for the term link.
+				unset( $this->rewrite_slug_rules[ $regex ] );
 			}
 
 			if ( null !== $rewrite_slug ) {
-				foreach ( $rules as $rule ) {
-					$regex = sprintf( $rule['regex'], "{$rewrite_slug}/{$taxonomy_slug}" );
+				$this->add_rewrite_slug_rules( $taxonomy, $rules, "{$rewrite_slug}/{$taxonomy_slug}", $post_type_query );
+			}
 
-					// Never replace a rule that is already registered.
-					if ( isset( $wp_rewrite->extra_rules_top[ $regex ] ) ) {
-						continue;
-					}
-
-					$redirect = $rule['redirect'] . $post_type_query;
-					add_rewrite_rule( $regex, $redirect, 'top' );
-					$this->rewrite_slug_rules[ $regex ] = $taxonomy;
-				}
+			/*
+			 * The post type is not registered yet, so the rules above are under its name,
+			 * but CPTP_Module_Permalink::term_link() builds the link with its rewrite slug.
+			 * Add rules for the link when the post type is registered.
+			 */
+			if ( ! $post_type_obj ) {
+				$this->pending_taxonomy_rules[ $post_type ][ $taxonomy ] = array( $rules, $taxonomy_slug, $post_type_query );
 			}
 
 			do_action( 'CPTP_registered_' . $taxonomy . '_rules', $object_type, $args, $taxonomy_slug );
 		endforeach;
 	}
 
+
+	/**
+	 * Add the taxonomy rules under the rewrite slug of a post type that is registered after its taxonomy.
+	 *
+	 * @param string       $post_type Post type.
+	 * @param WP_Post_Type $args      Arguments used to register the post type.
+	 */
+	public function register_pending_taxonomy_rules( $post_type, $args ) {
+		global $wp_rewrite;
+
+		if ( empty( $this->pending_taxonomy_rules[ $post_type ] ) ) {
+			return;
+		}
+
+		$pending = $this->pending_taxonomy_rules[ $post_type ];
+		unset( $this->pending_taxonomy_rules[ $post_type ] );
+
+		// CPTP_Module_Permalink::term_link() adds the slug of the post type only when both are set.
+		if ( ! isset( $args->rewrite['slug'] ) || ! isset( $args->rewrite['with_front'] ) ) {
+			return;
+		}
+
+		$rewrite_slug = $args->rewrite['slug'];
+		if ( $args->rewrite['with_front'] ) {
+			$rewrite_slug = substr( $wp_rewrite->front, 1 ) . $rewrite_slug;
+		}
+
+		if ( empty( $rewrite_slug ) ) {
+			return;
+		}
+
+		foreach ( $pending as $taxonomy => $rule_args ) {
+			list( $rules, $taxonomy_slug, $post_type_query ) = $rule_args;
+			$this->add_rewrite_slug_rules( $taxonomy, $rules, "{$rewrite_slug}/{$taxonomy_slug}", $post_type_query );
+		}
+	}
+
+	/**
+	 * Add taxonomy rules under the rewrite slug of a post type, for the URL of the term link.
+	 *
+	 * A request that matches one of these rules, but is not for a term, is parsed again without them.
+	 *
+	 * @see CPTP_Module_Rewrite::reparse_request_without_rewrite_slug_rules()
+	 *
+	 * @param string  $taxonomy        Taxonomy name.
+	 * @param array[] $rules           Rules, as an array of `regex` with a placeholder for the base, and `redirect`.
+	 * @param string  $base            Rewrite slug of the post type, followed by the slug of the taxonomy.
+	 * @param string  $post_type_query Query string to add to the redirect of each rule.
+	 */
+	private function add_rewrite_slug_rules( $taxonomy, $rules, $base, $post_type_query ) {
+		global $wp_rewrite;
+
+		foreach ( $rules as $rule ) {
+			$regex = sprintf( $rule['regex'], $base );
+
+			// Never replace a rule that is already registered.
+			if ( isset( $wp_rewrite->extra_rules_top[ $regex ] ) ) {
+				continue;
+			}
+
+			add_rewrite_rule( $regex, $rule['redirect'] . $post_type_query, 'top' );
+			$this->rewrite_slug_rules[ $regex ] = $taxonomy;
+		}
+	}
 
 	/**
 	 * Parse the request again without the rules under the rewrite slug, when the request is not for a term.
