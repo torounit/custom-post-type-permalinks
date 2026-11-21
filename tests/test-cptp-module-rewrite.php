@@ -727,8 +727,8 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The URL under the `has_archive` slug resolved before the rules for the
-	 * rewrite slug were added, so it must keep resolving.
+	 * The URL under the `has_archive` slug resolved before the term link did,
+	 * so it must keep resolving.
 	 *
 	 * @test
 	 * @group rewrite
@@ -855,9 +855,8 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The rules under the rewrite slug are above the rules of the post type.
-	 * They must not take the URLs of a post whose slug is the taxonomy slug,
-	 * because those URLs resolved before the rules were added.
+	 * Resolving the term link must not take the URLs of a post whose slug is
+	 * the taxonomy slug, because those URLs resolved before.
 	 *
 	 * @test
 	 * @group rewrite
@@ -912,6 +911,81 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		// The term archive still resolves.
 		$this->go_to( get_term_link( $term_obj, $this->taxonomy ) );
 		$this->assertQueryTrue( 'is_archive', 'is_tax' );
+	}
+
+	/**
+	 * Content that already resolves at the URL of a term link must keep that URL.
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_existing_content_wins_over_term_link_with_has_archive_slug() {
+		$archive_slug = cptp_rand_str();
+		$rewrite_slug = cptp_rand_str();
+		$term_obj     = $this->register_post_type_with_archive_slug( $archive_slug, $rewrite_slug );
+		$taxonomy     = get_taxonomy( $this->taxonomy );
+
+		$post_id       = $this->factory->post->create(
+			array(
+				'post_type'    => $this->post_type,
+				'post_name'    => $taxonomy->rewrite['slug'],
+				'post_content' => 'one<!--nextpage-->two',
+			)
+		);
+		$attachment_id = $this->factory->attachment->create_object(
+			'image.jpg',
+			$post_id,
+			array(
+				'post_mime_type' => 'image/jpeg',
+				'post_name'      => $term_obj->slug,
+			)
+		);
+
+		// The attachment and the term link have the same URL.
+		$this->assertEquals( get_term_link( $term_obj, $this->taxonomy ), get_permalink( $attachment_id ) );
+
+		$this->go_to( get_term_link( $term_obj, $this->taxonomy ) );
+		$this->assertQueryTrue( 'is_single', 'is_singular', 'is_attachment' );
+		$this->assertSame( $attachment_id, get_queried_object_id() );
+
+		$this->assertSame( $attachment_id, url_to_postid( get_permalink( $attachment_id ) ) );
+		$this->assertSame( $post_id, url_to_postid( trailingslashit( get_permalink( $post_id ) ) . '2/' ) );
+
+		// The term archive is still at the URL under the `has_archive` slug.
+		$this->go_to( home_url( $archive_slug . '/' . $taxonomy->rewrite['slug'] . '/' . $term_obj->slug . '/' ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax' );
+	}
+
+	/**
+	 * The term link is resolved without rewrite rules, so the rules that the
+	 * plugin adds must be the same as before: only under the `has_archive` slug.
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_taxonomy_rules_are_unchanged_with_has_archive_slug() {
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+
+		$archive_slug = cptp_rand_str();
+		$this->register_post_type_with_archive_slug( $archive_slug, cptp_rand_str() );
+		$taxonomy_slug = get_taxonomy( $this->taxonomy )->rewrite['slug'];
+
+		$rules = array_filter(
+			array_keys( $wp_rewrite->extra_rules_top ),
+			function ( $regex ) use ( $taxonomy_slug ) {
+				return false !== strpos( $regex, '/' . $taxonomy_slug . '/' );
+			}
+		);
+
+		$this->assertCount( 10, $rules );
+		foreach ( $rules as $regex ) {
+			$this->assertStringStartsWith( $archive_slug . '/' . $taxonomy_slug . '/', $regex );
+		}
 	}
 
 	/**
@@ -1085,8 +1159,8 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 	/**
 	 * When the taxonomy is registered before the post type, the rules are under
-	 * the post type name. That URL resolved before the rules for the rewrite
-	 * slug were added, so it must keep resolving.
+	 * the post type name. That URL resolved before the term link did, so it
+	 * must keep resolving.
 	 *
 	 * @test
 	 * @group rewrite
@@ -1136,8 +1210,8 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The rules under the rewrite slug must not take the URLs of a post whose
-	 * slug is the taxonomy slug, when the taxonomy is registered before the post type.
+	 * Resolving the term link must not take the URLs of a post whose slug is
+	 * the taxonomy slug, when the taxonomy is registered before the post type.
 	 *
 	 * @test
 	 * @group rewrite
@@ -1250,36 +1324,20 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 	}
 
 	/**
-	 * When the rewrite slug is the post type name, the rules that are built
-	 * before the post type is registered already match the term link.
+	 * The term link is resolved without rewrite rules, so the rules that the
+	 * plugin adds must be the same as before: only under the post type name.
 	 *
 	 * @test
 	 * @group rewrite
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_taxonomy_rules_are_not_added_twice_with_taxonomy_registered_first() {
+	public function test_taxonomy_rules_are_unchanged_with_taxonomy_registered_first() {
 		/** @var WP_Rewrite $wp_rewrite */
 		global $wp_rewrite;
 
-		$taxonomy_slug = cptp_rand_str();
-		register_taxonomy(
-			$this->taxonomy,
-			$this->post_type,
-			array(
-				'public'  => true,
-				'rewrite' => array(
-					'slug' => $taxonomy_slug,
-				),
-			)
-		);
-		register_post_type(
-			$this->post_type,
-			array(
-				'public'      => true,
-				'has_archive' => true,
-			)
-		);
+		$this->register_taxonomy_before_post_type( cptp_rand_str() );
+		$taxonomy_slug = get_taxonomy( $this->taxonomy )->rewrite['slug'];
 
 		$rules = array_filter(
 			array_keys( $wp_rewrite->extra_rules_top ),
