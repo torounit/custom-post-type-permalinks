@@ -14,9 +14,24 @@
 class CPTP_Module_Rewrite extends CPTP_Module {
 
 	/**
+	 * Taxonomy rules added under the rewrite slug of a post type whose has_archive is another slug.
+	 *
+	 * @var string[] Taxonomy names, keyed by the regex of the rule.
+	 */
+	private $rewrite_slug_rules = array();
+
+	/**
+	 * Whether the request is being parsed again without the rules in $rewrite_slug_rules.
+	 *
+	 * @var bool
+	 */
+	private $reparsing = false;
+
+	/**
 	 * Add Actions.
 	 */
 	public function add_hook() {
+		add_action( 'parse_request', array( $this, 'reparse_request_without_rewrite_slug_rules' ), 1 );
 		add_action( 'parse_request', array( $this, 'parse_request' ) );
 		add_action( 'registered_post_type', array( $this, 'register_post_type_rules' ), 10, 2 );
 		add_action( 'registered_taxonomy', array( $this, 'register_taxonomy_rules' ), 10, 3 );
@@ -162,12 +177,26 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				$slug = $post_type;
 			}
 
+			/*
+			 * When has_archive is a string, the rules are under that slug, but
+			 * CPTP_Module_Permalink::term_link() builds the link with the rewrite slug.
+			 * Keep the rules under the has_archive slug, and add rules for the link below.
+			 */
+			$rewrite_slug = null;
 			if ( ! empty( $post_type_obj->has_archive ) && is_string( $post_type_obj->has_archive ) ) {
+				if ( $post_type_obj->has_archive !== $slug ) {
+					$rewrite_slug = $slug;
+				}
+
 				$slug = $post_type_obj->has_archive;
 			}
 
 			if ( ! empty( $post_type_obj->rewrite['with_front'] ) ) {
-				$slug = substr( $wp_rewrite->front, 1 ) . $slug;
+				$front = substr( $wp_rewrite->front, 1 );
+				$slug  = $front . $slug;
+				if ( null !== $rewrite_slug ) {
+					$rewrite_slug = $front . $rewrite_slug;
+				}
 			}
 
 			if ( 'category' === $taxonomy ) {
@@ -241,17 +270,25 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				add_rewrite_rule( $regex, $redirect, 'top' );
 			}
 
-			if ( get_option( 'add_post_type_for_tax' ) ) {
+			$post_type_query = get_option( 'add_post_type_for_tax' ) ? "&post_type={$post_type}" : '';
+			foreach ( $rules as $rule ) {
+				$regex    = sprintf( $rule['regex'], "{$slug}/{$taxonomy_slug}" );
+				$redirect = $rule['redirect'] . $post_type_query;
+				add_rewrite_rule( $regex, $redirect, 'top' );
+			}
+
+			if ( null !== $rewrite_slug ) {
 				foreach ( $rules as $rule ) {
-					$regex    = sprintf( $rule['regex'], "{$slug}/{$taxonomy_slug}" );
-					$redirect = $rule['redirect'] . "&post_type={$post_type}";
+					$regex = sprintf( $rule['regex'], "{$rewrite_slug}/{$taxonomy_slug}" );
+
+					// Never replace a rule that is already registered.
+					if ( isset( $wp_rewrite->extra_rules_top[ $regex ] ) ) {
+						continue;
+					}
+
+					$redirect = $rule['redirect'] . $post_type_query;
 					add_rewrite_rule( $regex, $redirect, 'top' );
-				}
-			} else {
-				foreach ( $rules as $rule ) {
-					$regex    = sprintf( $rule['regex'], "{$slug}/{$taxonomy_slug}" );
-					$redirect = $rule['redirect'];
-					add_rewrite_rule( $regex, $redirect, 'top' );
+					$this->rewrite_slug_rules[ $regex ] = $taxonomy;
 				}
 			}
 
@@ -259,6 +296,67 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		endforeach;
 	}
 
+
+	/**
+	 * Parse the request again without the rules under the rewrite slug, when the request is not for a term.
+	 *
+	 * The rules under the rewrite slug are above the rules of the post type, so they also match
+	 * the URLs of a post whose slug is the taxonomy slug: its pages, feed, embed and attachments.
+	 * Those URLs were resolved by the rules below before the rules under the rewrite slug were added,
+	 * so hand them back when no term matches.
+	 *
+	 * @param WP $wp WP instance.
+	 */
+	public function reparse_request_without_rewrite_slug_rules( $wp ) {
+		if ( $this->reparsing || empty( $wp->matched_rule ) || ! isset( $this->rewrite_slug_rules[ $wp->matched_rule ] ) ) {
+			return;
+		}
+
+		$taxonomy = get_taxonomy( $this->rewrite_slug_rules[ $wp->matched_rule ] );
+		if ( ! $taxonomy ) {
+			return;
+		}
+
+		if ( isset( $wp->query_vars[ $taxonomy->name ] ) ) {
+			$term_slug = $wp->query_vars[ $taxonomy->name ];
+			if ( ! is_string( $term_slug ) ) {
+				return;
+			}
+
+			if ( $taxonomy->hierarchical ) {
+				$term_slug = wp_basename( $term_slug );
+			}
+
+			if ( get_term_by( 'slug', $term_slug, $taxonomy->name ) ) {
+				return;
+			}
+		}
+
+		$this->reparsing = true;
+		add_filter( 'option_rewrite_rules', array( $this, 'remove_rewrite_slug_rules' ) );
+
+		$wp->matched_rule  = null;
+		$wp->matched_query = null;
+		$wp->parse_request( $wp->extra_query_vars );
+
+		remove_filter( 'option_rewrite_rules', array( $this, 'remove_rewrite_slug_rules' ) );
+		$this->reparsing = false;
+	}
+
+	/**
+	 * Remove the rules under the rewrite slug from the rewrite rules.
+	 *
+	 * @param array|mixed $rules Rewrite rules.
+	 *
+	 * @return array|mixed
+	 */
+	public function remove_rewrite_slug_rules( $rules ) {
+		if ( ! is_array( $rules ) ) {
+			return $rules;
+		}
+
+		return array_diff_key( $rules, $this->rewrite_slug_rules );
+	}
 
 	/**
 	 *

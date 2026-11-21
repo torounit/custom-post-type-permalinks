@@ -98,6 +98,7 @@ That's it. You can access the permalinks setting by going to _Settings -> Permal
 
 - Requires WordPress 6.8 or later.
 - Requires PHP 8.2 or later.
+- Fix custom taxonomy archive links returning 404 when `has_archive` of the post type is a string that differs from its rewrite slug.
 
 ### 3.5.6
 

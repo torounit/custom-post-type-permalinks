@@ -637,4 +637,368 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		$this->assertQueryTrue( 'is_post_type_archive', 'is_archive', 'is_tax', 'is_paged' );
 	}
 
+	/**
+	 * Registers a post type whose `has_archive` slug differs from its rewrite slug,
+	 * and a taxonomy with a term that has more posts than one page shows.
+	 *
+	 * @param string $archive_slug `has_archive` of the post type.
+	 * @param string $rewrite_slug Rewrite slug of the post type.
+	 *
+	 * @return WP_Term
+	 */
+	private function register_post_type_with_archive_slug( $archive_slug, $rewrite_slug ) {
+		register_post_type(
+			$this->post_type,
+			array(
+				'public'      => true,
+				'has_archive' => $archive_slug,
+				'rewrite'     => array(
+					'slug' => $rewrite_slug,
+				),
+			)
+		);
+		register_taxonomy(
+			$this->taxonomy,
+			$this->post_type,
+			array(
+				'public'  => true,
+				'rewrite' => array(
+					'slug' => cptp_rand_str(),
+				),
+			)
+		);
+
+		$post_ids = $this->factory->post->create_many(
+			10,
+			array(
+				'post_type' => $this->post_type,
+				'post_date' => '2012-12-12',
+			)
+		);
+
+		$term_id  = $this->factory->term->create(
+			array(
+				'taxonomy' => $this->taxonomy,
+			)
+		);
+		$term_obj = get_term( $term_id, $this->taxonomy );
+		foreach ( $post_ids as $post_id ) {
+			wp_set_object_terms( $post_id, $term_obj->slug, $this->taxonomy );
+		}
+
+		do_action( 'wp_loaded' );
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+
+		return $term_obj;
+	}
+
+	/**
+	 * The term link is built with the rewrite slug of the post type, so it must
+	 * resolve when `has_archive` is a string that differs from the rewrite slug.
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_term_archive_with_has_archive_slug() {
+		$archive_slug = cptp_rand_str();
+		$rewrite_slug = cptp_rand_str();
+		$term_obj     = $this->register_post_type_with_archive_slug( $archive_slug, $rewrite_slug );
+		$taxonomy     = get_taxonomy( $this->taxonomy );
+		$term_path    = $taxonomy->rewrite['slug'] . '/' . $term_obj->slug;
+
+		$this->assertEquals( home_url( $rewrite_slug . '/' . $term_path . '/' ), get_term_link( $term_obj, $this->taxonomy ) );
+
+		$this->go_to( get_term_link( $term_obj, $this->taxonomy ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax' );
+		$this->assertSame( $term_obj->term_id, get_queried_object_id() );
+
+		$this->go_to( next_posts( 0, false ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax', 'is_paged' );
+
+		$this->go_to( home_url( $rewrite_slug . '/' . $term_path . '/date/2012' ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax', 'is_year', 'is_date' );
+
+		$this->go_to( home_url( $rewrite_slug . '/' . $term_path . '/feed/' ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax', 'is_feed' );
+	}
+
+	/**
+	 * The URL under the `has_archive` slug resolved before the rules for the
+	 * rewrite slug were added, so it must keep resolving.
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_term_archive_under_has_archive_slug() {
+		$archive_slug = cptp_rand_str();
+		$rewrite_slug = cptp_rand_str();
+		$term_obj     = $this->register_post_type_with_archive_slug( $archive_slug, $rewrite_slug );
+		$taxonomy     = get_taxonomy( $this->taxonomy );
+		$term_path    = $taxonomy->rewrite['slug'] . '/' . $term_obj->slug;
+
+		$this->go_to( home_url( $archive_slug . '/' . $term_path . '/' ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax' );
+		$this->assertSame( $term_obj->term_id, get_queried_object_id() );
+
+		$this->go_to( home_url( $archive_slug . '/' . $term_path . '/page/2/' ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax', 'is_paged' );
+
+		$this->go_to( home_url( $archive_slug . '/' . $term_path . '/date/2012' ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax', 'is_year', 'is_date' );
+
+		$this->go_to( home_url( $archive_slug . '/' . $term_path . '/feed/' ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax', 'is_feed' );
+	}
+
+	/**
+	 * A term whose slug is not ASCII must resolve under both slugs.
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_multibyte_term_archive_with_has_archive_slug() {
+		$archive_slug = cptp_rand_str();
+		$rewrite_slug = cptp_rand_str();
+		$this->register_post_type_with_archive_slug( $archive_slug, $rewrite_slug );
+		$taxonomy = get_taxonomy( $this->taxonomy );
+
+		$term_id  = $this->factory->term->create(
+			array(
+				'taxonomy' => $this->taxonomy,
+				'name'     => '小説',
+			)
+		);
+		$term_obj = get_term( $term_id, $this->taxonomy );
+		$post_id  = $this->factory->post->create( array( 'post_type' => $this->post_type ) );
+		wp_set_object_terms( $post_id, $term_obj->slug, $this->taxonomy );
+
+		$this->go_to( get_term_link( $term_obj, $this->taxonomy ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax' );
+		$this->assertSame( $term_obj->term_id, get_queried_object_id() );
+
+		$this->go_to( home_url( $archive_slug . '/' . $taxonomy->rewrite['slug'] . '/' . $term_obj->slug . '/' ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax' );
+		$this->assertSame( $term_obj->term_id, get_queried_object_id() );
+	}
+
+	/**
+	 * A child term of a hierarchical taxonomy must resolve under both slugs.
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_child_term_archive_with_has_archive_slug() {
+		$archive_slug = cptp_rand_str();
+		$rewrite_slug = cptp_rand_str();
+
+		register_post_type(
+			$this->post_type,
+			array(
+				'public'      => true,
+				'has_archive' => $archive_slug,
+				'rewrite'     => array(
+					'slug' => $rewrite_slug,
+				),
+			)
+		);
+		register_taxonomy(
+			$this->taxonomy,
+			$this->post_type,
+			array(
+				'public'       => true,
+				'hierarchical' => true,
+				'rewrite'      => array(
+					'slug'         => cptp_rand_str(),
+					'hierarchical' => true,
+				),
+			)
+		);
+		$taxonomy = get_taxonomy( $this->taxonomy );
+
+		$parent_id = $this->factory->term->create( array( 'taxonomy' => $this->taxonomy ) );
+		$child_id  = $this->factory->term->create(
+			array(
+				'taxonomy' => $this->taxonomy,
+				'parent'   => $parent_id,
+			)
+		);
+		$parent    = get_term( $parent_id, $this->taxonomy );
+		$child     = get_term( $child_id, $this->taxonomy );
+		$post_id   = $this->factory->post->create( array( 'post_type' => $this->post_type ) );
+		wp_set_object_terms( $post_id, $child->term_id, $this->taxonomy );
+
+		do_action( 'wp_loaded' );
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+
+		$term_path = $taxonomy->rewrite['slug'] . '/' . $parent->slug . '/' . $child->slug;
+		$this->assertEquals( home_url( $rewrite_slug . '/' . $term_path . '/' ), get_term_link( $child, $this->taxonomy ) );
+
+		$this->go_to( get_term_link( $child, $this->taxonomy ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax' );
+		$this->assertSame( $child->term_id, get_queried_object_id() );
+
+		$this->go_to( home_url( $archive_slug . '/' . $term_path . '/' ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax' );
+		$this->assertSame( $child->term_id, get_queried_object_id() );
+	}
+
+	/**
+	 * The rules under the rewrite slug are above the rules of the post type.
+	 * They must not take the URLs of a post whose slug is the taxonomy slug,
+	 * because those URLs resolved before the rules were added.
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_post_urls_under_taxonomy_slug_with_has_archive_slug() {
+		$archive_slug = cptp_rand_str();
+		$rewrite_slug = cptp_rand_str();
+		$term_obj     = $this->register_post_type_with_archive_slug( $archive_slug, $rewrite_slug );
+		$taxonomy     = get_taxonomy( $this->taxonomy );
+
+		$post_id       = $this->factory->post->create(
+			array(
+				'post_type'    => $this->post_type,
+				'post_name'    => $taxonomy->rewrite['slug'],
+				'post_content' => 'one<!--nextpage-->two',
+			)
+		);
+		$attachment_id = $this->factory->attachment->create_object(
+			'image.jpg',
+			$post_id,
+			array(
+				'post_mime_type' => 'image/jpeg',
+				'post_name'      => cptp_rand_str(),
+			)
+		);
+		$post_url      = home_url( $rewrite_slug . '/' . $taxonomy->rewrite['slug'] );
+		$this->assertEquals( $post_url . '/', trailingslashit( get_permalink( $post_id ) ) );
+
+		$this->go_to( $post_url . '/2/' );
+		$this->assertQueryTrue( 'is_single', 'is_singular' );
+		$this->assertSame( $post_id, get_queried_object_id() );
+		$this->assertSame( 2, get_query_var( 'page' ) );
+
+		$this->go_to( $post_url . '/feed/' );
+		$this->assertQueryTrue( 'is_single', 'is_singular', 'is_feed', 'is_comment_feed' );
+		$this->assertSame( $post_id, get_queried_object_id() );
+
+		$this->go_to( $post_url . '/embed/' );
+		$this->assertQueryTrue( 'is_single', 'is_singular', 'is_embed' );
+		$this->assertSame( $post_id, get_queried_object_id() );
+
+		$this->go_to( get_permalink( $attachment_id ) );
+		$this->assertQueryTrue( 'is_single', 'is_singular', 'is_attachment' );
+		$this->assertSame( $attachment_id, get_queried_object_id() );
+
+		// A URL that is neither a term nor a post is still not found.
+		$this->go_to( $post_url . '/' . cptp_rand_str() . '/' );
+		$this->assertQueryTrue( 'is_404' );
+
+		// The term archive still resolves.
+		$this->go_to( get_term_link( $term_obj, $this->taxonomy ) );
+		$this->assertQueryTrue( 'is_archive', 'is_tax' );
+	}
+
+	/**
+	 * With `add_post_type_for_tax`, both slugs must query the post type.
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_cpt_query_term_archive_with_has_archive_slug() {
+		update_option( 'add_post_type_for_tax', true );
+
+		$archive_slug = cptp_rand_str();
+		$rewrite_slug = cptp_rand_str();
+		$term_obj     = $this->register_post_type_with_archive_slug( $archive_slug, $rewrite_slug );
+		$taxonomy     = get_taxonomy( $this->taxonomy );
+		$term_path    = $taxonomy->rewrite['slug'] . '/' . $term_obj->slug;
+
+		$this->go_to( get_term_link( $term_obj, $this->taxonomy ) );
+		$this->assertQueryTrue( 'is_post_type_archive', 'is_archive', 'is_tax' );
+
+		$this->go_to( home_url( $archive_slug . '/' . $term_path . '/' ) );
+		$this->assertQueryTrue( 'is_post_type_archive', 'is_archive', 'is_tax' );
+	}
+
+	/**
+	 * The rules of a post type whose `has_archive` is not a different slug must
+	 * stay exactly as they were.
+	 *
+	 * @test
+	 * @group rewrite
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 * @dataProvider data_has_archive_without_extra_rules
+	 *
+	 * @param bool|string $has_archive `has_archive` of the post type. `null` uses the rewrite slug.
+	 */
+	public function test_taxonomy_rules_are_not_added_twice( $has_archive ) {
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+
+		$rewrite_slug  = cptp_rand_str();
+		$taxonomy_slug = cptp_rand_str();
+		if ( null === $has_archive ) {
+			$has_archive = $rewrite_slug;
+		}
+
+		register_post_type(
+			$this->post_type,
+			array(
+				'public'      => true,
+				'has_archive' => $has_archive,
+				'rewrite'     => array(
+					'slug' => $rewrite_slug,
+				),
+			)
+		);
+		register_taxonomy(
+			$this->taxonomy,
+			$this->post_type,
+			array(
+				'public'  => true,
+				'rewrite' => array(
+					'slug' => $taxonomy_slug,
+				),
+			)
+		);
+
+		$rules = array_filter(
+			array_keys( $wp_rewrite->extra_rules_top ),
+			function ( $regex ) use ( $taxonomy_slug ) {
+				return false !== strpos( $regex, '/' . $taxonomy_slug . '/' );
+			}
+		);
+
+		$this->assertCount( 10, $rules );
+		foreach ( $rules as $regex ) {
+			$this->assertStringStartsWith( $rewrite_slug . '/' . $taxonomy_slug . '/', $regex );
+		}
+	}
+
+	public function data_has_archive_without_extra_rules() {
+		return array(
+			'true'                     => array( true ),
+			'false'                    => array( false ),
+			'same as the rewrite slug' => array( null ),
+		);
+	}
 }
