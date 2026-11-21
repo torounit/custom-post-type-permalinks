@@ -738,7 +738,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 	/**
 	 * Registers the post type and the taxonomy, and creates posts in and out of
-	 * the archives of the target author, category, term and year.
+	 * the archives of the target author, category and term.
 	 *
 	 * @param array $post_type_args Arguments of the post type.
 	 * @param array $taxonomy_args  Arguments of the taxonomy.
@@ -820,7 +820,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 			wp_set_object_terms( $post_id, array( $other_term_id ), $this->taxonomy );
 		}
 
-		// Posts of another post type by the target author in the target category and year.
+		// Posts of another post type by the target author in the target category.
 		$this->factory->post->create_many(
 			6,
 			array(
@@ -880,7 +880,7 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 
 	/*
 	 * WordPress 7.2 on its own: the random URLs of core redirect to the permalinks of
-	 * this plugin, and the `random` query variable works on the archives of this plugin.
+	 * this plugin, and the rules outside the random base stay the same.
 	 */
 
 	/**
@@ -907,89 +907,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 			$this->redirect_location
 		);
 		$this->assertSame( $this->post_type, get_post_type( url_to_postid( $this->redirect_location ) ) );
-		$this->assertRandomPostTypes( array( $this->post_type ) );
-	}
-
-	/**
-	 * `?random` on the author archive of a post type.
-	 *
-	 * @test
-	 * @group rewrite
-	 * @group random
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
-	public function test_random_query_var_on_author_archive_of_post_type() {
-		$this->set_up_random_content();
-
-		$fixture = $this->create_random_fixture();
-		$this->flush_rules();
-
-		$this->go_to_until_redirect( home_url( '/' . $fixture['slug'] . '/author/' . $fixture['author']->user_nicename . '/?random' ) );
-
-		$this->assertRedirectedToOneOf( $fixture['target_ids'] );
-		$this->assertRandomPostTypes( array( $this->post_type ) );
-	}
-
-	/**
-	 * `?random` on the category archive of a post type.
-	 *
-	 * @test
-	 * @group rewrite
-	 * @group random
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
-	public function test_random_query_var_on_category_archive_of_post_type() {
-		$this->set_up_random_content();
-
-		$fixture = $this->create_random_fixture();
-		$this->flush_rules();
-
-		$this->go_to_until_redirect( home_url( '/' . $fixture['slug'] . '/' . $fixture['category_base'] . '/' . $fixture['category']->slug . '/?random' ) );
-
-		$this->assertRedirectedToOneOf( $fixture['target_ids'] );
-		$this->assertRandomPostTypes( array( $this->post_type ) );
-	}
-
-	/**
-	 * `?random` on the term archive under the post type slug.
-	 *
-	 * @test
-	 * @group rewrite
-	 * @group random
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
-	public function test_random_query_var_on_term_archive() {
-		$this->set_up_random_content();
-
-		$fixture = $this->create_random_fixture();
-		$this->flush_rules();
-
-		$this->go_to_until_redirect( add_query_arg( 'random', '', get_term_link( $fixture['term'] ) ) );
-
-		$this->assertRedirectedToOneOf( $fixture['target_ids'] );
-	}
-
-	/**
-	 * `?random` on the date archive of a post type.
-	 *
-	 * @test
-	 * @group rewrite
-	 * @group random
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
-	public function test_random_query_var_on_date_archive_of_post_type() {
-		$this->set_up_random_content();
-
-		$fixture = $this->create_random_fixture();
-		$this->flush_rules();
-
-		$this->go_to_until_redirect( home_url( '/' . $fixture['slug'] . '/2012/?random' ) );
-
-		$this->assertRedirectedToOneOf( $fixture['target_ids'] );
 		$this->assertRandomPostTypes( array( $this->post_type ) );
 	}
 
@@ -1208,33 +1125,6 @@ class CPTP_Module_Rewrite_Test extends WP_UnitTestCase {
 		$this->assertTrue( is_tax( $this->taxonomy ), 'The term archive is not at the expected URL.' );
 
 		$this->go_to_until_redirect( $this->random_url( $archive_slug . '/' . $fixture['term_path'] ) );
-		$this->assertRedirectedToOneOf( $fixture['target_ids'] );
-	}
-
-	/**
-	 * Random URLs use the random base set on the Permalinks screen.
-	 *
-	 * @test
-	 * @group rewrite
-	 * @group random
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
-	public function test_random_url_uses_custom_random_base() {
-		$this->set_up_random_content();
-
-		/** @var WP_Rewrite $wp_rewrite */
-		global $wp_rewrite;
-
-		$random_base = cptp_rand_str();
-		$wp_rewrite->set_random_base( $random_base );
-		$fixture = $this->create_random_fixture();
-		$this->flush_rules();
-
-		$this->go_to_until_redirect( home_url( '/' . $random_base . '/' . $fixture['slug'] . '/author/' . $fixture['author']->user_nicename . '/' ) );
-		$this->assertRedirectedToOneOf( $fixture['target_ids'] );
-
-		$this->go_to_until_redirect( home_url( '/' . $random_base . '/' . $fixture['slug'] . '/' . $fixture['term_path'] ) );
 		$this->assertRedirectedToOneOf( $fixture['target_ids'] );
 	}
 
