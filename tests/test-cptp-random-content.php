@@ -560,6 +560,29 @@ class CPTP_Random_Content_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Random URLs use the random base set on the Permalinks screen.
+	 *
+	 * @test
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_random_url_uses_custom_random_base() {
+		/** @var WP_Rewrite $wp_rewrite */
+		global $wp_rewrite;
+
+		$random_base = cptp_rand_str();
+		$wp_rewrite->set_random_base( $random_base );
+		$fixture = $this->create_fixture();
+		$this->flush_rules();
+
+		$this->request( home_url( '/' . $random_base . '/' . $fixture['slug'] . '/author/' . $fixture['author']->user_nicename . '/' ) );
+		$this->assertRedirectedToOneOf( $fixture['target_ids'] );
+
+		$this->request( home_url( '/' . $random_base . '/' . $fixture['slug'] . '/' . $fixture['term_path'] ) );
+		$this->assertRedirectedToOneOf( $fixture['target_ids'] );
+	}
+
+	/**
 	 * No random URL for an archive that is disabled.
 	 *
 	 * @test

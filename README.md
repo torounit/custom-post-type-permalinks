@@ -98,6 +98,7 @@ That's it. You can access the permalinks setting by going to _Settings -> Permal
 
 - Requires WordPress 6.8 or later.
 - Requires PHP 8.2 or later.
+- Add random content URLs (WordPress 7.2) for the author, category and term archives of custom post types, e.g. `/random/{post-type-slug}/author/{author}/`.
 
 ### 3.5.6
 
