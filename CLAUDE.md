@@ -74,8 +74,6 @@ Concretely:
 
 PHPUnit tests under `tests/`. `tests/bootstrap.php` initializes the WordPress test environment and Yoast PHPUnit Polyfills.
 
-Test files correspond to classes: tests for `CPTP_Module_Rewrite` go in `tests/test-cptp-module-rewrite.php` (`CPTP_Module_Rewrite_Test`). Do not add a test file for a feature; add the tests to the file of the class that implements it.
-
 ### CI/CD
 
 - `.github/workflows/test.yml` — PHPUnit across PHP 8.2/8.4 and WP trunk/7.1/6.8 (single site and multisite).
