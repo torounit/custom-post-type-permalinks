@@ -14,7 +14,8 @@
 class CPTP_Module_Rewrite extends CPTP_Module {
 
 	/**
-	 * Taxonomy rules for the URL of the term link, where the rewrite rules are under another slug.
+	 * Taxonomy rules for the URL of the term link, where the taxonomy was registered before the post type
+	 * and the rewrite rules are under the post type name.
 	 *
 	 * These are not rewrite rules. They are only used for a request that is not found.
 	 *
@@ -189,26 +190,12 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				$slug = $post_type;
 			}
 
-			/*
-			 * When has_archive is a string, the rules are under that slug, but
-			 * CPTP_Module_Permalink::term_link() builds the link with the rewrite slug.
-			 * Keep the rules under the has_archive slug, and resolve the link below.
-			 */
-			$rewrite_slug = null;
 			if ( ! empty( $post_type_obj->has_archive ) && is_string( $post_type_obj->has_archive ) ) {
-				if ( $post_type_obj->has_archive !== $slug ) {
-					$rewrite_slug = $slug;
-				}
-
 				$slug = $post_type_obj->has_archive;
 			}
 
 			if ( ! empty( $post_type_obj->rewrite['with_front'] ) ) {
-				$front = substr( $wp_rewrite->front, 1 );
-				$slug  = $front . $slug;
-				if ( null !== $rewrite_slug ) {
-					$rewrite_slug = $front . $rewrite_slug;
-				}
+				$slug = substr( $wp_rewrite->front, 1 ) . $slug;
 			}
 
 			if ( 'category' === $taxonomy ) {
@@ -289,14 +276,10 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				add_rewrite_rule( $regex, $redirect, 'top' );
 			}
 
-			if ( null !== $rewrite_slug ) {
-				$this->add_term_link_rules( $taxonomy, $rules, "{$rewrite_slug}/{$taxonomy_slug}", $post_type_query );
-			}
-
 			/*
 			 * The post type is not registered yet, so the rules above are under its name,
-			 * but CPTP_Module_Permalink::term_link() builds the link with its rewrite slug.
-			 * Resolve the link when the post type is registered.
+			 * but CPTP_Module_Permalink::term_link() builds the link with its rewrite slug,
+			 * or has_archive when it is a string. Resolve the link when the post type is registered.
 			 */
 			if ( ! $post_type_obj ) {
 				$this->pending_taxonomy_rules[ $post_type ][ $taxonomy ] = array( $rules, $taxonomy_slug, $post_type_query );
@@ -308,7 +291,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 
 	/**
-	 * Resolve the term link under the rewrite slug of a post type that is registered after its taxonomy.
+	 * Resolve the term link of a taxonomy that was registered before this post type.
 	 *
 	 * @param string       $post_type Post type.
 	 * @param WP_Post_Type $args      Arguments used to register the post type.
@@ -328,29 +311,34 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			return;
 		}
 
-		$rewrite_slug = $args->rewrite['slug'];
-		if ( $args->rewrite['with_front'] ) {
-			$rewrite_slug = substr( $wp_rewrite->front, 1 ) . $rewrite_slug;
+		// The same slug as in CPTP_Module_Permalink::term_link().
+		$slug = $args->rewrite['slug'];
+		if ( ! empty( $args->has_archive ) && is_string( $args->has_archive ) ) {
+			$slug = $args->has_archive;
 		}
 
-		if ( empty( $rewrite_slug ) ) {
+		if ( $args->rewrite['with_front'] ) {
+			$slug = substr( $wp_rewrite->front, 1 ) . $slug;
+		}
+
+		if ( empty( $slug ) ) {
 			return;
 		}
 
 		foreach ( $pending as $taxonomy => $rule_args ) {
 			list( $rules, $taxonomy_slug, $post_type_query ) = $rule_args;
-			$this->add_term_link_rules( $taxonomy, $rules, "{$rewrite_slug}/{$taxonomy_slug}", $post_type_query );
+			$this->add_term_link_rules( $taxonomy, $rules, "{$slug}/{$taxonomy_slug}", $post_type_query );
 		}
 	}
 
 	/**
-	 * Remember taxonomy rules under the rewrite slug of a post type, for the URL of the term link.
+	 * Remember taxonomy rules under the slug of a post type that the term link uses.
 	 *
 	 * @see CPTP_Module_Rewrite::resolve_term_link()
 	 *
 	 * @param string  $taxonomy        Taxonomy name.
 	 * @param array[] $rules           Rules, as an array of `regex` with a placeholder for the base, and `redirect`.
-	 * @param string  $base            Rewrite slug of the post type, followed by the slug of the taxonomy.
+	 * @param string  $base            Slug of the post type in the term link, followed by the slug of the taxonomy.
 	 * @param string  $post_type_query Query string to add to the redirect of each rule.
 	 */
 	private function add_term_link_rules( $taxonomy, $rules, $base, $post_type_query ) {
@@ -365,9 +353,10 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	/**
 	 * Resolve a request for the URL of a term link, when the rewrite rules did not find anything for it.
 	 *
-	 * Rewrite rules under the rewrite slug would have to be above the rules of the post type,
-	 * and would take URLs that those rules resolve: the pages, feed, embed and attachments
-	 * of a post whose slug is the taxonomy slug. So the rewrite rules are left as they are,
+	 * When a taxonomy is registered before its post type, the rewrite rules are under the post type name,
+	 * not under the slug that the term link uses. Rewrite rules for the term link would have to be above
+	 * the rules of the post type, and would take URLs that those rules resolve: the pages, feed, embed
+	 * and attachments of a post whose slug is the taxonomy slug. So the rewrite rules are left as they are,
 	 * and only a request that is not found is parsed again, with the rule for the term link first.
 	 * Every request that the rewrite rules resolve is answered exactly as before.
 	 *
