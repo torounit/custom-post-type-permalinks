@@ -3,7 +3,7 @@
 Contributors: Toro_Unit, inc2734, ixkaito, keita_kobayashi, strategio  
 Donate link: https://www.paypal.me/torounit  
 Tags: permalink, url, link, address, custom post type  
-Requires at least: 6.8  
+Requires at least: 6.9  
 Tested up to: 7.1  
 Requires PHP: 8.2  
 License: GPLv2 or Later  
@@ -96,7 +96,7 @@ That's it. You can access the permalinks setting by going to _Settings -> Permal
 
 ### Unreleased
 
-- Requires WordPress 6.8 or later.
+- Requires WordPress 6.9 or later.
 - Requires PHP 8.2 or later.
 - Fix custom taxonomy archive links returning 404 when `has_archive` of the post type is a string that differs from its rewrite slug. The link now uses the `has_archive` slug, like the rewrite rules.
 - Fix custom taxonomy archive links returning 404 when the taxonomy is registered before a post type whose rewrite slug differs from its name, or that uses the front of the permalink structure.
