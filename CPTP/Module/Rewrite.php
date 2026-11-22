@@ -30,7 +30,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	 *
 	 * @var array[] Arguments of add_term_link_rules(), keyed by post type, then by taxonomy.
 	 */
-	private $pending_taxonomy_rules = array();
+	private $pending_term_link_rules = array();
 
 	/**
 	 * The rule in $term_link_rules that the request is being parsed again with, as regex => redirect.
@@ -45,7 +45,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 	public function add_hook() {
 		add_action( 'parse_request', array( $this, 'parse_request' ) );
 		add_action( 'registered_post_type', array( $this, 'register_post_type_rules' ), 10, 2 );
-		add_action( 'registered_post_type', array( $this, 'register_pending_taxonomy_rules' ), 10, 2 );
+		add_action( 'registered_post_type', array( $this, 'prepare_term_link_rules' ), 10, 2 );
 		add_action( 'registered_taxonomy', array( $this, 'register_taxonomy_rules' ), 10, 3 );
 		add_filter( 'pre_handle_404', array( $this, 'resolve_term_link' ), 10, 2 );
 	}
@@ -282,7 +282,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 			 * or has_archive when it is a string. Resolve the link when the post type is registered.
 			 */
 			if ( ! $post_type_obj ) {
-				$this->pending_taxonomy_rules[ $post_type ][ $taxonomy ] = array( $rules, $taxonomy_slug, $post_type_query );
+				$this->pending_term_link_rules[ $post_type ][ $taxonomy ] = array( $rules, $taxonomy_slug, $post_type_query );
 			}
 
 			do_action( 'CPTP_registered_' . $taxonomy . '_rules', $object_type, $args, $taxonomy_slug );
@@ -291,20 +291,23 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 
 
 	/**
-	 * Resolve the term link of a taxonomy that was registered before this post type.
+	 * Prepare the rules for the term link of a taxonomy that was registered before this post type.
+	 *
+	 * The slug that the term link uses is only known once the post type is registered.
+	 * The rules are kept in $term_link_rules. They are not added to the rewrite rules.
 	 *
 	 * @param string       $post_type Post type.
 	 * @param WP_Post_Type $args      Arguments used to register the post type.
 	 */
-	public function register_pending_taxonomy_rules( $post_type, $args ) {
+	public function prepare_term_link_rules( $post_type, $args ) {
 		global $wp_rewrite;
 
-		if ( empty( $this->pending_taxonomy_rules[ $post_type ] ) ) {
+		if ( empty( $this->pending_term_link_rules[ $post_type ] ) ) {
 			return;
 		}
 
-		$pending = $this->pending_taxonomy_rules[ $post_type ];
-		unset( $this->pending_taxonomy_rules[ $post_type ] );
+		$pending = $this->pending_term_link_rules[ $post_type ];
+		unset( $this->pending_term_link_rules[ $post_type ] );
 
 		// CPTP_Module_Permalink::term_link() adds the slug of the post type only when both are set.
 		if ( ! isset( $args->rewrite['slug'] ) || ! isset( $args->rewrite['with_front'] ) ) {
