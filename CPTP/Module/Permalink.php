@@ -410,6 +410,11 @@ class CPTP_Module_Permalink extends CPTP_Module {
 		$slug       = $post_type_obj->rewrite['slug'];
 		$with_front = $post_type_obj->rewrite['with_front'];
 
+		// The rewrite rules are under has_archive when it is a string. See CPTP_Module_Rewrite::register_taxonomy_rules().
+		if ( ! empty( $post_type_obj->has_archive ) && is_string( $post_type_obj->has_archive ) ) {
+			$slug = $post_type_obj->has_archive;
+		}
+
 		if ( $with_front ) {
 			$slug = $front . $slug;
 		}

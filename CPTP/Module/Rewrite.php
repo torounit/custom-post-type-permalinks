@@ -14,12 +14,40 @@
 class CPTP_Module_Rewrite extends CPTP_Module {
 
 	/**
+	 * Taxonomy rules for the URL of the term link, where the taxonomy was registered before the post type
+	 * and the rewrite rules are under the post type name.
+	 *
+	 * These are not rewrite rules. They are only used for a request that is not found.
+	 *
+	 * @see CPTP_Module_Rewrite::resolve_term_link()
+	 *
+	 * @var array[] Arrays of `taxonomy` and `redirect`, keyed by the regex of the rule.
+	 */
+	private $term_link_rules = array();
+
+	/**
+	 * Taxonomy rules to add to $term_link_rules, once the post type is registered.
+	 *
+	 * @var array[] Arguments of add_term_link_rules(), keyed by post type, then by taxonomy.
+	 */
+	private $pending_term_link_rules = array();
+
+	/**
+	 * The rule in $term_link_rules that the request is being parsed again with, as regex => redirect.
+	 *
+	 * @var string[]|null
+	 */
+	private $resolving_rule = null;
+
+	/**
 	 * Add Actions.
 	 */
 	public function add_hook() {
 		add_action( 'parse_request', array( $this, 'parse_request' ) );
 		add_action( 'registered_post_type', array( $this, 'register_post_type_rules' ), 10, 2 );
+		add_action( 'registered_post_type', array( $this, 'prepare_term_link_rules' ), 10, 2 );
 		add_action( 'registered_taxonomy', array( $this, 'register_taxonomy_rules' ), 10, 3 );
+		add_filter( 'pre_handle_404', array( $this, 'resolve_term_link' ), 10, 2 );
 	}
 
 	/**
@@ -241,24 +269,206 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 				add_rewrite_rule( $regex, $redirect, 'top' );
 			}
 
-			if ( get_option( 'add_post_type_for_tax' ) ) {
-				foreach ( $rules as $rule ) {
-					$regex    = sprintf( $rule['regex'], "{$slug}/{$taxonomy_slug}" );
-					$redirect = $rule['redirect'] . "&post_type={$post_type}";
-					add_rewrite_rule( $regex, $redirect, 'top' );
-				}
-			} else {
-				foreach ( $rules as $rule ) {
-					$regex    = sprintf( $rule['regex'], "{$slug}/{$taxonomy_slug}" );
-					$redirect = $rule['redirect'];
-					add_rewrite_rule( $regex, $redirect, 'top' );
-				}
+			$post_type_query = get_option( 'add_post_type_for_tax' ) ? "&post_type={$post_type}" : '';
+			foreach ( $rules as $rule ) {
+				$regex    = sprintf( $rule['regex'], "{$slug}/{$taxonomy_slug}" );
+				$redirect = $rule['redirect'] . $post_type_query;
+				add_rewrite_rule( $regex, $redirect, 'top' );
+			}
+
+			/*
+			 * The post type is not registered yet, so the rules above are under its name,
+			 * but CPTP_Module_Permalink::term_link() builds the link with its rewrite slug,
+			 * or has_archive when it is a string. Resolve the link when the post type is registered.
+			 */
+			if ( ! $post_type_obj ) {
+				$this->pending_term_link_rules[ $post_type ][ $taxonomy ] = array( $rules, $taxonomy_slug, $post_type_query );
 			}
 
 			do_action( 'CPTP_registered_' . $taxonomy . '_rules', $object_type, $args, $taxonomy_slug );
 		endforeach;
 	}
 
+
+	/**
+	 * Prepare the rules for the term link of a taxonomy that was registered before this post type.
+	 *
+	 * The slug that the term link uses is only known once the post type is registered.
+	 * The rules are kept in $term_link_rules. They are not added to the rewrite rules.
+	 *
+	 * @param string       $post_type Post type.
+	 * @param WP_Post_Type $args      Arguments used to register the post type.
+	 */
+	public function prepare_term_link_rules( $post_type, $args ) {
+		global $wp_rewrite;
+
+		if ( empty( $this->pending_term_link_rules[ $post_type ] ) ) {
+			return;
+		}
+
+		$pending = $this->pending_term_link_rules[ $post_type ];
+		unset( $this->pending_term_link_rules[ $post_type ] );
+
+		// CPTP_Module_Permalink::term_link() adds the slug of the post type only when both are set.
+		if ( ! isset( $args->rewrite['slug'] ) || ! isset( $args->rewrite['with_front'] ) ) {
+			return;
+		}
+
+		// The same slug as in CPTP_Module_Permalink::term_link().
+		$slug = $args->rewrite['slug'];
+		if ( ! empty( $args->has_archive ) && is_string( $args->has_archive ) ) {
+			$slug = $args->has_archive;
+		}
+
+		if ( $args->rewrite['with_front'] ) {
+			$slug = substr( $wp_rewrite->front, 1 ) . $slug;
+		}
+
+		if ( empty( $slug ) ) {
+			return;
+		}
+
+		foreach ( $pending as $taxonomy => $rule_args ) {
+			list( $rules, $taxonomy_slug, $post_type_query ) = $rule_args;
+			$this->add_term_link_rules( $taxonomy, $rules, "{$slug}/{$taxonomy_slug}", $post_type_query );
+		}
+	}
+
+	/**
+	 * Remember taxonomy rules under the slug of a post type that the term link uses.
+	 *
+	 * @see CPTP_Module_Rewrite::resolve_term_link()
+	 *
+	 * @param string  $taxonomy        Taxonomy name.
+	 * @param array[] $rules           Rules, as an array of `regex` with a placeholder for the base, and `redirect`.
+	 * @param string  $base            Slug of the post type in the term link, followed by the slug of the taxonomy.
+	 * @param string  $post_type_query Query string to add to the redirect of each rule.
+	 */
+	private function add_term_link_rules( $taxonomy, $rules, $base, $post_type_query ) {
+		foreach ( $rules as $rule ) {
+			$this->term_link_rules[ sprintf( $rule['regex'], $base ) ] = array(
+				'taxonomy' => $taxonomy,
+				'redirect' => $rule['redirect'] . $post_type_query,
+			);
+		}
+	}
+
+	/**
+	 * Resolve a request for the URL of a term link, when the rewrite rules did not find anything for it.
+	 *
+	 * When a taxonomy is registered before its post type, the rewrite rules are under the post type name,
+	 * not under the slug that the term link uses. Rewrite rules for the term link would have to be above
+	 * the rules of the post type, and would take URLs that those rules resolve: the pages, feed, embed
+	 * and attachments of a post whose slug is the taxonomy slug. So the rewrite rules are left as they are,
+	 * and only a request that is not found is parsed again, with the rule for the term link first.
+	 * Every request that the rewrite rules resolve is answered exactly as before.
+	 *
+	 * @param bool     $preempt  Whether to short-circuit default header status handling.
+	 * @param WP_Query $wp_query WordPress Query object.
+	 *
+	 * @return bool
+	 */
+	public function resolve_term_link( $preempt, $wp_query ) {
+		global $wp;
+
+		if ( false !== $preempt || null !== $this->resolving_rule || ! $this->term_link_rules ) {
+			return $preempt;
+		}
+
+		if ( empty( $wp->request ) || ! self::is_not_found( $wp_query ) ) {
+			return $preempt;
+		}
+
+		$this->resolving_rule = $this->find_term_link_rule( $wp->request );
+		if ( null === $this->resolving_rule ) {
+			return $preempt;
+		}
+
+		add_filter( 'option_rewrite_rules', array( $this, 'prepend_resolving_rule' ) );
+
+		$wp->matched_rule  = null;
+		$wp->matched_query = null;
+		$wp->parse_request( $wp->extra_query_vars );
+
+		remove_filter( 'option_rewrite_rules', array( $this, 'prepend_resolving_rule' ) );
+
+		$wp->query_posts();
+		$this->resolving_rule = null;
+
+		return $preempt;
+	}
+
+	/**
+	 * Whether WP::handle_404() is going to answer the query with a 404, or the query found nothing to show.
+	 *
+	 * @param WP_Query $wp_query WordPress Query object.
+	 *
+	 * @return bool
+	 */
+	private static function is_not_found( $wp_query ) {
+		if ( is_admin() || $wp_query->is_robots() || $wp_query->is_favicon() ) {
+			return false;
+		}
+
+		if ( $wp_query->is_404() ) {
+			return true;
+		}
+
+		if ( $wp_query->posts ) {
+			return false;
+		}
+
+		// The archive of an author, a term or a post type, the home and a search are not a 404 without posts.
+		return ! $wp_query->get_queried_object() && ! $wp_query->is_home() && ! $wp_query->is_search();
+	}
+
+	/**
+	 * Find the rule in $term_link_rules that matches the request and whose term exists.
+	 *
+	 * @param string $request Requested path, as in WP::$request.
+	 *
+	 * @return string[]|null The rule as regex => redirect, or null.
+	 */
+	private function find_term_link_rule( $request ) {
+		foreach ( $this->term_link_rules as $regex => $rule ) {
+			if ( ! preg_match( "#^$regex#", $request, $matches ) && ! preg_match( "#^$regex#", urldecode( $request ), $matches ) ) {
+				continue;
+			}
+
+			$taxonomy = get_taxonomy( $rule['taxonomy'] );
+			if ( ! $taxonomy ) {
+				continue;
+			}
+
+			// WP_Query takes several terms, separated by a comma or a plus sign.
+			foreach ( preg_split( '/[,+]/', $matches[1] ) as $term_slug ) {
+				if ( $taxonomy->hierarchical ) {
+					$term_slug = wp_basename( $term_slug );
+				}
+
+				if ( '' !== $term_slug && get_term_by( 'slug', $term_slug, $taxonomy->name ) ) {
+					return array( $regex => $rule['redirect'] );
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Put the rule for the term link above the rewrite rules.
+	 *
+	 * @param array|mixed $rules Rewrite rules.
+	 *
+	 * @return array|mixed
+	 */
+	public function prepend_resolving_rule( $rules ) {
+		if ( ! is_array( $rules ) || null === $this->resolving_rule ) {
+			return $rules;
+		}
+
+		return array_merge( $this->resolving_rule, $rules );
+	}
 
 	/**
 	 *
