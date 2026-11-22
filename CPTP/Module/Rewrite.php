@@ -48,6 +48,7 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		add_action( 'registered_post_type', array( $this, 'prepare_term_link_rules' ), 10, 2 );
 		add_action( 'registered_taxonomy', array( $this, 'register_taxonomy_rules' ), 10, 3 );
 		add_filter( 'pre_handle_404', array( $this, 'resolve_term_link' ), 10, 2 );
+		add_filter( 'random_rewrite_rules', array( $this, 'random_rewrite_rules' ) );
 	}
 
 	/**
@@ -468,6 +469,122 @@ class CPTP_Module_Rewrite extends CPTP_Module {
 		}
 
 		return array_merge( $this->resolving_rule, $rules );
+	}
+
+	/**
+	 * Add the random content rules of the archives under the post type slug.
+	 *
+	 * WordPress 7.2 redirects an archive path prefixed with the random base to a
+	 * random post from that archive, for example `/random/category/news/`. This adds
+	 * the same for the author, category and term archives of this plugin:
+	 *
+	 * - `/random/{post-type-slug}/author/{author}/`
+	 * - `/random/{post-type-slug}/{category-base}/{category}/`
+	 * - `/random/{post-type-slug}/{taxonomy-slug}/{term}/`
+	 *
+	 * As in core, the post type slug has no front, date archives have no rule and
+	 * only randomable post types receive rules. The `random` query variable works
+	 * on the archives without a rule, for example `/{post-type-slug}/2026/?random`.
+	 *
+	 * The rules are under the random base only and follow every rule added to the
+	 * top, so the rules of post types and taxonomies keep precedence over them.
+	 *
+	 * @param array<string, string> $rules Random content rules, keyed by their regex.
+	 *
+	 * @return array<string, string>
+	 */
+	public function random_rewrite_rules( $rules ) {
+		/**
+		 * WP_Rewrite.
+		 *
+		 * @var WP_Rewrite $wp_rewrite
+		 */
+		global $wp_rewrite;
+
+		if ( ! function_exists( 'wp_is_random_content_redirect_enabled' ) || ! wp_is_random_content_redirect_enabled() ) {
+			return $rules;
+		}
+
+		$random_base = $wp_rewrite->root . $wp_rewrite->get_random_base();
+		$post_types  = get_post_types( array( 'randomable' => true ), 'objects' );
+		$cptp_rules  = array();
+
+		// Author and category archives, see register_post_type_rules().
+		foreach ( array_intersect_key( $post_types, CPTP_Util::get_post_types() ) as $post_type => $post_type_obj ) {
+			if ( ! $post_type_obj->has_archive ) {
+				continue;
+			}
+
+			$base  = $random_base . '/' . self::get_archive_slug( $post_type_obj );
+			$query = $wp_rewrite->preg_index( 1 ) . '&post_type=' . $post_type . '&random=1';
+
+			if ( CPTP_Util::get_post_type_author_archive_support( $post_type_obj ) ) {
+				$cptp_rules[ $base . '/author/([^/]+)/?$' ] = $wp_rewrite->index . '?author_name=' . $query;
+			}
+
+			if ( in_array( 'category', (array) $post_type_obj->taxonomies, true ) ) {
+				$category_base = get_option( 'category_base' );
+				if ( ! $category_base ) {
+					$category_base = 'category';
+				}
+
+				$cptp_rules[ $base . '/' . $category_base . '/([^/]+)/?$' ] = $wp_rewrite->index . '?category_name=' . $query;
+			}
+		}
+
+		// Term archives, see register_taxonomy_rules().
+		$taxonomies = array();
+		if ( ! CPTP_Util::get_no_taxonomy_structure() ) {
+			$taxonomies = get_taxonomies(
+				array(
+					'_builtin'           => false,
+					'publicly_queryable' => true,
+				),
+				'objects'
+			);
+		}
+
+		foreach ( $taxonomies as $taxonomy => $taxonomy_obj ) {
+			if ( false === $taxonomy_obj->rewrite ) {
+				continue;
+			}
+
+			$taxonomy_slug = isset( $taxonomy_obj->rewrite['slug'] ) ? $taxonomy_obj->rewrite['slug'] : $taxonomy;
+
+			foreach ( array_intersect_key( $post_types, array_flip( $taxonomy_obj->object_type ) ) as $post_type => $post_type_obj ) {
+				$query = $wp_rewrite->preg_index( 1 );
+				if ( get_option( 'add_post_type_for_tax' ) ) {
+					$query .= '&post_type=' . $post_type;
+				}
+
+				$regex                = $random_base . '/' . self::get_archive_slug( $post_type_obj ) . '/' . $taxonomy_slug . '/(.+?)/?$';
+				$cptp_rules[ $regex ] = $wp_rewrite->index . '?' . $taxonomy . '=' . $query . '&random=1';
+			}
+		}
+
+		// Rules added to the top and the random rules of core keep their query.
+		$cptp_rules = array_diff_key( $cptp_rules, $wp_rewrite->extra_rules_top, $rules );
+
+		return array_merge( $cptp_rules, $rules );
+	}
+
+	/**
+	 * Returns the slug of the archives of a post type, without the front.
+	 *
+	 * @param WP_Post_Type $post_type_obj Post type object.
+	 *
+	 * @return string
+	 */
+	private static function get_archive_slug( $post_type_obj ) {
+		if ( is_string( $post_type_obj->has_archive ) ) {
+			return $post_type_obj->has_archive;
+		}
+
+		if ( ! empty( $post_type_obj->rewrite['slug'] ) ) {
+			return $post_type_obj->rewrite['slug'];
+		}
+
+		return $post_type_obj->name;
 	}
 
 	/**
