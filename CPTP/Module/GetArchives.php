@@ -138,15 +138,23 @@ class CPTP_Module_GetArchives extends CPTP_Module {
 			$blog_url = preg_replace( '/https?:\/\//', '', $blog_url );
 			$ret_link = str_replace( $blog_url, $blog_url . '/%link_dir%', $html );
 
+			/*
+			 * The rewrite rules are under has_archive when it is a string.
+			 * See CPTP_Module_Rewrite::register_post_type_rules() and CPTP_Module_Rewrite::register_taxonomy_rules().
+			 */
+			$archive_slug = is_string( $post_type->has_archive ) ? $post_type->has_archive : null;
+
 			if ( empty( $c ) ) {
-				if ( isset( $post_type->rewrite['slug'] ) ) {
+				if ( null !== $archive_slug ) {
+					$link_dir = $archive_slug;
+				} elseif ( isset( $post_type->rewrite['slug'] ) ) {
 					$link_dir = $post_type->rewrite['slug'];
 				} else {
 					$link_dir = $this->get_archives_where_r['post_type'];
 				}
 			} else {
 				$c['name'] = ( 'category' === $c['name'] && get_option( 'category_base' ) ) ? get_option( 'category_base' ) : $c['name'];
-				$link_dir  = $post_type->rewrite['slug'] . '/' . $c['name'] . '/' . $c['termslug'];
+				$link_dir  = ( null !== $archive_slug ? $archive_slug : $post_type->rewrite['slug'] ) . '/' . $c['name'] . '/' . $c['termslug'];
 			}
 
 			$ret_link = str_replace( '%link_dir%/date/', '%link_dir%/', $ret_link );
