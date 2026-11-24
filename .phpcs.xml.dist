@@ -21,7 +21,7 @@
     <config name="testVersion" value="8.2-"/>
     <!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
     <rule ref="PHPCompatibilityWP"/>
-    <config name="minimum_supported_wp_version" value="6.8"/>
+    <config name="minimum_supported_wp_version" value="6.9"/>
     <rule ref="WordPress-Core">
         <exclude name="WordPress.Files.FileName" />
         <exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
