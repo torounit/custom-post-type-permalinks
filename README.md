@@ -8,7 +8,7 @@ Tested up to: 7.2
 Requires PHP: 8.2  
 License: GPLv2 or Later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt  
-Stable tag:        3.5.6
+Stable tag:        3.6.0
 
 Edit the permalink of custom post type.
 
@@ -94,7 +94,7 @@ That's it. You can access the permalinks setting by going to _Settings -> Permal
 
 ## Changelog
 
-### Unreleased
+### 3.6.0
 
 - Requires WordPress 6.9 or later.
 - Requires PHP 8.2 or later.
